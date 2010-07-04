@@ -1,0 +1,202 @@
+			Gnulib stable snapshot
+			----------------------
+
+  * 20100704-stable
+
+Snapshot taken based on:
+
+commit 86ba51d2c17219b82b977da0a912e05a3d9bf858
+Date:   Sun Jun 20 13:31:40 2010 +0200
+
+with the following additional commits:
+
+    * [d0ed135]->[8626eaa] autoupdates
+    * [386abcb]->[a155c56] autoupdate
+    * [599af40]->[170554f] unitypes: Fix bug introduced on 2010-05-18.
+    * [7740412]->[331fd48] string: Fix syntax error with g++ 2.96.
+    * [5616180]->[ce5a4ac] idpriv-drop: Fix tests.
+    * [6e9c624]->[cbec1d8] gettext: Use AC_GNU_SOURCE as a fallback for AC_USE_SYSTEM_EXTENSIONS.
+    * [7773f84]->[a01b938] stdbool: Update doc.
+
+----------------------------------------------------------------------
+
+  * 20100424-stable
+
+Snapshot taken based on:
+
+commit  ba564f2164f381af846d9695e6465cffe7ec918c
+Date:   Fri Apr 9 02:02:15 2010 +0200
+
+with the following additional commits:
+
+    * [950f346]->[99a272b] ftruncate: mark module as obsolete; even MinGW provides it, now
+    * [2d4d227]->[358e18f] Add attribution to a ChangeLog entry.
+    * [38e3c69]->[a11321f] ftruncate: add two years to projected module removal date: 2012
+    * [6b8b58b]->[1ce7c50] init.sh: run tr in the "C" locale to avoid multibyte interpretation
+    * [85f6993]->[bcd59b9] Add missing parenthesis in manywarnings example
+    * [3213c10]->[102392e] vasnprintf test: Reduce code duplication.
+    * [3c65a68]->[4b43aec] write: Fix a C++ test error on mingw.
+    * [067d1f1]->[cc75f4b] vasnprintf: Fix multiple test failures on mingw.
+    * [32d1664]->[e651e75] vasnprintf: Fix crash in %ls directive.
+    * [0167c19]->[8bd3d4c] vasnprintf: Correct handling of unconvertible wide string arguments.
+    * [de9f4b1]->[c886605] vasnprintf: Add more tests.
+    * [15a0c62]->[849156a] fchownat: Fix a C++ test error on Solaris 8.
+    * [67c7b8e]->[42d09c4] maint.mk: correct a diagnostic
+    * [b969309]->[70b21bf] mkdir: Make it work on mingw64.
+    * [3c79d51]->[9f9fbf6] Update comment.
+    * [03271c7]->[f5544ce] Fix typo in comment.
+    * [1820b30]->[3e18c19] libunistring: Detect libunistring also when it depends on libiconv.
+    * [82b0be3]->[6f6d4bf] havelib: Add static libraries to LIBS in the right order.
+    * [e330e06]->[1d3b6f0] libunistring: Correct value of $LTLIBUNISTRING.
+    * [c9f911d]->[86cda03] autoupdate
+    * [197b47e]->[5510d3d] git-version-gen: use "git update-index..." rather than "git status"
+    * [5fbd6e3]->[5fbd6e3] doc: users.txt: GNU patch now uses gnulib
+    * [2abb98c]->[f07545c] getopt-posix: avoid spurious failure on FreeBSD
+    * [3108b95]->[1454b1f] getopt-posix: avoid spurious failure on Solaris
+    * [5cc0bcf]->[d711c30] getopt-posix: detect MacOS bug
+    * [db3e280]->[cc1fb6a] getopt: merge bug fixes from glibc
+    * [61c96af]->[6229a28] getopt-gnu: match recent glibc fixes and posix ruling
+    * [d39bc2c]->[588d54b] autoupdate
+    * [7c1b995]->[a251be0] strtok_r: relax license to LGPLv2+
+    * [56d363d]->[57a3236] test-forkpty: fix expected signature
+    * [e764ea2]->[0dc1446] openpty: Fix mistake from 2010-03-21.
+    * [ae75893]->[854fe4e] Override netdb.h always.
+    * [93b28fe]->[e7f1d9f] ioctl: Move autoconf macro to a .m4 file.
+    * [710c8d3]->[8cf9b2c] relocatable: Drop the need to define RELOCATABLE_STRIP in Makefile.am.
+    * [2f31750]->[2676677] relocatable: Simplify doc.
+    * [cea53ef]->[5428678] bootstrap: use "git -h" instead of "git --help"
+    * [e51d12c]->[528ab01] vasnprintf: Correct errno value in case of out-of-memory.
+
+    and one local commit, submitted upstream:
+
+    * [7ffc813]->[b219cbd] make check: avoid an error when no .git dir present.
+
+----------------------------------------------------------------------
+
+  * 20100308-stable
+
+Snapshot taken based on:
+
+commit  4fc10daa05477586fea99b6b3ca02a87d1102fa1
+Date:   Mon Mar 1 22:09:44 2010 +0100
+
+with the following additional commits:
+
+    * [88baa1e]->[6681664] spawn: Don't override the system defined values on FreeBSD 8.
+    * [ca156dd]->[12e638f] copy-acl: enhance Solaris ACL error handling
+    * [fa93cea]->[fbe6ced] exit: Obsolete module, use stdlib instead.
+    * [eb6dce1]->[529ebff] exitfail: Relax license to LGPLv2.1+.  Drop exitfail.m4.
+    * [434627d]->[3dfb904] Prefer lib_SOURCES over unconditional AC_LIBOBJ.
+    * [032088a]->[99e99ca] euidaccess: relax license to LGPLv2+
+    * [3753983]->[51c9c87] Fix incorrect Makefile.am generation in German locale.
+    * [89e5b6b]->[6fde090] Clarify access, euidaccess, faccessat.
+    * [798f5bd]->[661fa69] Fix link error on platforms with GNU libiconv.
+    * [94a90dc]->[a62a0db] Exclude lib-ignore module.
+    * [fc980d5]->[9f46144] Fix test-dirent link error.
+    * [f19a2e5]->[2e4b5be] Fix test-dirent-safer link error. Correct last commit.
+    * [7d09cc8]->[c896764] Fix test-cond link error.
+
+----------------------------------------------------------------------
+
+  * 20100109-stable
+
+Snapshot taken based on:
+
+commit  12319ff4e84ca616a671216d991dd6eaf1c39c47
+Date:   Fri Jan 1 16:00:07 2010 +0100
+
+with the following additional commits:
+
+    * [e7100ae]->[60a41fa] headers: make check of system header explicit
+    * [1bf02c3]->[2e79dd2] wchar: Remove unused configure check.
+    * [8f3aa1f]->[ab43907] autoupdate
+    * [e138cd8]->[18a2e77] fdopendir: fix configure test
+    * [7a29e00]->[11639c6] nl_langinfo: avoid configure-time syntax error
+    * [51983dc]->[fab630e] mkdir: avoid xalloc
+    * [28e6fc0]->[b8025c4] xalloc.h: use consistent formatting
+    * [0c2fded]->[41d7de2] maint.mk: include 4 more function names in alloca.h-checking regexp
+    * [0e0f8f1]->[2d44e17] maint: remove useless inclusions of "alloca.h"
+    * [c1b6197]->[9e93370] ChangeLog: correct last entry: s/alloca.h/xalloc.h/
+    * [f8b8f4f]->[bfdc843] strcase: document what it provides
+    * [41c44a6]->[88de58a] utimens (fdutimens): ignore a negative FD, per contract
+    * [735d9d0]->[8a69e5c] maint: support 'make announcement' from a VPATH build
+    * [816a1ec]->[0d57ec9] readtokens: this module *does* require xalloc.h
+    * [f9eed4b]->[58b5448] nl_langinfo: do not call AC_CHECK_FUNC_ONCE inside if.
+    * [60ad192]->[932e55d] stdio, unistd: guarantee ssize_t
+    * [ae0044c]->[78c1179] autoupdate
+    * [eb9c0c2]->[d0f97a4] cleanup after gl_FUNC_READLINK, for gl_FUNC_SYMLINK test
+    * [e5697c6]->[b4e7212] linkat, renameat: avoid bad free
+    * [010ecd2]->[65e8854] dirent: fix test failure
+    * [978114f]->[eb65fea] pread: fix compilation on glibc
+    * [2f0e0a8]->[c93838e] doc: regenerate INSTALL
+    * [654c876]->[4b8c490] select: add missing dependency
+    * [c4b4563]->[9ebfb66] maint.mk: ignore multi-line copyright in NEWS
+    * [cb361c9]->[d9d722c] maint.mk: detect incorrect GFDL usage
+    * [c1a179c]->[abd3f20] wctype: allow C++ use
+    * [6751651]->[1c3411f] autoupdate
+    * [5cd308a]->[d1ecc61] ChangeLog: Correct a recent entry.
+    * [7f01cc5]->[77f03a3] nl_langinfo: Simplify logic.
+    * [cc6a687]->[efba37d] doc: Clarify the platforms.
+    * [64cbadd]->[a75ac7f] xlist, xoset: Fix missing dependency bug, introduced on 2009-12-13.
+    * [f1195cc]->[877b01f] stdio: Ensure <stdio.h> defines off_t, ssize_t, va_list.
+    * [027bd46]->[53c2db0] dirent: Document the last fix.
+    * [969fe75]->[085b493] mbslen: Avoid collision with system function.
+    * [ccc06b2]->[3437136] Fix indentation of wctype.in.h, broken since 2007-01-06.
+    * [0906b5f]->[6b40a56] glob: Fix C++ compilation.
+    * [2cf2e37]->[0b0ac4a] dup2: work around mingw bug
+    * [581419c]->[fad0fe1] lib/dup2.c (rpl_dup2): Improve comment.
+    * [dd5823d]->[465b4d1] Tests for module 'getlogin_r'.
+    * [3361cfa]->[5bfd3af] getlogin_r: Add comment.
+    * [89b39ef]->[88bc1a6] getlogin_r: Small fixes.
+    * [570a589]->[d6b7bf8] getlogin_r: Support for native Windows.
+    * [630a387]->[b2c3f71] unistr/u8-to-u16: Reject invalid input.
+    * [95a86a9]->[f3af270] unistr/u8-to-u32: Reject invalid input.
+    * [f03c8d5]->[987b3c4] unistr/u16-to-u8: Reject invalid input.
+    * [19aa55e]->[b4ee15b] unistr/u16-to-u32: Reject invalid input.
+
+----------------------------------------------------------------------
+
+  * 20091120-stable
+
+Snapshot taken based on:
+
+commit 7becd9d708425924f3a402fdd3c6e18ba2a7e4e3
+Date:   Sat Nov 7 16:03:38 2009 -0700
+
+with the following additional commits:
+
+    * [26c5fd7]->[7eb2ad0] utimens: remove invalid futimesat call
+    * [6553be8]->[510522d] strftime.c: include ignore-value.h only when FPRINTFTIME is defined
+    * [349396e]->[cc85265] stat: detect FreeBSD bug
+    * [48e9883]->[7f013da] open: detect FreeBSD bug
+    * [d462fe1]->[02634ef] rename: detect FreeBSD bug
+    * [b0d3085]->[fd021c4] autoupdate
+    * [2420877]->[12a64eb] unlink, remove: detect FreeBSD bug
+    * [492960c]->[24c30ab] link: detect FreeBSD bug
+    * [24a6037]->[ec14720] symlink: detect FreeBSD bug
+    * [dfd4d11]->[3bb65d2] readlink: detect FreeBSD bug
+    * [7127847]->[c9698f2] bootstrap: generalize autoheader check
+    * [ac67780]->[3739c19] fts: do not fail on a submount during traversal
+    * [08e6b4c]->[82a192d] getgroups: fix logic error
+    * [80074d1]->[d9cc1a4] getgroups: avoid calling exit
+    * [61b3a42]->[a12148f] getgroups, getugroups: provide stubs for mingw
+    * [0173b1e]->[dc5014b] test-getgroups: avoid compilation failure
+    * [f3a2c4a]->[5390af1] getgroups: avoid compilation failure
+    * [1e642be]->[867cf3b] getgroups: work around FreeBSD bug
+    * [cf0c4ab]->[2d61dc2] getgroups: avoid compiler warning
+    * [ee8909a]->[28fc486] strftime.h: wrap funtion declaration in extern "C" block
+    * [fb1b608]->[d837f67] gnulib-tool: correctly detect absence of m4 directories
+    * [a86ea84]->[e14e479] fnmatch: avoid compiler warning
+    * [24a6641]->[16685f1] lib/gc-pbkdf2-sha1.c: Remove comments from RFC 2898.
+    * [1b712ba]->[4b4b924] avoid new AC_REQUIRE expanded-before-required warnings
+    * [6963723]->[456348e] better AC_REQUIRE expanded-before-required-warning avoidance
+    * [1c32714]->[dc372f7] version-etc: relax license to LGPLv3+
+    * [7e52ced]->[3f0179e] version-etc-fsf: relax license to LGPLv3+
+    * [b205080]->[e09f5b5] version-etc: use proper license string
+    * [b9d28ec]->[f2baca9] Add `gnulib-tool --import' support for LGPLv3+.
+    * [d9d9b26]->[6d8c90b] Add.
+    * [0883405]->[72abcbb] utimens: fix regression on Solaris
+    * [8cfd4a9]->[8607d21] tests: avoid false negative with --with-packager
+    * [111e540]->[0028f27] build: avoid compiler warnings
+    * [841ad19]->[c6d977e] manywarnings: depend on warnings
+    * [758f912]->[dd21f46] autoupdate
