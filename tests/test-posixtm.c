@@ -1,5 +1,5 @@
 /* Test that posixtime works as required.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,7 +46,13 @@ static struct posixtm_test const T[] =
     { "12131415.16",     13, 1,            0}, /* ??? Dec 13 14:15:16 ???? */
     { "12131415",        13, 1,            0}, /* ??? Dec 13 14:15:00 ???? */
 
+    /* These two tests fail on 64-bit Solaris up through at least
+       Solaris 10, which is off by one day for time stamps before
+       0001-01-01 00:00:00 UTC.  */
     { "000001010000.00", 13, 1, -62167219200}, /* Sat Jan  1 00:00:00 0    */
+    { "000012312359.59", 13, 1, -62135596801}, /* Fri Dec 31 23:59:59 0    */
+
+    { "000101010000.00", 13, 1, -62135596800}, /* Sat Jan  1 00:00:00 1    */
     { "190112132045.51", 13, 1,  -2147483649}, /* Fri Dec 13 20:45:51 1901 */
     { "190112132045.52", 13, 1,  -2147483648}, /* Fri Dec 13 20:45:52 1901 */
     { "190112132045.53", 13, 1,  -2147483647}, /* Fri Dec 13 20:45:53 1901 */
@@ -112,7 +118,7 @@ main (void)
   for (i = 0; T[i].in; i++)
     {
       time_t t_out;
-      time_t t_exp = T[i].t_expected;
+      time_t t_exp;
       bool ok;
 
       /* Some tests assume that time_t is signed.
@@ -124,12 +130,15 @@ main (void)
           continue;
         }
 
-      if (T[i].valid && t_exp != T[i].t_expected)
+      if (! (TYPE_MINIMUM (time_t) <= T[i].t_expected
+             && T[i].t_expected <= TYPE_MAXIMUM (time_t)))
         {
           printf ("skipping %s: result is out of range of your time_t\n",
                   T[i].in);
           continue;
         }
+
+      t_exp = T[i].t_expected;
 
       /* If an input string does not specify the year number, determine
          the expected output by calling posixtime with an otherwise

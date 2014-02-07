@@ -3,34 +3,33 @@ poll() function: wait for some event on a set of file descriptors.
 
 Files:
 lib/poll.c
-lib/poll.in.h
 m4/poll.m4
 
 Depends-on:
-alloca
-select
-sys_select
-sys_time
-errno
+poll-h
+alloca          [test $HAVE_POLL = 0 || test $REPLACE_POLL = 1]
+select          [test $HAVE_POLL = 0 || test $REPLACE_POLL = 1]
+sockets         [test $HAVE_POLL = 0 || test $REPLACE_POLL = 1]
+sys_select      [test $HAVE_POLL = 0 || test $REPLACE_POLL = 1]
+sys_time        [test $HAVE_POLL = 0 || test $REPLACE_POLL = 1]
+errno           [test $HAVE_POLL = 0 || test $REPLACE_POLL = 1]
+msvc-nothrow    [test $HAVE_POLL = 0 || test $REPLACE_POLL = 1]
 
 configure.ac:
 gl_FUNC_POLL
+if test $HAVE_POLL = 0 || test $REPLACE_POLL = 1; then
+  AC_LIBOBJ([poll])
+  gl_PREREQ_POLL
+fi
+gl_POLL_MODULE_INDICATOR([poll])
 
 Makefile.am:
-BUILT_SOURCES += $(POLL_H)
-
-# We need the following in order to create <poll.h> when the system
-# doesn't have one.
-poll.h: poll.in.h
-	$(AM_V_GEN)rm -f $@-t $@ && \
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  cat $(srcdir)/poll.in.h; \
-	} > $@-t && \
-	mv -f $@-t $@
-MOSTLYCLEANFILES += poll.h poll.h-t
 
 Include:
 <poll.h>
+
+Link:
+$(LIB_POLL)
 
 License:
 LGPLv2+

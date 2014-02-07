@@ -1,5 +1,5 @@
-# readline.m4 serial 7
-dnl Copyright (C) 2005, 2006, 2009, 2010 Free Software Foundation, Inc.
+# readline.m4 serial 10
+dnl Copyright (C) 2005-2006, 2009-2012 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -29,7 +29,7 @@ AC_DEFUN([gl_FUNC_READLINE],
     am_save_LIBS="$LIBS"
     dnl On some systems, -lreadline doesn't link without an additional
     dnl -lncurses or -ltermcap.
-    dnl Try -lncurses before -ltermcap, because libtermcap is unsecure
+    dnl Try -lncurses before -ltermcap, because libtermcap is insecure
     dnl by design and obsolete since 1994. Try -lcurses last, because
     dnl libcurses is unusable on some old Unices.
     for extra_lib in "" ncurses termcap curses; do
@@ -40,7 +40,12 @@ AC_DEFUN([gl_FUNC_READLINE],
       AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <stdio.h>
 #include <readline/readline.h>]],
           [[readline((char*)0);]])],
-        [gl_cv_lib_readline=" -l$extra_lib"])
+        [if test -n "$extra_lib"; then
+           gl_cv_lib_readline="yes, requires -l$extra_lib"
+         else
+           gl_cv_lib_readline="yes"
+         fi
+        ])
       if test "$gl_cv_lib_readline" != no; then
         break
       fi
@@ -50,9 +55,10 @@ AC_DEFUN([gl_FUNC_READLINE],
 
   if test "$gl_cv_lib_readline" != no; then
     AC_DEFINE([HAVE_READLINE], [1], [Define if you have the readline library.])
-    if test "$gl_cv_lib_readline" != " -l"; then
-      LIBREADLINE="$LIBREADLINE$gl_cv_lib_readline"
-      LTLIBREADLINE="$LTLIBREADLINE$gl_cv_lib_readline"
+    extra_lib=`echo "$gl_cv_lib_readline" | sed -n -e 's/yes, requires //p'`
+    if test -n "$extra_lib"; then
+      LIBREADLINE="$LIBREADLINE $extra_lib"
+      LTLIBREADLINE="$LTLIBREADLINE $extra_lib"
     fi
     AC_MSG_CHECKING([how to link with libreadline])
     AC_MSG_RESULT([$LIBREADLINE])
@@ -66,12 +72,7 @@ AC_DEFUN([gl_FUNC_READLINE],
   AC_SUBST([LIBREADLINE])
   AC_SUBST([LTLIBREADLINE])
 
-  AC_CHECK_HEADERS([readline/readline.h])
-
-  if test $gl_cv_lib_readline = no; then
-    AC_LIBOBJ([readline])
-    gl_PREREQ_READLINE
-  fi
+  AC_CHECK_HEADERS([readline/readline.h readline/history.h])
 ])
 
 # Prerequisites of lib/readline.c.

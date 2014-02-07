@@ -8,10 +8,14 @@ m4/atanl.m4
 Depends-on:
 math
 extensions
-isnanl
+atan            [test $HAVE_ATANL = 0 && test $HAVE_SAME_LONG_DOUBLE_AS_DOUBLE = 1]
+isnanl          [test $HAVE_ATANL = 0 && test $HAVE_SAME_LONG_DOUBLE_AS_DOUBLE = 0]
 
 configure.ac:
 gl_FUNC_ATANL
+if test $HAVE_ATANL = 0; then
+  AC_LIBOBJ([atanl])
+fi
 gl_MATH_MODULE_INDICATOR([atanl])
 
 Makefile.am:
@@ -23,7 +27,7 @@ Link:
 $(ATANL_LIBM)
 
 License:
-GPL
+LGPL
 
 Maintainer:
 Paolo Bonzini

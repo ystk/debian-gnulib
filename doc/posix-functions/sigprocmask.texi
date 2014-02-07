@@ -2,7 +2,7 @@
 @section @code{sigprocmask}
 @findex sigprocmask
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/sigprocmask.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/sigprocmask.html}
 
 Gnulib module: sigprocmask
 
@@ -10,7 +10,7 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw.
+mingw, MSVC 9.
 @end itemize
 
 Portability problems not fixed by Gnulib:

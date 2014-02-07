@@ -11,10 +11,10 @@ unicase/base
 unicase/u16-casefold
 uniconv/u16-conv-to-enc
 localcharset
-memxfrm
+amemxfrm
 
 configure.ac:
-gl_LIBUNISTRING_MODULE([0.9.1], [unicase/u16-casexfrm])
+gl_LIBUNISTRING_MODULE([0.9.4], [unicase/u16-casexfrm])
 
 Makefile.am:
 if LIBUNISTRING_COMPILE_UNICASE_U16_CASEXFRM

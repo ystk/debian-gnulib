@@ -3,14 +3,10 @@ Generic crypto wrappers for DES block cipher.
 
 Files:
 m4/gc-des.m4
-lib/des.h
-lib/des.c
-m4/des.m4
 
 Depends-on:
-stdint
-stdbool
 crypto/gc
+crypto/des [test "$ac_cv_libgcrypt" != yes]
 
 configure.ac:
 gl_GC_DES

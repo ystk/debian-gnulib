@@ -40,23 +40,60 @@
  */
 
 /* Installation:
+
    $ gnulib-tool --create-testdir --dir=/tmp/testdir123 git-merge-changelog
    $ cd /tmp/testdir123
    $ ./configure
    $ make
    $ make install
-   - Add to .git/config of the checkout (or to your $HOME/.gitconfig) the lines
 
-        [merge "merge-changelog"]
-                name = GNU-style ChangeLog merge driver
-                driver = /usr/local/bin/git-merge-changelog %O %A %B
+   Additionally, for git users:
+     - Add to .git/config of the checkout (or to your $HOME/.gitconfig) the
+       lines
 
-   - In every directory that contains a ChangeLog file, add a file
-     '.gitattributes' with this line:
+          [merge "merge-changelog"]
+                  name = GNU-style ChangeLog merge driver
+                  driver = /usr/local/bin/git-merge-changelog %O %A %B
 
-        ChangeLog    merge=merge-changelog
+     - In every directory that contains a ChangeLog file, add a file
+       '.gitattributes' with this line:
 
-     (See "man 5 gitattributes" for more info.)
+          ChangeLog    merge=merge-changelog
+
+       (See "man 5 gitattributes" for more info.)
+
+   Additionally, for bzr users:
+     - Install the 'extmerge' bzr plug-in listed at
+         <http://doc.bazaar.canonical.com/plugins/en/index.html>
+         <http://wiki.bazaar.canonical.com/BzrPlugins>
+     - Add to your $HOME/.bazaar/bazaar.conf the line
+
+          external_merge = git-merge-changelog %b %T %o
+
+     - Then, to merge a conflict in a ChangeLog file, use
+
+          $ bzr extmerge ChangeLog
+
+   Additionally, for hg users:
+     - Add to your $HOME/.hgrc the lines
+
+        [merge-patterns]
+        ChangeLog = git-merge-changelog
+
+        [merge-tools]
+        git-merge-changelog.executable = /usr/local/bin/git-merge-changelog
+        git-merge-changelog.args = $base $local $other
+
+       See <http://www.selenic.com/mercurial/hgrc.5.html> section merge-tools
+       for reference.
+ */
+
+/* Use as an alternative to 'diff3':
+   git-merge-changelog performs the same role as "diff3 -m", just with
+   reordered arguments:
+     $ git-merge-changelog %O %A %B
+   is comparable to
+     $ diff3 -m %A %O %B
  */
 
 /* Calling convention:
@@ -929,12 +966,12 @@ static const struct option long_options[] =
   { NULL, 0, NULL, 0 }
 };
 
-/* Print a usage mesage and exit.  */
+/* Print a usage message and exit.  */
 static void
 usage (int status)
 {
   if (status != EXIT_SUCCESS)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
+    fprintf (stderr, "Try '%s --help' for more information.\n",
              program_name);
   else
     {
@@ -961,7 +998,7 @@ usage (int status)
       printf ("  -h, --help                  display this help and exit\n");
       printf ("  -V, --version               output version information and exit\n");
       printf ("\n");
-      fputs ("Report bugs to <bug-gnu-gettext@gnu.org>.\n",
+      fputs ("Report bugs to <bug-gnulib@gnu.org>.\n",
              stdout);
     }
 

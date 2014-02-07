@@ -1,6 +1,6 @@
 /* hash - hashing table processing.
 
-   Copyright (C) 1998-2004, 2006-2007, 2009-2010 Free Software Foundation, Inc.
+   Copyright (C) 1998-2004, 2006-2007, 2009-2012 Free Software Foundation, Inc.
 
    Written by Jim Meyering, 1992.
 
@@ -27,7 +27,7 @@
 #include "hash.h"
 
 #include "bitrotate.h"
-#include "xalloc.h"
+#include "xalloc-oversized.h"
 
 #include <stdint.h>
 #include <stdio.h>
@@ -63,7 +63,7 @@ struct hash_table
     /* Tuning arguments, kept in a physically separate structure.  */
     const Hash_tuning *tuning;
 
-    /* Three functions are given to `hash_initialize', see the documentation
+    /* Three functions are given to 'hash_initialize', see the documentation
        block for this function.  In a word, HASHER randomizes a user entry
        into a number up from 0 up to some maximum minus 1; COMPARATOR returns
        true if two user entries compare equally; and DATA_FREER is the cleanup
@@ -87,23 +87,23 @@ struct hash_table
    some user-provided data (also called a user entry).  An entry indistinctly
    refers to both the internal entry and its associated user entry.  A user
    entry contents may be hashed by a randomization function (the hashing
-   function, or just `hasher' for short) into a number (or `slot') between 0
+   function, or just "hasher" for short) into a number (or "slot") between 0
    and the current table size.  At each slot position in the hash table,
    starts a linked chain of entries for which the user data all hash to this
    slot.  A bucket is the collection of all entries hashing to the same slot.
 
-   A good `hasher' function will distribute entries rather evenly in buckets.
+   A good "hasher" function will distribute entries rather evenly in buckets.
    In the ideal case, the length of each bucket is roughly the number of
    entries divided by the table size.  Finding the slot for a data is usually
-   done in constant time by the `hasher', and the later finding of a precise
+   done in constant time by the "hasher", and the later finding of a precise
    entry is linear in time with the size of the bucket.  Consequently, a
    larger hash table size (that is, a larger number of buckets) is prone to
-   yielding shorter chains, *given* the `hasher' function behaves properly.
+   yielding shorter chains, *given* the "hasher" function behaves properly.
 
    Long buckets slow down the lookup algorithm.  One might use big hash table
    sizes in hope to reduce the average length of buckets, but this might
    become inordinate, as unused slots in the hash table take some space.  The
-   best bet is to make sure you are using a good `hasher' function (beware
+   best bet is to make sure you are using a good "hasher" function (beware
    that those are not that easy to write! :-), and to use a table size
    larger than the actual number of entries.  */
 
@@ -113,8 +113,8 @@ struct hash_table
    1.0).  The growth threshold defaults to 0.8, and the growth factor
    defaults to 1.414, meaning that the table will have doubled its size
    every second time 80% of the buckets get used.  */
-#define DEFAULT_GROWTH_THRESHOLD 0.8
-#define DEFAULT_GROWTH_FACTOR 1.414
+#define DEFAULT_GROWTH_THRESHOLD 0.8f
+#define DEFAULT_GROWTH_FACTOR 1.414f
 
 /* If a deletion empties a bucket and causes the ratio of used buckets to
    table size to become smaller than the shrink threshold (a number between
@@ -122,8 +122,8 @@ struct hash_table
    number greater than the shrink threshold but smaller than 1.0).  The shrink
    threshold and factor default to 0.0 and 1.0, meaning that the table never
    shrinks.  */
-#define DEFAULT_SHRINK_THRESHOLD 0.0
-#define DEFAULT_SHRINK_FACTOR 1.0
+#define DEFAULT_SHRINK_THRESHOLD 0.0f
+#define DEFAULT_SHRINK_FACTOR 1.0f
 
 /* Use this to initialize or reset a TUNING structure to
    some sensible values. */
@@ -243,18 +243,25 @@ hash_print_statistics (const Hash_table *table, FILE *stream)
            (unsigned long int) max_bucket_length);
 }
 
+/* Hash KEY and return a pointer to the selected bucket.
+   If TABLE->hasher misbehaves, abort.  */
+static struct hash_entry *
+safe_hasher (const Hash_table *table, const void *key)
+{
+  size_t n = table->hasher (key, table->n_buckets);
+  if (! (n < table->n_buckets))
+    abort ();
+  return table->bucket + n;
+}
+
 /* If ENTRY matches an entry already in the hash table, return the
    entry from the table.  Otherwise, return NULL.  */
 
 void *
 hash_lookup (const Hash_table *table, const void *entry)
 {
-  struct hash_entry const *bucket
-    = table->bucket + table->hasher (entry, table->n_buckets);
+  struct hash_entry const *bucket = safe_hasher (table, entry);
   struct hash_entry const *cursor;
-
-  if (! (bucket < table->bucket_limit))
-    abort ();
 
   if (bucket->data == NULL)
     return NULL;
@@ -293,23 +300,24 @@ hash_get_first (const Hash_table *table)
 }
 
 /* Return the user data for the entry following ENTRY, where ENTRY has been
-   returned by a previous call to either `hash_get_first' or `hash_get_next'.
+   returned by a previous call to either 'hash_get_first' or 'hash_get_next'.
    Return NULL if there are no more entries.  */
 
 void *
 hash_get_next (const Hash_table *table, const void *entry)
 {
-  struct hash_entry const *bucket
-    = table->bucket + table->hasher (entry, table->n_buckets);
+  struct hash_entry const *bucket = safe_hasher (table, entry);
   struct hash_entry const *cursor;
 
-  if (! (bucket < table->bucket_limit))
-    abort ();
-
   /* Find next entry in the same bucket.  */
-  for (cursor = bucket; cursor; cursor = cursor->next)
-    if (cursor->data == entry && cursor->next)
-      return cursor->next->data;
+  cursor = bucket;
+  do
+    {
+      if (cursor->data == entry && cursor->next)
+        return cursor->next->data;
+      cursor = cursor->next;
+    }
+  while (cursor != NULL);
 
   /* Find first entry in any subsequent bucket.  */
   while (++bucket < table->bucket_limit)
@@ -411,9 +419,9 @@ hash_string (const char *string, size_t n_buckets)
 
 #else /* not USE_DIFF_HASH */
 
-/* This one comes from `recode', and performs a bit better than the above as
+/* This one comes from 'recode', and performs a bit better than the above as
    per a few experiments.  It is inspired from a hashing routine found in the
-   very old Cyber `snoop', itself written in typical Greg Mansfield style.
+   very old Cyber 'snoop', itself written in typical Greg Mansfield style.
    (By the way, what happened to this excellent man?  Is he still alive?)  */
 
 size_t
@@ -432,7 +440,7 @@ hash_string (const char *string, size_t n_buckets)
 /* Return true if CANDIDATE is a prime number.  CANDIDATE should be an odd
    number at least equal to 11.  */
 
-static bool
+static bool _GL_ATTRIBUTE_CONST
 is_prime (size_t candidate)
 {
   size_t divisor = 3;
@@ -451,7 +459,7 @@ is_prime (size_t candidate)
 /* Round a given CANDIDATE number up to the nearest prime, and return that
    prime.  Primes lower than 10 are merely skipped.  */
 
-static size_t
+static size_t _GL_ATTRIBUTE_CONST
 next_prime (size_t candidate)
 {
   /* Skip small primes.  */
@@ -532,7 +540,7 @@ check_tuning (Hash_table *table)
    TUNING, or return 0 if there is no possible way to allocate that
    many entries.  */
 
-static size_t
+static size_t _GL_ATTRIBUTE_PURE
 compute_bucket_size (size_t candidate, const Hash_tuning *tuning)
 {
   if (!tuning->is_n_buckets)
@@ -576,9 +584,9 @@ compute_bucket_size (size_t candidate, const Hash_tuning *tuning)
 
    The user-supplied DATA_FREER function, when not NULL, may be later called
    with the user data as an argument, just before the entry containing the
-   data gets freed.  This happens from within `hash_free' or `hash_clear'.
+   data gets freed.  This happens from within 'hash_free' or 'hash_clear'.
    You should specify this function only if you want these functions to free
-   all of your `data' data.  This is typically the case when your data is
+   all of your 'data' data.  This is typically the case when your data is
    simply an auxiliary struct that you have malloc'd to aggregate several
    values.  */
 
@@ -782,12 +790,8 @@ static void *
 hash_find_entry (Hash_table *table, const void *entry,
                  struct hash_entry **bucket_head, bool delete)
 {
-  struct hash_entry *bucket
-    = table->bucket + table->hasher (entry, table->n_buckets);
+  struct hash_entry *bucket = safe_hasher (table, entry);
   struct hash_entry *cursor;
-
-  if (! (bucket < table->bucket_limit))
-    abort ();
 
   *bucket_head = bucket;
 
@@ -873,10 +877,7 @@ transfer_entries (Hash_table *dst, Hash_table *src, bool safe)
         for (cursor = bucket->next; cursor; cursor = next)
           {
             data = cursor->data;
-            new_bucket = (dst->bucket + dst->hasher (data, dst->n_buckets));
-
-            if (! (new_bucket < dst->bucket_limit))
-              abort ();
+            new_bucket = safe_hasher (dst, data);
 
             next = cursor->next;
 
@@ -903,10 +904,7 @@ transfer_entries (Hash_table *dst, Hash_table *src, bool safe)
         bucket->next = NULL;
         if (safe)
           continue;
-        new_bucket = (dst->bucket + dst->hasher (data, dst->n_buckets));
-
-        if (! (new_bucket < dst->bucket_limit))
-          abort ();
+        new_bucket = safe_hasher (dst, data);
 
         if (new_bucket->data)
           {
@@ -1020,25 +1018,42 @@ hash_rehash (Hash_table *table, size_t candidate)
   return false;
 }
 
-/* If ENTRY matches an entry already in the hash table, return the pointer
-   to the entry from the table.  Otherwise, insert ENTRY and return ENTRY.
-   Return NULL if the storage required for insertion cannot be allocated.
-   This implementation does not support duplicate entries or insertion of
-   NULL.  */
+/* Insert ENTRY into hash TABLE if there is not already a matching entry.
 
-void *
-hash_insert (Hash_table *table, const void *entry)
+   Return -1 upon memory allocation failure.
+   Return 1 if insertion succeeded.
+   Return 0 if there is already a matching entry in the table,
+   and in that case, if MATCHED_ENT is non-NULL, set *MATCHED_ENT
+   to that entry.
+
+   This interface is easier to use than hash_insert when you must
+   distinguish between the latter two cases.  More importantly,
+   hash_insert is unusable for some types of ENTRY values.  When using
+   hash_insert, the only way to distinguish those cases is to compare
+   the return value and ENTRY.  That works only when you can have two
+   different ENTRY values that point to data that compares "equal".  Thus,
+   when the ENTRY value is a simple scalar, you must use
+   hash_insert_if_absent.  ENTRY must not be NULL.  */
+int
+hash_insert_if_absent (Hash_table *table, void const *entry,
+                       void const **matched_ent)
 {
   void *data;
   struct hash_entry *bucket;
 
-  /* The caller cannot insert a NULL entry.  */
+  /* The caller cannot insert a NULL entry, since hash_lookup returns NULL
+     to indicate "not found", and hash_find_entry uses "bucket->data == NULL"
+     to indicate an empty bucket.  */
   if (! entry)
     abort ();
 
   /* If there's a matching entry already in the table, return that.  */
   if ((data = hash_find_entry (table, entry, &bucket, false)) != NULL)
-    return data;
+    {
+      if (matched_ent)
+        *matched_ent = data;
+      return 0;
+    }
 
   /* If the growth threshold of the buckets in use has been reached, increase
      the table size and rehash.  There's no point in checking the number of
@@ -1062,11 +1077,11 @@ hash_insert (Hash_table *table, const void *entry)
                 * tuning->growth_threshold));
 
           if (SIZE_MAX <= candidate)
-            return NULL;
+            return -1;
 
           /* If the rehash fails, arrange to return NULL.  */
           if (!hash_rehash (table, candidate))
-            return NULL;
+            return -1;
 
           /* Update the bucket we are interested in.  */
           if (hash_find_entry (table, entry, &bucket, false) != NULL)
@@ -1081,7 +1096,7 @@ hash_insert (Hash_table *table, const void *entry)
       struct hash_entry *new_entry = allocate_entry (table);
 
       if (new_entry == NULL)
-        return NULL;
+        return -1;
 
       /* Add ENTRY in the overflow of the bucket.  */
 
@@ -1089,7 +1104,7 @@ hash_insert (Hash_table *table, const void *entry)
       new_entry->next = bucket->next;
       bucket->next = new_entry;
       table->n_entries++;
-      return (void *) entry;
+      return 1;
     }
 
   /* Add ENTRY right in the bucket head.  */
@@ -1098,7 +1113,31 @@ hash_insert (Hash_table *table, const void *entry)
   table->n_entries++;
   table->n_buckets_used++;
 
-  return (void *) entry;
+  return 1;
+}
+
+/* hash_insert0 is the deprecated name for hash_insert_if_absent.
+   .  */
+int
+hash_insert0 (Hash_table *table, void const *entry, void const **matched_ent)
+{
+  return hash_insert_if_absent (table, entry, matched_ent);
+}
+
+/* If ENTRY matches an entry already in the hash table, return the pointer
+   to the entry from the table.  Otherwise, insert ENTRY and return ENTRY.
+   Return NULL if the storage required for insertion cannot be allocated.
+   This implementation does not support duplicate entries or insertion of
+   NULL.  */
+
+void *
+hash_insert (Hash_table *table, void const *entry)
+{
+  void const *matched_ent;
+  int err = hash_insert_if_absent (table, entry, &matched_ent);
+  return (err == -1
+          ? NULL
+          : (void *) (err == 0 ? matched_ent : entry));
 }
 
 /* If ENTRY is already in the table, remove it and return the just-deleted

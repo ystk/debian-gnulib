@@ -1,5 +1,5 @@
 /* Test of rounding towards zero.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,24 +27,10 @@ SIGNATURE_CHECK (truncl, long double, (long double));
 
 #include "fpucw.h"
 #include "isnanl-nolibm.h"
+#include "minus-zero.h"
+#include "infinity.h"
 #include "nan.h"
 #include "macros.h"
-
-/* On HP-UX 10.20, negating 0.0L does not yield -0.0L.
-   So we use minus_zero instead.
-   IRIX cc can't put -0.0L into .data, but can compute at runtime.
-   Note that the expression -LDBL_MIN * LDBL_MIN does not work on other
-   platforms, such as when cross-compiling to PowerPC on MacOS X 10.5.  */
-#if defined __hpux || defined __sgi
-static long double
-compute_minus_zero (void)
-{
-  return -LDBL_MIN * LDBL_MIN;
-}
-# define minus_zero compute_minus_zero ()
-#else
-long double minus_zero = -0.0L;
-#endif
 
 int
 main ()
@@ -55,7 +41,7 @@ main ()
 
   /* Zero.  */
   ASSERT (truncl (0.0L) == 0.0L);
-  ASSERT (truncl (minus_zero) == 0.0L);
+  ASSERT (truncl (minus_zerol) == 0.0L);
   /* Positive numbers.  */
   ASSERT (truncl (0.3L) == 0.0L);
   ASSERT (truncl (0.7L) == 0.0L);
@@ -77,8 +63,8 @@ main ()
   ASSERT (truncl (-65536.0L) == -65536.0L);
   ASSERT (truncl (-2.341e31L) == -2.341e31L);
   /* Infinite numbers.  */
-  ASSERT (truncl (1.0L / 0.0L) == 1.0L / 0.0L);
-  ASSERT (truncl (-1.0L / 0.0L) == -1.0L / 0.0L);
+  ASSERT (truncl (Infinityl ()) == Infinityl ());
+  ASSERT (truncl (- Infinityl ()) == - Infinityl ());
   /* NaNs.  */
   ASSERT (isnanl (truncl (NaNl ())));
 

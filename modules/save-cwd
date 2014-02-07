@@ -9,14 +9,16 @@ m4/save-cwd.m4
 Depends-on:
 chdir-long
 cloexec
+getcwd-lgpl
+fchdir
 stdbool
 unistd-safer
-xgetcwd
 
 configure.ac:
 gl_SAVE_CWD
 
 Makefile.am:
+lib_SOURCES += save-cwd.c
 
 Include:
 "save-cwd.h"

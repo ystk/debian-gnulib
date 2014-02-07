@@ -1,5 +1,5 @@
 /* Filtering of data through a subprocess.
-   Copyright (C) 2001-2003, 2008-2010 Free Software Foundation, Inc.
+   Copyright (C) 2001-2003, 2008-2012 Free Software Foundation, Inc.
    Written by Paolo Bonzini <bonzini@gnu.org>, 2009,
    and Bruno Haible <bruno@clisp.org>, 2009.
 
@@ -34,7 +34,7 @@
 #endif
 
 #include "error.h"
-#include "pipe.h"
+#include "spawn-pipe.h"
 #include "wait-process.h"
 #include "xalloc.h"
 #include "gettext.h"
@@ -96,7 +96,7 @@ static inline void filter_cleanup (struct pipe_filter_gi *filter,
 
 
 #if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
-/* Native Woe32 API.  */
+/* Native Windows API.  */
 
 static unsigned int WINAPI
 reader_thread_func (void *thread_arg)

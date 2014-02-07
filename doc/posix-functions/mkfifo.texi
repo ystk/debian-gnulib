@@ -2,7 +2,7 @@
 @section @code{mkfifo}
 @findex mkfifo
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/mkfifo.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/mkfifo.html}
 
 Gnulib module: mkfifo
 
@@ -14,7 +14,7 @@ FreeBSD 7.2, Solaris 9.
 @item
 This function is missing on some platforms; however, the replacement
 always fails with @code{ENOSYS}:
-mingw.
+mingw, MSVC 9.
 @end itemize
 
 Portability problems not fixed by Gnulib:

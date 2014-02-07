@@ -7,11 +7,13 @@ tests/test-fprintf-posix2.sh
 tests/test-fprintf-posix2.c
 tests/test-fprintf-posix3.sh
 tests/test-fprintf-posix3.c
+tests/infinity.h
 tests/signature.h
 tests/macros.h
 
 Depends-on:
 stdint
+get-rusage-as
 
 configure.ac:
 AC_CHECK_FUNCS_ONCE([getrlimit setrlimit])

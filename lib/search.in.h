@@ -1,6 +1,6 @@
 /* A GNU-like <search.h>.
 
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,19 +15,20 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef _GL_SEARCH_H
+#ifndef _@GUARD_PREFIX@_SEARCH_H
 
 #if __GNUC__ >= 3
 @PRAGMA_SYSTEM_HEADER@
 #endif
+@PRAGMA_COLUMNS@
 
 /* The include_next requires a split double-inclusion guard.  */
 #if @HAVE_SEARCH_H@
 # @INCLUDE_NEXT@ @NEXT_SEARCH_H@
 #endif
 
-#ifndef _GL_SEARCH_H
-#define _GL_SEARCH_H
+#ifndef _@GUARD_PREFIX@_SEARCH_H
+#define _@GUARD_PREFIX@_SEARCH_H
 
 
 /* The definitions of _GL_FUNCDECL_RPL etc. are copied here.  */
@@ -52,6 +53,7 @@
    for details.  */
 
 # if !@HAVE_TSEARCH@
+#  if !GNULIB_defined_search_types
 typedef enum
 {
   preorder,
@@ -60,13 +62,18 @@ typedef enum
   leaf
 }
 VISIT;
+#   define GNULIB_defined_search_types 1
+#  endif
 # endif
 
 # ifdef __cplusplus
 extern "C" {
 # endif
+# if !GNULIB_defined_search_fn_types
 typedef int (*_gl_search_compar_fn) (const void *, const void *);
 typedef void (*_gl_search_action_fn) (const void *, VISIT, int);
+#  define GNULIB_defined_search_fn_types 1
+# endif
 # ifdef __cplusplus
 }
 # endif
@@ -151,7 +158,7 @@ _GL_CXXALIASWARN (tdelete);
        and after the right subtree traversal,
      - for leaf nodes: once.
    The arguments passed to ACTION are:
-     1. the node; it can be casted to a 'const void * const *', i.e. into a
+     1. the node; it can be cast to a 'const void * const *', i.e. into a
         pointer to the key,
      2. an indicator which visit of the node this is,
      3. the level of the node in the tree (0 for the root).  */
@@ -196,5 +203,5 @@ _GL_WARN_ON_USE (twalk, "twalk is unportable - "
 #endif
 
 
-#endif /* _GL_SEARCH_H */
-#endif /* _GL_SEARCH_H */
+#endif /* _@GUARD_PREFIX@_SEARCH_H */
+#endif /* _@GUARD_PREFIX@_SEARCH_H */

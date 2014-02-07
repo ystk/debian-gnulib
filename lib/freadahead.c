@@ -1,5 +1,5 @@
 /* Retrieve information about a FILE stream.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,7 +48,11 @@ freadahead (FILE *fp)
   /* equivalent to
      (fp->_ungetc_count == 0 ? fp->_rcount : fp->_ungetc_count - fp->_rcount) */
   return (fp->_rcount > 0 ? fp->_rcount : fp->_ungetc_count - fp->_rcount);
-#elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw */
+#elif defined __minix               /* Minix */
+  if ((fp_->_flags & _IOWRITING) != 0)
+    return 0;
+  return fp_->_count;
+#elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, NonStop Kernel */
   if ((fp_->_flag & _IOWRT) != 0)
     return 0;
   return fp_->_cnt;
@@ -76,6 +80,10 @@ freadahead (FILE *fp)
   return (fp->__pushed_back
           ? fp->__get_limit - fp->__pushback_bufp + 1
           : fp->__get_limit - fp->__bufp);
+#elif defined EPLAN9                /* Plan9 */
+  if (fp->state == 4 /* WR */ || fp->rp >= fp->wp)
+    return 0;
+  return fp->wp - fp->rp;
 #elif defined SLOW_BUT_NO_HACKS     /* users can define this */
   abort ();
   return 0;

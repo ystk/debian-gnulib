@@ -1,18 +1,16 @@
 # Check prerequisites for compiling lib/c-stack.c.
 
-# Copyright (C) 2002, 2003, 2004, 2008, 2009, 2010 Free Software Foundation,
-# Inc.
+# Copyright (C) 2002-2004, 2008-2012 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
 
 # Written by Paul Eggert.
 
-# serial 10
+# serial 14
 
 AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
-  [# for STACK_DIRECTION
-   AC_REQUIRE([AC_FUNC_ALLOCA])
+  [
    AC_REQUIRE([AC_CANONICAL_HOST])
    AC_CHECK_FUNCS_ONCE([setrlimit])
    AC_CHECK_HEADERS_ONCE([ucontext.h])
@@ -21,7 +19,7 @@ AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
    dnl is accessed, or when the stack overflows.
    dnl Either { SIGSEGV } or { SIGSEGV, SIGBUS }.
    case "$host_os" in
-     sunos4* | freebsd* | dragonfly* | openbsd* | netbsd* | kfreebsd* | knetbsd*) # BSD systems
+     sunos4* | freebsd* | dragonfly* | openbsd* | mirbsd* | netbsd* | kfreebsd* | knetbsd*) # BSD systems
        FAULT_YIELDS_SIGBUS=1 ;;
      hpux*) # HP-UX
        FAULT_YIELDS_SIGBUS=1 ;;
@@ -77,16 +75,18 @@ AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
               st.ss_size = SIGSTKSZ;
               r = sigaltstack (&st, 0);
               if (r != 0)
-                return r;
+                return 1;
 
               sigemptyset (&act.sa_mask);
               act.sa_flags = SA_NODEFER | SA_ONSTACK | SA_RESETHAND;
               act.sa_handler = segv_handler;
               #if FAULT_YIELDS_SIGBUS
               if (sigaction (SIGBUS, &act, 0) < 0)
-                return -1;
+                return 2;
               #endif
-              return sigaction (SIGSEGV, &act, 0);
+              if (sigaction (SIGSEGV, &act, 0) < 0)
+                return 3;
+              return 0;
             }
             static volatile int *
             recurse_1 (volatile int n, volatile int *p)
@@ -104,6 +104,7 @@ AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
             int
             main ()
             {
+              int result;
               #if HAVE_SETRLIMIT && defined RLIMIT_STACK
               /* Before starting the endless recursion, try to be friendly
                  to the user's machine.  On some Linux 2.2.x systems, there
@@ -114,7 +115,10 @@ AC_DEFUN([AC_SYS_XSI_STACK_OVERFLOW_HEURISTIC],
               setrlimit (RLIMIT_STACK, &rl);
               #endif
 
-              return c_stack_action () || recurse (0);
+              result = c_stack_action ();
+              if (result != 0)
+                return result;
+              return recurse (0);
             }
            ]])],
         [ac_cv_sys_stack_overflow_works=yes],
@@ -177,7 +181,7 @@ int main ()
     exit(3);
   /* Provoke a SIGSEGV.  */
   raise (SIGSEGV);
-  exit (3);
+  exit (4);
 }]])],
       [gl_cv_sigaltstack_low_base=yes],
       [gl_cv_sigaltstack_low_base=no],
@@ -245,9 +249,9 @@ int main ()
                     s += page_size;
                   if (s < stack_size + page_size)
                     _exit (0);
+                  _exit (4);
                 }
-
-              _exit (1);
+              _exit (5);
             }
 
             static int
@@ -263,16 +267,18 @@ int main ()
               st.ss_size = SIGSTKSZ;
               r = sigaltstack (&st, 0);
               if (r != 0)
-                return r;
+                return 1;
 
               sigemptyset (&act.sa_mask);
               act.sa_flags = SA_NODEFER | SA_ONSTACK | SA_RESETHAND | SA_SIGINFO;
               act.sa_sigaction = segv_handler;
               #if FAULT_YIELDS_SIGBUS
               if (sigaction (SIGBUS, &act, 0) < 0)
-                return -1;
+                return 2;
               #endif
-              return sigaction (SIGSEGV, &act, 0);
+              if (sigaction (SIGSEGV, &act, 0) < 0)
+                return 3;
+              return 0;
             }
             static volatile int *
             recurse_1 (volatile int n, volatile int *p)
@@ -290,6 +296,7 @@ int main ()
             int
             main ()
             {
+              int result;
               #if HAVE_SETRLIMIT && defined RLIMIT_STACK
               /* Before starting the endless recursion, try to be friendly
                  to the user's machine.  On some Linux 2.2.x systems, there
@@ -300,7 +307,10 @@ int main ()
               setrlimit (RLIMIT_STACK, &rl);
               #endif
 
-              return c_stack_action () || recurse (0);
+              result = c_stack_action ();
+              if (result != 0)
+                return result;
+              return recurse (0);
             }
            ]])],
         [ac_cv_sys_xsi_stack_overflow_heuristic=yes],
@@ -328,7 +338,7 @@ AC_DEFUN([gl_PREREQ_C_STACK],
    AC_REQUIRE([AC_FUNC_ALLOCA])
 
    AC_CHECK_FUNCS_ONCE([sigaltstack])
-   AC_CHECK_DECLS([sigaltstack], , , [#include <signal.h>])
+   AC_CHECK_DECLS([sigaltstack], , , [[#include <signal.h>]])
 
    AC_CHECK_HEADERS_ONCE([unistd.h ucontext.h])
 

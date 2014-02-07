@@ -1,5 +1,5 @@
 /* Test of <stdlib.h> substitute in C++ mode.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@
 
 #include "signature.h"
 
+
+#if GNULIB_TEST__EXIT
+SIGNATURE_CHECK (GNULIB_NAMESPACE::_Exit, void, (int));
+#endif
 
 //SIGNATURE_CHECK (GNULIB_NAMESPACE::atexit, int, (void (*) (void)));
 
@@ -54,6 +58,11 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::grantpt, int, (int));
 
 #if GNULIB_TEST_MALLOC_POSIX
 SIGNATURE_CHECK (GNULIB_NAMESPACE::malloc, void *, (size_t));
+#endif
+
+#if GNULIB_TEST_MBTOWC
+SIGNATURE_CHECK (GNULIB_NAMESPACE::mbtowc, int,
+                 (wchar_t *, const char *, size_t));
 #endif
 
 #if GNULIB_TEST_MKDTEMP
@@ -141,6 +150,10 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::unlockpt, int, (int));
 
 #if GNULIB_TEST_UNSETENV
 SIGNATURE_CHECK (GNULIB_NAMESPACE::unsetenv, int, (const char *));
+#endif
+
+#if GNULIB_TEST_WCTOMB
+SIGNATURE_CHECK (GNULIB_NAMESPACE::wctomb, int, (char *, wchar_t));
 #endif
 
 

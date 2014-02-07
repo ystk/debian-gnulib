@@ -1,5 +1,5 @@
 /* Display width functions.
-   Copyright (C) 2001-2002, 2005, 2007, 2009-2010 Free Software Foundation,
+   Copyright (C) 2001-2002, 2005, 2007, 2009-2012 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify it
@@ -38,7 +38,11 @@ extern "C" {
 
 /* Determine number of column positions required for UC.  */
 extern int
-       uc_width (ucs4_t uc, const char *encoding);
+       uc_width (ucs4_t uc, const char *encoding)
+#if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 96)
+       __attribute__ ((__pure__))
+#endif
+       ;
 
 /* Determine number of column positions required for first N units
    (or fewer if S ends before this) in S.  */

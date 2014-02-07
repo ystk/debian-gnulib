@@ -2,7 +2,7 @@
 @section @code{erf}
 @findex erf
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/erf.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/erf.html}
 
 Gnulib module: erf
 
@@ -12,4 +12,7 @@ Portability problems fixed by Gnulib:
 
 Portability problems not fixed by Gnulib:
 @itemize
+@item
+This function is missing on some platforms:
+Minix 3.1.8, MSVC 9.
 @end itemize

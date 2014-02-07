@@ -1,7 +1,7 @@
 @node stdint.h
 @section @file{stdint.h}
 
-POSIX specification: @url{http://www.opengroup.org/susv3xbd/stdint.h.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/basedefs/stdint.h.html}
 
 Gnulib module: stdint
 
@@ -9,7 +9,7 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This header file is missing on some platforms:
-OpenBSD 3.8, AIX 5.1, HP-UX 11, IRIX 6.5, OSF/1 5.1, Interix 3.5, BeOS.
+OpenBSD 3.8, AIX 5.1, HP-UX 11.11, IRIX 6.5, OSF/1 5.1, MSVC 9, Interix 3.5, BeOS.
 @item
 This header file is very incomplete on some platforms.
 @item
@@ -23,6 +23,16 @@ mingw.
 The values of @code{INT8_MAX}, @code{UINT8_MAX} etc. are not usable in
 preprocessor expressions on some platforms:
 HP-UX 11.23.
+@item
+The macros @code{WCHAR_MIN} and @code{WCHAR_MAX} are not defined in
+@code{<stdint.h>} (only in @code{<wchar.h>}) on some platforms:
+Dragonfly, BSDI.
+@item
+On some hosts that predate C++11, when using C++ one must define
+@code{__STDC_CONSTANT_MACROS} to make visible the definitions of
+constant macros such as @code{INTMAX_C}, and one must define
+@code{__STDC_LIMIT_MACROS} to make visible the definitions of limit
+macros such as @code{INTMAX_MAX}.
 @end itemize
 
 Portability problems not fixed by Gnulib:

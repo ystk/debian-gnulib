@@ -1,5 +1,5 @@
 /* Test of rounding towards zero.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,19 +24,17 @@
 SIGNATURE_CHECK (truncf, float, (float));
 
 #include "isnanf-nolibm.h"
+#include "minus-zero.h"
+#include "infinity.h"
 #include "nan.h"
 #include "macros.h"
-
-/* HP cc on HP-UX 10.20 has a bug with the constant expression -0.0f.
-   So we use -zero instead.  */
-float zero = 0.0f;
 
 int
 main ()
 {
   /* Zero.  */
   ASSERT (truncf (0.0f) == 0.0f);
-  ASSERT (truncf (-zero) == 0.0f);
+  ASSERT (truncf (minus_zerof) == 0.0f);
   /* Positive numbers.  */
   ASSERT (truncf (0.3f) == 0.0f);
   ASSERT (truncf (0.7f) == 0.0f);
@@ -58,8 +56,8 @@ main ()
   ASSERT (truncf (-65536.0f) == -65536.0f);
   ASSERT (truncf (-2.341e31f) == -2.341e31f);
   /* Infinite numbers.  */
-  ASSERT (truncf (1.0f / 0.0f) == 1.0f / 0.0f);
-  ASSERT (truncf (-1.0f / 0.0f) == -1.0f / 0.0f);
+  ASSERT (truncf (Infinityf ()) == Infinityf ());
+  ASSERT (truncf (- Infinityf ()) == - Infinityf ());
   /* NaNs.  */
   ASSERT (isnanf (truncf (NaNf ())));
 

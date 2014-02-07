@@ -2,7 +2,7 @@
 @section @code{iconv_close}
 @findex iconv_close
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/iconv_close.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/iconv_close.html}
 
 Gnulib module: iconv
 
@@ -16,6 +16,6 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-MacOS X 10.3, FreeBSD 6.0, OpenBSD 3.8, IRIX 5.3, Cygwin, mingw, BeOS,
+MacOS X 10.5, FreeBSD 6.0, OpenBSD 3.8, Minix 3.1.8, IRIX 5.3, Cygwin, mingw, MSVC 9, BeOS,
 when GNU libiconv is not installed.
 @end itemize

@@ -9,24 +9,33 @@ m4/fts.m4
 
 Depends-on:
 cloexec
+closedir
 cycle-check
 d-ino
 d-type
 dirent-safer
-dirfd
+dup
 fchdir
 fcntl-h
 fcntl-safer
+fdopendir
+fstat
 hash
 i-ring
 lstat
 memmove
+openat-h
 openat-safer
+opendir
+readdir
 stdbool
 unistd-safer
 
 configure.ac:
 gl_FUNC_FTS
+dnl Use this version of fts unconditionally, since the GNU libc and
+dnl NetBSD versions have bugs and/or unnecessary limitations.
+AC_LIBOBJ([fts])
 
 Makefile.am:
 

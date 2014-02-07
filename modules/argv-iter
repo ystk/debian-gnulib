@@ -6,8 +6,8 @@ lib/argv-iter.c
 lib/argv-iter.h
 
 Depends-on:
-arg-nonnull
 getdelim
+snippet/arg-nonnull
 stdbool
 
 configure.ac:
@@ -18,7 +18,7 @@ lib_SOURCES += argv-iter.c argv-iter.h
 Include:
 "argv-iter.h"
 
-License
+License:
 GPL
 
 Maintainer:

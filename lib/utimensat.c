@@ -1,5 +1,5 @@
 /* Set the access and modification time of a file relative to directory fd.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,6 +48,10 @@ int
 rpl_utimensat (int fd, char const *file, struct timespec const times[2],
                int flag)
 {
+# ifdef __linux__
+  struct timespec ts[2];
+# endif
+
   /* See comments in utimens.c for details.  */
   static int utimensat_works_really; /* 0 = unknown, 1 = yes, -1 = no.  */
   if (0 <= utimensat_works_really)
@@ -55,7 +59,6 @@ rpl_utimensat (int fd, char const *file, struct timespec const times[2],
       int result;
 # ifdef __linux__
       struct stat st;
-      struct timespec ts[2];
       /* As recently as Linux kernel 2.6.32 (Dec 2009), several file
          systems (xfs, ntfs-3g) have bugs with a single UTIME_OMIT,
          but work if both times are either explicitly specified or
@@ -81,6 +84,21 @@ rpl_utimensat (int fd, char const *file, struct timespec const times[2],
             ts[1] = times[1];
           times = ts;
         }
+#  ifdef __hppa__
+      /* Linux kernel 2.6.22.19 on hppa does not reject invalid tv_nsec
+         values.  */
+      else if (times
+               && ((times[0].tv_nsec != UTIME_NOW
+                    && (times[0].tv_nsec < 0
+                        || times[0].tv_nsec >= 1000000000))
+                   || (times[1].tv_nsec != UTIME_NOW
+                       && (times[1].tv_nsec < 0
+                           || times[1].tv_nsec >= 1000000000))))
+        {
+          errno = EINVAL;
+          return -1;
+        }
+#  endif
 # endif /* __linux__ */
       result = utimensat (fd, file, times, flag);
       /* Linux kernel 2.6.25 has a bug where it returns EINVAL for

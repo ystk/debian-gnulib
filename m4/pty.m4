@@ -1,5 +1,5 @@
-# pty.m4 serial 7
-dnl Copyright (C) 2010 Free Software Foundation, Inc.
+# pty.m4 serial 12
+dnl Copyright (C) 2010-2012 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -28,6 +28,8 @@ AC_DEFUN([gl_FUNC_FORKPTY],
   dnl We assume that forkpty exists (possibly in libc, possibly in libutil)
   dnl if and only if it is declared.
   AC_CHECK_DECLS([forkpty],,, [[
+/* <sys/types.h> is a prerequisite of <libutil.h> on FreeBSD 8.0.  */
+#include <sys/types.h>
 #if HAVE_PTY_H
 # include <pty.h>
 #endif
@@ -45,6 +47,8 @@ AC_DEFUN([gl_FUNC_FORKPTY],
       [gl_cv_func_forkpty_const],
       [AC_COMPILE_IFELSE(
         [AC_LANG_PROGRAM([[
+/* <sys/types.h> is a prerequisite of <libutil.h> on FreeBSD 8.0.  */
+#include <sys/types.h>
 #if HAVE_PTY_H
 # include <pty.h>
 #endif
@@ -63,12 +67,10 @@ AC_DEFUN([gl_FUNC_FORKPTY],
       ])
     if test $gl_cv_func_forkpty_const != yes; then
       REPLACE_FORKPTY=1
-      AC_LIBOBJ([forkpty])
     fi
   else
     dnl The system does not have forkpty.
     HAVE_FORKPTY=0
-    AC_LIBOBJ([forkpty])
   fi
 ])
 
@@ -83,6 +85,8 @@ AC_DEFUN([gl_FUNC_OPENPTY],
   dnl We assume that openpty exists (possibly in libc, possibly in libutil)
   dnl if and only if it is declared.
   AC_CHECK_DECLS([openpty],,, [[
+/* <sys/types.h> is a prerequisite of <libutil.h> on FreeBSD 8.0.  */
+#include <sys/types.h>
 #if HAVE_PTY_H
 # include <pty.h>
 #endif
@@ -100,6 +104,8 @@ AC_DEFUN([gl_FUNC_OPENPTY],
       [gl_cv_func_openpty_const],
       [AC_COMPILE_IFELSE(
         [AC_LANG_PROGRAM([[
+/* <sys/types.h> is a prerequisite of <libutil.h> on FreeBSD 8.0.  */
+#include <sys/types.h>
 #if HAVE_PTY_H
 # include <pty.h>
 #endif
@@ -118,14 +124,13 @@ AC_DEFUN([gl_FUNC_OPENPTY],
       ])
     if test $gl_cv_func_openpty_const != yes; then
       REPLACE_OPENPTY=1
-      AC_LIBOBJ([openpty])
       AC_DEFINE([HAVE_OPENPTY], [1],
         [Define to 1 if the system has the 'openpty' function.])
     fi
   else
     dnl The system does not have openpty.
     HAVE_OPENPTY=0
-    AC_LIBOBJ([openpty])
+    dnl Prerequisites of lib/openpty.c in this case.
     AC_CHECK_FUNCS([_getpty posix_openpt])
   fi
 ])
@@ -134,8 +139,8 @@ AC_DEFUN([gl_FUNC_LOGIN_TTY],
 [
   AC_REQUIRE([gl_PTY_LIB])
 
-  AC_CHECK_FUNCS_ONCE([login_tty])
-  if test $ac_cv_func_login_tty = no; then
-    AC_LIBOBJ([login_tty])
-  fi
+  gl_saved_libs="$LIBS"
+  LIBS="$LIBS $PTY_LIB"
+  AC_CHECK_FUNCS([login_tty])
+  LIBS="$gl_saved_LIBS"
 ])

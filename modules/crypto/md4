@@ -7,12 +7,14 @@ lib/md4.c
 m4/md4.m4
 
 Depends-on:
+stdalign
 stdint
 
 configure.ac:
 gl_MD4
 
 Makefile.am:
+lib_SOURCES += md4.c
 
 Include:
 "md4.h"

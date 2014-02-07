@@ -8,8 +8,10 @@ lib/w32sock.h
 m4/sockets.m4
 
 Depends-on:
+socketlib
 sys_socket
-close-hook
+fd-hook
+msvc-nothrow
 
 configure.ac:
 gl_SOCKETS

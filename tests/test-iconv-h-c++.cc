@@ -1,5 +1,5 @@
 /* Test of <iconv.h> substitute in C++ mode.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,20 +22,22 @@
 #if HAVE_ICONV
 # include <iconv.h>
 
-# ifndef ICONV_CONST
-#  define ICONV_CONST /* empty */
-# endif
-
 # include "signature.h"
 
 
+#if GNULIB_TEST_ICONV
 SIGNATURE_CHECK (GNULIB_NAMESPACE::iconv_open, iconv_t,
                  (const char *, const char *));
+#endif
 
+#if GNULIB_TEST_ICONV
 SIGNATURE_CHECK (GNULIB_NAMESPACE::iconv, size_t,
                  (iconv_t, ICONV_CONST char **, size_t *, char **, size_t *));
+#endif
 
+#if GNULIB_TEST_ICONV
 SIGNATURE_CHECK (GNULIB_NAMESPACE::iconv_close, int, (iconv_t));
+#endif
 
 #endif
 

@@ -1,3 +1,80 @@
+gnulib (20120404+stable-1) unstable; urgency=low
+
+  * New upstream stable snapshot.
+  * Refresh 01-gnulib-directory.patch.
+  * Standards-Version: 3.9.3 (no changes).
+
+ -- Ian Beckwith <ianb@debian.org>  Fri, 06 Apr 2012 02:20:27 +0100
+
+gnulib (20111211+stable-1) unstable; urgency=low
+
+  * New upstream stable snapshot.
+  * Refresh 01-gnulib-directory.patch.
+
+ -- Ian Beckwith <ianb@debian.org>  Sun, 11 Dec 2011 06:56:11 +0000
+
+gnulib (20110908+stable-1) unstable; urgency=low
+
+  * New upstream stable snapshot.
+  * Refresh 01-gnulib-directory.patch.
+
+ -- Ian Beckwith <ianb@debian.org>  Thu, 08 Sep 2011 20:38:18 +0100
+
+gnulib (20110609+stable-1) unstable; urgency=low
+
+  * New upstream stable snapshot.
+  * Refresh patches.
+  * Standards-Version: 3.9.2 (no changes).
+
+ -- Ian Beckwith <ianb@debian.org>  Fri, 10 Jun 2011 03:38:41 +0100
+
+gnulib (20110412+stable-1) unstable; urgency=low
+
+  * New upstream stable snapshot.
+  * Refresh 01-gnulib-directory.patch.
+  * Disable test suite - now requires cppi which is not in Debian.
+  * Fix lintian override path syntax.
+
+ -- Ian Beckwith <ianb@debian.org>  Thu, 14 Apr 2011 17:58:14 +0100
+
+gnulib (20110216+stable-1) unstable; urgency=low
+
+  * New upstream stable snapshot.
+  * Resume uploading to unstable.
+  * Refreshed patches.
+
+ -- Ian Beckwith <ianb@debian.org>  Thu, 17 Feb 2011 00:04:04 +0000
+
+gnulib (20101221+stable-1) experimental; urgency=low
+
+  * New upstream stable snapshot, identical to the
+    previous 20101220+stable-1 but with:
+    [d534aa8]->[385ec31] iconv_open: Fix regression from 2010-12-04.
+
+ -- Ian Beckwith <ianb@debian.org>  Wed, 22 Dec 2010 23:17:09 +0000
+
+gnulib (20101220+stable-1) experimental; urgency=low
+
+  * New upstream stable snapshot.
+
+ -- Ian Beckwith <ianb@debian.org>  Mon, 20 Dec 2010 21:01:23 +0000
+
+gnulib (20101024+stable-1) experimental; urgency=low
+
+  * New upstream stable snapshot.
+  * Upload to experimental as squeeze is frozen.
+
+ -- Ian Beckwith <ianb@debian.org>  Sun, 24 Oct 2010 01:04:55 +0100
+
+gnulib (20100829+stable-1) experimental; urgency=low
+
+  * New upstream stable snapshot.
+  * Upload to experimental as squeeze is frozen.
+  * Refresh 01-gnulib-directory.patch.
+  * Standards-Version: 3.9.1 (no changes).
+
+ -- Ian Beckwith <ianb@debian.org>  Mon, 30 Aug 2010 22:00:33 +0100
+
 gnulib (20100704+stable-1) unstable; urgency=low
 
   * New upstream stable snapshot.

@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Ian Beckwith <ianb@debian.org>
 Build-Depends: debhelper (>= 7.0.50~), texinfo
-Standards-Version: 3.9.0
+Standards-Version: 3.9.3
 Homepage: http://www.gnu.org/software/gnulib/
 Vcs-Browser: http://erislabs.net/gitweb?p=gnulib.git
 Vcs-Git: git://erislabs.net/gnulib.git

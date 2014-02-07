@@ -10,6 +10,7 @@ Depends-on:
 errno
 fchdir
 fcntl-h
+fstat
 open
 same-inode
 stdbool
@@ -18,6 +19,7 @@ configure.ac:
 gl_CHDIR_SAFER
 
 Makefile.am:
+lib_SOURCES += chdir-safer.c
 
 Include:
 "chdir-safer.h"

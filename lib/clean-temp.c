@@ -1,5 +1,5 @@
 /* Temporary directories and temporary files with automatic cleanup.
-   Copyright (C) 2001, 2003, 2006-2007, 2009-2010 Free Software Foundation,
+   Copyright (C) 2001, 2003, 2006-2007, 2009-2012 Free Software Foundation,
    Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2006.
 
@@ -59,13 +59,10 @@
 
 #define _(str) gettext (str)
 
-/* GNU Hurd doesn't have PATH_MAX.  */
+/* GNU Hurd doesn't have PATH_MAX.  Use a fallback.
+   Temporary directory names are usually not that long.  */
 #ifndef PATH_MAX
-# ifdef MAXPATHLEN
-#  define PATH_MAX MAXPATHLEN
-# else
-#  define PATH_MAX 1024
-# endif
+# define PATH_MAX 1024
 #endif
 
 #ifndef uintptr_t

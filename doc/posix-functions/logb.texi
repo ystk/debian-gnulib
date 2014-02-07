@@ -2,7 +2,7 @@
 @section @code{logb}
 @findex logb
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/logb.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/logb.html}
 
 Gnulib module: logb
 
@@ -15,4 +15,7 @@ Cygwin 1.5.x.
 
 Portability problems not fixed by Gnulib:
 @itemize
+@item
+This function is missing on some platforms:
+Minix 3.1.8, MSVC 9.
 @end itemize

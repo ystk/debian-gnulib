@@ -112,19 +112,20 @@ our @deleted_files=();
 # actions
 my $scan=0;
 my $merge=0;
+my $help=0;
 my $writecopyright=0;
 
 usage() unless(@ARGV);
-usage() unless GetOptions("scan|s" => \$scan,
+usage() unless GetOptions("scan|s"  => \$scan,
 			  "merge|m" => \$merge,
 			  "write|w" => \$writecopyright,
-			  "help|h" => sub { usage(); });
+			  "help|h"  => \$help);
+usage() if $help;
 
 load_cache();
 scan() if($scan);
 merge() if($merge);
 write_copyright() if ($merge || $writecopyright);
-
 
 
 sub scan

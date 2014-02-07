@@ -7,11 +7,15 @@ lib/sig-handler.h
 m4/sigaction.m4
 
 Depends-on:
-signal
-sigprocmask
+signal-h
+sigprocmask     [test $HAVE_SIGACTION = 0]
 
 configure.ac:
 gl_SIGACTION
+if test $HAVE_SIGACTION = 0; then
+  AC_LIBOBJ([sigaction])
+  gl_PREREQ_SIGACTION
+fi
 gl_SIGNAL_MODULE_INDICATOR([sigaction])
 
 Makefile.am:
@@ -20,7 +24,7 @@ Include:
 <signal.h>
 
 License:
-LGPL
+LGPLv2+
 
 Maintainer:
 Eric Blake

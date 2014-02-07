@@ -2,7 +2,7 @@
 @section @code{globfree}
 @findex globfree
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/globfree.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/globfree.html}
 
 Gnulib module: glob
 
@@ -10,7 +10,7 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-IRIX 5.3, mingw, BeOS.
+IRIX 5.3, mingw, MSVC 9, BeOS.
 @end itemize
 
 Portability problems not fixed by Gnulib:

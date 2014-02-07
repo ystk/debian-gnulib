@@ -1,5 +1,5 @@
 /* Test of rounding to nearest, breaking ties away from zero.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,8 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by Ben Pfaff <blp@gnu.org>, 2007.
    Based heavily on Bruno Haible's test-trunc.c. */
@@ -26,19 +25,17 @@
 SIGNATURE_CHECK (round, double, (double));
 
 #include "isnand-nolibm.h"
+#include "minus-zero.h"
+#include "infinity.h"
 #include "nan.h"
 #include "macros.h"
-
-/* HP cc on HP-UX 10.20 has a bug with the constant expression -0.0.
-   So we use -zero instead.  */
-double zero = 0.0;
 
 int
 main ()
 {
   /* Zero.  */
   ASSERT (round (0.0) == 0.0);
-  ASSERT (round (-zero) == 0.0);
+  ASSERT (round (minus_zerod) == 0.0);
   /* Positive numbers.  */
   ASSERT (round (0.3) == 0.0);
   ASSERT (round (0.5) == 1.0);
@@ -66,8 +63,8 @@ main ()
   ASSERT (round (-65536.001) == -65536.0);
   ASSERT (round (-2.341e31) == -2.341e31);
   /* Infinite numbers.  */
-  ASSERT (round (1.0 / 0.0) == 1.0 / 0.0);
-  ASSERT (round (-1.0 / 0.0) == -1.0 / 0.0);
+  ASSERT (round (Infinityd ()) == Infinityd ());
+  ASSERT (round (- Infinityd ()) == - Infinityd ());
   /* NaNs.  */
   ASSERT (isnand (round (NaNd ())));
 

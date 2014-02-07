@@ -1,5 +1,5 @@
 /* Test of rounding towards positive infinity.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,7 +29,14 @@
 #include <stdio.h>
 
 #include "isnanf-nolibm.h"
+#include "minus-zero.h"
 #include "macros.h"
+
+/* MSVC with option -fp:strict refuses to compile constant initializers that
+   contain floating-point operations.  Pacify this compiler.  */
+#ifdef _MSC_VER
+# pragma fenv_access (off)
+#endif
 
 
 /* The reference implementation, taken from lib/ceil.c.  */
@@ -37,6 +44,9 @@
 #define DOUBLE float
 #define MANT_DIG FLT_MANT_DIG
 #define L_(literal) literal##f
+
+/* -0.0.  See minus-zero.h.  */
+#define MINUS_ZERO minus_zerof
 
 /* 2^(MANT_DIG-1).  */
 static const DOUBLE TWO_MANT_DIG =
@@ -63,6 +73,9 @@ ceilf_reference (DOUBLE x)
 
   if (z > L_(0.0))
     {
+      /* Work around ICC's desire to optimize denormal floats to 0.  */
+      if (z < FLT_MIN)
+        return L_(1.0);
       /* Avoid rounding errors for values near 2^k, where k >= MANT_DIG-1.  */
       if (z < TWO_MANT_DIG)
         {
@@ -76,8 +89,12 @@ ceilf_reference (DOUBLE x)
     }
   else if (z < L_(0.0))
     {
+      /* For -1 < x < 0, return -0.0 regardless of the current rounding
+         mode.  */
+      if (z > L_(-1.0))
+        z = MINUS_ZERO;
       /* Avoid rounding errors for values near -2^k, where k >= MANT_DIG-1.  */
-      if (z > - TWO_MANT_DIG)
+      else if (z > - TWO_MANT_DIG)
         {
           /* Round to the next integer (nearest or up or down, doesn't matter).  */
           z -= TWO_MANT_DIG;

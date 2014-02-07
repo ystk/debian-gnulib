@@ -1,7 +1,7 @@
 /* Emulation for sqrtl.
    Contributed by Paolo Bonzini
 
-   Copyright 2002, 2003, 2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright 2002-2003, 2007, 2009-2012 Free Software Foundation, Inc.
 
    This file is part of gnulib.
 
@@ -23,7 +23,17 @@
 /* Specification.  */
 #include <math.h>
 
-#include <float.h>
+#if HAVE_SAME_LONG_DOUBLE_AS_DOUBLE
+
+long double
+sqrtl (long double x)
+{
+  return sqrt (x);
+}
+
+#else
+
+# include <float.h>
 
 /* A simple Newton-Raphson method. */
 long double
@@ -57,3 +67,5 @@ sqrtl (long double x)
 
   return y;
 }
+
+#endif

@@ -2,7 +2,7 @@
 @section @code{fnmatch}
 @findex fnmatch
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/fnmatch.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/fnmatch.html}
 
 Gnulib module: fnmatch or fnmatch-gnu
 
@@ -10,7 +10,7 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-IRIX 5.3, mingw.
+IRIX 5.3, mingw, MSVC 9.
 @item
 This function is broken in some versions of Solaris and glibc.
 @end itemize

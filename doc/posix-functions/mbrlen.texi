@@ -2,7 +2,7 @@
 @section @code{mbrlen}
 @findex mbrlen
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/mbrlen.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/mbrlen.html}
 
 Gnulib module: mbrlen
 
@@ -10,7 +10,7 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-HP-UX 11.00, IRIX 6.5, Solaris 2.6, mingw, Interix 3.5.
+Minix 3.1.8, HP-UX 11.00, IRIX 6.5, Solaris 2.6, mingw, Interix 3.5.
 @item
 This function does not put the state into non-initial state when parsing an
 incomplete multibyte character on some platforms:
@@ -19,7 +19,7 @@ AIX 5.1, OSF/1 5.1.
 This function returns the total number of bytes that make up the multibyte
 character, not the number of bytes that were needed to complete the multibyte
 character, on some platforms:
-HP-UX 11.11, Solaris 10.
+HP-UX 11.11, Solaris 11 2010-11.
 @item
 This function may not return 0 when parsing the NUL character on some platforms:
 Solaris 9.

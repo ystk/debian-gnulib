@@ -1,5 +1,5 @@
 /* Report a SIGPIPE signal and exit.
-   Copyright (C) 2008, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2008-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,25 +41,14 @@
 #ifndef _SIGPIPE_DIE_H
 #define _SIGPIPE_DIE_H
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-# ifndef __attribute__
-#  if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8)
-#   define __attribute__(x)
-#  endif
-# endif
-
-# ifndef ATTRIBUTE_NORETURN
-#  define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
-# endif
-
 /* Emit an error message indicating a SIGPIPE signal, and terminate the
    process with an error code.  */
-extern void sigpipe_die (void) ATTRIBUTE_NORETURN;
+extern _Noreturn void sigpipe_die (void);
 
 /* Install a SIGPIPE handler that invokes PREPARE_DIE and then emits an
    error message and exits.  PREPARE_DIE may be NULL, meaning a no-op.  */

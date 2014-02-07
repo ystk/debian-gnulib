@@ -28,13 +28,14 @@ dirname-lgpl
 getopt-gnu
 strchrnul
 sysexits
-malloc
+malloc-gnu
 mempcpy
 strndup
 strcase
 extensions
 vsnprintf
 sleep
+stdalign
 strerror
 memchr
 memmove

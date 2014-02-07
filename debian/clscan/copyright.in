@@ -24,7 +24,7 @@ Detailed copyright information follows, see debian/clscan/README
 in the gnulib source package for information on updating this.
 
 Files: debian/*
-Copyright: 2006-2008, Daniel Baumann <daniel@debian.org> /  2009 Ian Beckwith <ianb@debian.org>
+Copyright: 2006-2008, Daniel Baumann <daniel@debian.org> /  2009-2011 Ian Beckwith <ianb@debian.org>
 License: GPL-2
 
 Files: modules/*

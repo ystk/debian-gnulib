@@ -1,10 +1,215 @@
 Important notes
 ---------------
 
+Date        Modules         Changes
+
+2012-01-07  quotearg        In the C locale, the function will no longer use
+                            the grave accent character to begin a quoted
+                            string (`like this').  It will use apostrophes
+                            'like these' or, in Unicode locales, single quotes
+                            ‘like these’.  You may want to adjust any error
+                            messages that hard code the quoting characters.
+
+2010-09-04  gnulib-tool     The option '--import' is no longer cumulative; it
+                            now expects the complete list of modules and other
+                            options on the command line. If you want to
+                            augment (not set) the list of modules, use the
+                            new option '--add-import' instead of '--import'.
+
 User visible incompatible changes
 ---------------------------------
 
 Date        Modules         Changes
+
+2012-02-24  streq           This module no longer provides the STREQ macro.
+                            Use STREQ_OPT instead.
+
+2012-01-10  ignore-value    This module no longer provides the ignore_ptr
+                            function.  It was deprecated a year ago, but existed
+                            so briefly before then that it never came into use.
+                            Now, the ignore_value function does its job.
+
+2011-11-18  hash            This module deprecates the hash_insert0 function
+                            using gcc's "deprecated" attribute.  Use the better-
+                            named hash_insert_if_absent equivalent.
+
+2011-11-04  openat          This module no longer provides the mkdirat()
+                            function. If you need this function, you now need
+                            to request the 'mkdirat' module.
+
+2011-11-04  openat          This module no longer provides the fstatat()
+                            function. If you need this function, you now need
+                            to request the 'fstatat' module.
+
+2011-11-03  openat          This module no longer provides the unlinkat()
+                            function. If you need this function, you now need
+                            to request the 'unlinkat' module.
+
+2011-11-02  openat          This module no longer provides the fchmodat()
+                            function. If you need this function, you now need
+                            to request the 'fchmodat' module.
+
+2011-11-01  alignof         This module no longer provides the alignof() macro.
+                            Use either alignof_slot() or alignof_type() instead.
+
+2011-11-01  openat          This module no longer provides the fchownat()
+                            function. If you need this function, you now need
+                            to request the 'fchownat' module.
+
+2011-10-03  poll            The link requirements of this module are changed
+                            from empty to $(LIB_POLL).
+
+2011-09-25  sys_stat        This module no longer provides the fstat()
+                            function. If you need this function, you now need
+                            to request the 'fstat' module.
+
+2011-09-23  signal          This module is renamed to 'signal-h'.
+
+2011-09-22  select          The link requirements of this module are changed
+                            from $(LIBSOCKET) to $(LIB_SELECT).
+
+2011-09-12  fchdir          This module no longer overrides the functions
+                            opendir() and closedir(), unless the modules
+                            'opendir' and 'closedir' are in use, respectively.
+                            If you use opendir(), please use module 'opendir'.
+                            If you use closedir(), please use module 'closedir'.
+
+2011-08-04  pathmax         The header file "pathmax.h" no longer defines
+                            PATH_MAX on GNU/Hurd. Please use one of the methods
+                            listed in pathmax.h to ensure your package is
+                            portable to GNU/Hurd.
+
+2011-07-24  close           This module no longer pulls in the 'fclose' module.
+                            If your code creates a socket descriptor using
+                            socket() or accept(), then a FILE stream referring
+                            to it using fdopen(), then in order to close this
+                            stream, you need the 'fclose' module.
+
+2011-07-12  arg-nonnull     Renamed to snippet/arg-nonnull.
+            c++defs         Renamed to snippet/c++defs.
+            link-warning    Renamed to snippet/link-warning.
+            unused-parameter Renamed to snippet/unused-parameter.
+            warn-on-use     Renamed to snippet/warn-on-use.
+
+2011-06-15  verify          verify_true (V) is deprecated; please use
+                            verify_expr (V, 1) instead.
+
+2011-06-05  ansi-c++-opt    When a C++ compiler is not found, the variable CXX
+                            is now set to "no", not to ":".
+
+2011-05-11  group-member    The include file is changed from "group-member.h"
+                            to <unistd.h>.
+
+2011-05-02  exit            The module is removed.  It was deprecated
+                            on 2010-03-05.  Use 'stdlib' directly instead.
+
+2011-04-27  mgetgroups      The 'xgetgroups' function has been split into
+                            a new 'xgetgroups' module.
+
+2011-04-27  save-cwd        This module pulls in fewer dependencies by
+                            default; to retain robust handling of directories
+                            with an absolute name longer than PATH_MAX, you
+                            must now explicitly include the 'getcwd' module.
+
+2011-04-19  close-hook      This module has been renamed to 'fd-hook' and
+                            generalized.
+
+2011-03-08  regex-quote     The last argument is no longer an 'int cflags'
+                            but instead a pointer to a previously constructed
+                            'struct regex_quote_spec'.
+
+2011-02-25  dirname         These modules no longer put #defines for the
+            dirname-lgpl    following symbols into <config.h>: ISSLASH,
+            backupfile      FILE_SYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX,
+            lstat           FILE_SYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR,
+            openat          FILE_SYSTEM_DRIVE_PREFIX_CAN_BE_RELATIVE.
+            remove          Applications that need ISSLASH can include the new
+            rmdir           header dosname.h.
+            savewd
+            stat
+            unlink
+
+2011-02-14  getloadavg      This module no longer #defines C_GETLOADAVG or
+                            HAVE_GETLOADAVG, as the application no longer needs
+                            to worry about how getloadavg is defined.  It no
+                            longer defines the obsolete symbol NLIST_NAME_UNION
+                            (which should have been internal to the module
+                            anyway).  Also, support for setgid use has been
+                            removed, as nobody seems to be using it; thus
+                            GETLOADAVG_PRIVILEGED is no longer #defined and
+                            KMEM_GROUP and NEED_SETGID are no longer
+                            substituted for.
+
+2011-02-08  stdlib          Unless the random_r module is also used, this
+                            module no longer guarantees that the following are
+                            defined: struct random_data, RAND_MAX, random_r,
+                            srandom_r, initstate_r, setstate_r.
+
+2011-02-08  wctype-h        This module no longer provides the iswblank()
+                            function. If you need this function, you now need
+                            to request the 'iswblank' module.
+
+2011-02-07  wctype          This module is renamed to wctype-h.
+
+2011-01-18  multiarch       This no longer #defines AA_APPLE_UNIVERSAL_BUILD;
+                            instead, use the shell var APPLE_UNIVERSAL_BUILD.
+
+2010-12-10  pipe            This module is renamed to spawn-pipe. The include
+                            file is renamed to "spawn-pipe.h".
+
+2010-10-05  getdate         This module is deprecated. Please use the new
+                            parse-datetime module for the replacement
+                            function parse_datetime(), or help us write
+                            getdate-posix for getdate(). Also, the header
+                            "getdate.h" has been renamed "parse-datetime.h",
+                            and doc/getdate.texi to doc/parse-datetime.texi.
+
+2010-09-29  sys_wait        This module no longer provides the waitpid()
+                            function. If you need this function, you now need
+                            to request the 'waitpid' module.
+
+2010-09-17  utimens         The function gl_futimens is removed, and its
+                            signature has been migrated to fdutimens.  Callers
+                            of gl_futimens should change function name, and
+                            callers of fdutimens should swap parameter order.
+
+2010-09-17  fdutimensat     This function has a new signature: the fd now comes
+                            first instead of the dir/name pair, and a new
+                            atflag parameter is added at the end.  Old code
+                            should rearrange parameters, and pass 0 for atflag.
+
+2010-09-13  regex           The module is not guaranteeing anymore support for
+                            64-bit regoff_t on 64-bit systems.  The size of
+                            regoff_t will always be 32-bit unless the program
+                            is being configured --with-included-regex.  This
+                            may change again in the future once glibc provides
+                            this feature as well.
+
+2010-09-12  savedir         The fdsavedir function is now deprecated.
+
+2010-09-10  fcntl-h         This module now defaults O_CLOEXEC to 0, and
+                            it defaults O_EXEC and O_SEARCH to O_RDONLY.
+                            Use "#if O_CLOEXEC" instead of "#ifdef O_CLOEXEC".
+
+2010-08-28  realloc         This module is deprecated. Use 'realloc-gnu'
+                            instead. It will be removed 2012-01-01.
+
+2010-08-28  calloc          This module is deprecated. Use 'calloc-gnu'
+                            instead. It will be removed 2012-01-01.
+
+2010-08-28  malloc          This module is deprecated. Use 'malloc-gnu'
+                            instead. It will be removed 2012-01-01.
+
+2010-08-14  memxfrm         This module is renamed to amemxfrm. The include
+                            file is renamed to "amemxfrm.h". The function is
+                            renamed to amemxfrm.
+
+2010-08-09  symlinkat       This module now only provides symlinkat; use the
+                            new module 'readlinkat' if needed.
+
+2010-07-31  ansi-c++-opt    If Autoconf >= 2.66 is used, the 'configure'
+                            option is now called --disable-c++ rather than
+                            --disable-cxx.
 
 2010-04-02  maintainer-makefile
                             The macro _prohibit_regexp has been revamped into
@@ -178,7 +383,7 @@ Date        Modules         Changes
 2008-09-28  sockets         When using this module, you now need to link with
                             $(LIBSOCKET).
 
-2008-09-24  sys_select      The limitation on `select', introduced 2008-09-23,
+2008-09-24  sys_select      The limitation on 'select', introduced 2008-09-23,
                             was removed.  sys_select now includes a select
                             wrapper for Winsock.  The wrapper expects socket
                             and file descriptors to be compatible as arranged
@@ -341,12 +546,12 @@ Date        Modules         Changes
                             <unistd.h>.
 
 2007-06-09  xallocsa        Renamed to xmalloca. The include file "xallocsa.h"
-                            was remamed to "xmalloca.h". The function was
+                            was renamed to "xmalloca.h". The function was
                             renamed:
                               xallocsa -> xmalloca
 
 2007-06-09  allocsa         Renamed to malloca. The include file "allocsa.h"
-                            was remamed to "malloca.h". The function-like
+                            was renamed to "malloca.h". The function-like
                             macros were renamed:
                               allocsa -> malloca
                               freesa -> freea

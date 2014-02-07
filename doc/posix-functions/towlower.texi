@@ -2,9 +2,9 @@
 @section @code{towlower}
 @findex towlower
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/towlower.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/towlower.html}
 
-Gnulib module: wctype
+Gnulib module: wctype-h
 
 Portability problems fixed by Gnulib:
 @itemize

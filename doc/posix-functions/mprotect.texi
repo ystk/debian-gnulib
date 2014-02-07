@@ -2,7 +2,7 @@
 @section @code{mprotect}
 @findex mprotect
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/mprotect.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/mprotect.html}
 
 Gnulib module: ---
 
@@ -14,7 +14,7 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw, BeOS.
+Minix 3.1.8, mingw, MSVC 9, BeOS.
 @item
 This function does not set @code{errno} on some platforms:
 mingw.

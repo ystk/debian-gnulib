@@ -1,8 +1,7 @@
 Description:
-Parse a `user:group' specifier (e.g. the first argument of chown utility).
+Parse a 'user:group' specifier (e.g. the first argument of chown utility).
 
 Files:
-lib/inttostr.h
 lib/userspec.c
 lib/userspec.h
 m4/userspec.m4
@@ -21,6 +20,7 @@ configure.ac:
 gl_USERSPEC
 
 Makefile.am:
+lib_SOURCES += userspec.c
 
 Include:
 "userspec.h"

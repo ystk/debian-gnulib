@@ -3,7 +3,6 @@ Quote arguments for use in error messages.
 
 Files:
 lib/quote.h
-lib/quote.c
 m4/quote.m4
 
 Depends-on:

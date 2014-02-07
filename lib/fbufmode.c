@@ -1,5 +1,5 @@
 /* Retrieve information about a FILE stream.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -50,7 +50,9 @@ fbufmode (FILE *fp)
   return _IOFBF;
 #elif defined __EMX__               /* emx+gcc */
   return fp->_flags & (_IOLBF | _IONBF | _IOFBF);
-#elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw */
+#elif defined __minix               /* Minix */
+  return fp->_flags & (_IOLBF | _IONBF | _IOFBF);
+#elif defined _IOERR                /* AIX, HP-UX, IRIX, OSF/1, Solaris, OpenServer, mingw, NonStop Kernel */
 # if HAVE___FLBF                    /* Solaris >= 7 */
   if (__flbf (fp))
     return _IOLBF;
@@ -77,7 +79,13 @@ fbufmode (FILE *fp)
   if (fp->__linebuf)
     return _IOLBF;
   return (fp->__bufsize > 0 ? _IOFBF : _IONBF);
+#elif defined EPLAN9                /* Plan9 */
+  if (fp->flags & 2 /* LINEBUF */)
+    return _IOLBF;
+  if (fp->bufl)
+    return _IOFBF;
+  return _IONBF;
 #else
- #error "Please port gnulib fbufmode.c to your platform! Look at the setvbuf implementation."
+# error "Please port gnulib fbufmode.c to your platform! Look at the setvbuf implementation."
 #endif
 }

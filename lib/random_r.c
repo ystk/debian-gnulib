@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 1995, 2005, 2008-2010 Free Software Foundation, Inc.
+   Copyright (C) 1995, 2005, 2008-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@
       may be used to endorse or promote products derived from this software
       without specific prior written permission.
 
-   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+   THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS "AS IS" AND
    ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
    ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
@@ -57,11 +57,13 @@
    below.  */
 #define _GL_ARG_NONNULL(params)
 
+/* Specification.  */
+#include <stdlib.h>
+
 #include <errno.h>
 #include <limits.h>
 #include <stddef.h>
-#include <stdlib.h>
-#include <inttypes.h>
+#include <stdint.h>
 
 
 /* An improved random number generation package.  In addition to the standard
