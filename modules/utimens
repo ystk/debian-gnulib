@@ -9,8 +9,9 @@ m4/utimens.m4
 m4/utimes.m4
 
 Depends-on:
-dup2
 errno
+fcntl-h
+fstat
 lstat
 gettime
 stat-time
@@ -23,6 +24,7 @@ configure.ac:
 gl_UTIMENS
 
 Makefile.am:
+lib_SOURCES += utimens.c
 
 Include:
 "utimens.h"

@@ -1,6 +1,6 @@
 /* Detect the number of processors.
 
-   Copyright (C) 2009-2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,8 +13,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by Glen Lenker and Bruno Haible.  */
 
@@ -24,7 +23,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#if HAVE_PTHREAD_AFFINITY_NP && 0
+#if HAVE_PTHREAD_GETAFFINITY_NP && 0
 # include <pthread.h>
 # include <sched.h>
 #endif
@@ -71,7 +70,7 @@ num_processors_via_affinity_mask (void)
      Therefore this code is not enabled.
      glibc >= 2.3.4 has sched_getaffinity whereas NetBSD 5 has
      sched_getaffinity_np.  */
-#if HAVE_PTHREAD_AFFINITY_NP && defined __GLIBC__ && 0
+#if HAVE_PTHREAD_GETAFFINITY_NP && defined __GLIBC__ && 0
   {
     cpu_set_t set;
 
@@ -94,7 +93,7 @@ num_processors_via_affinity_mask (void)
           return count;
       }
   }
-#elif HAVE_PTHREAD_AFFINITY_NP && defined __NetBSD__ && 0
+#elif HAVE_PTHREAD_GETAFFINITY_NP && defined __NetBSD__ && 0
   {
     cpuset_t *set;
 

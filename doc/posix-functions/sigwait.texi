@@ -2,7 +2,7 @@
 @section @code{sigwait}
 @findex sigwait
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/sigwait.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/sigwait.html}
 
 Gnulib module: extensions
 
@@ -10,14 +10,14 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This function has an incompatible declaration on some platforms:
-Solaris 10 (when @code{_POSIX_PTHREAD_SEMANTICS} is not defined).
+Solaris 11 2011-11 (when @code{_POSIX_PTHREAD_SEMANTICS} is not defined).
 @end itemize
 
 Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw, BeOS.
+Minix 3.1.8, mingw, MSVC 9, BeOS.
 @item
 On Linux/glibc platforms before the advent of NPTL, signals could only be
 sent to one particular thread.  In POSIX, signals are sent to the entire

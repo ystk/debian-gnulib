@@ -1,5 +1,5 @@
 /* Test for positive or negative infinity.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,8 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License along
-   with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by Ben Pfaff <blp@gnu.org>, 2008. */
 
@@ -21,17 +20,20 @@
 
 #include <float.h>
 
-int gl_isinff (float x)
+int
+gl_isinff (float x)
 {
   return x < -FLT_MAX || x > FLT_MAX;
 }
 
-int gl_isinfd (double x)
+int
+gl_isinfd (double x)
 {
   return x < -DBL_MAX || x > DBL_MAX;
 }
 
-int gl_isinfl (long double x)
+int
+gl_isinfl (long double x)
 {
   return x < -LDBL_MAX || x > LDBL_MAX;
 }

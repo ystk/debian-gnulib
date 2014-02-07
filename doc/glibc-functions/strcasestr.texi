@@ -10,11 +10,16 @@ or @code{strcasestr}:
 @item
 This function is missing on some platforms:
 AIX 5.1, HP-UX 11, IRIX 6.5, OSF/1 5.1, Solaris 10, Cygwin 1.5.x,
-mingw, BeOS.
+mingw, MSVC 9, BeOS.
 
 @item
 This function can trigger memchr bugs on some platforms:
 glibc 2.10.
+
+@item
+This function can trigger false positives for long periodic needles on
+some platforms:
+glibc 2.12, Cygwin 1.7.7.
 @end itemize
 
 Portability problems fixed by Gnulib module @code{strcasestr}:
@@ -22,7 +27,7 @@ Portability problems fixed by Gnulib module @code{strcasestr}:
 @item
 This function has quadratic instead of linear worst-case complexity on some
 platforms:
-glibc 2.8, FreeBSD 6.2, NetBSD 3.0, OpenBSD 4.0.
+glibc 2.8, FreeBSD 6.2, NetBSD 5.0, OpenBSD 4.0, Solaris 11 2011-11.
 @end itemize
 
 Portability problems not fixed by Gnulib:

@@ -2,7 +2,7 @@
 @section @code{endhostent}
 @findex endhostent
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/endhostent.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/endhostent.html}
 
 Gnulib module: ---
 
@@ -14,5 +14,5 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw, BeOS.
+mingw, MSVC 9, BeOS.
 @end itemize

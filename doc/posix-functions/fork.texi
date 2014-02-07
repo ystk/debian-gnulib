@@ -2,7 +2,7 @@
 @section @code{fork}
 @findex fork
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/fork.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/fork.html}
 
 Gnulib module: ---
 
@@ -14,7 +14,7 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw.
+mingw, MSVC 9.
 @item
 On some platforms, @code{fork} followed by a call of the @code{exec} family
 (@code{execl}, @code{execlp}, @code{execle}, @code{execv}, @code{execvp},

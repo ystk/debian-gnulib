@@ -7,12 +7,18 @@ lib/read-file.c
 m4/read-file.m4
 
 Depends-on:
+fstat
+ftello
+malloc-posix
 realloc-posix
+stdint
+sys_stat
 
 configure.ac:
-gl_FUNC_READ_FILE
+gl_PREREQ_READ_FILE
 
 Makefile.am:
+lib_SOURCES += read-file.c
 
 Include:
 "read-file.h"

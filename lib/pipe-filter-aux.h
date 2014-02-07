@@ -1,5 +1,5 @@
 /* Auxiliary code for filtering of data through a subprocess.
-   Copyright (C) 2001-2003, 2008-2010 Free Software Foundation, Inc.
+   Copyright (C) 2001-2003, 2008-2012 Free Software Foundation, Inc.
    Written by Bruno Haible <haible@clisp.cons.org>, 2009.
 
    This program is free software: you can redistribute it and/or modify
@@ -102,9 +102,6 @@ nonintr_select (int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 #endif
 
 /* Non-blocking I/O.  */
-#ifndef O_NONBLOCK
-# define O_NONBLOCK O_NDELAY
-#endif
 #if HAVE_SELECT
 # define IS_EAGAIN(errcode) 0
 #else

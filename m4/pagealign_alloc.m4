@@ -1,5 +1,5 @@
-#serial 5
-dnl Copyright (C) 2005, 2006, 2007, 2009, 2010 Free Software Foundation, Inc.
+#serial 6
+dnl Copyright (C) 2005-2007, 2009-2012 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -9,7 +9,6 @@ AC_DEFUN([gl_PAGEALIGN_ALLOC],
   dnl Persuade glibc <sys/mman.h> to define MAP_ANONYMOUS.
   AC_REQUIRE([AC_USE_SYSTEM_EXTENSIONS])
 
-  AC_LIBOBJ([pagealign_alloc])
   gl_PREREQ_PAGEALIGN_ALLOC
 ])
 

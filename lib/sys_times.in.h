@@ -1,5 +1,5 @@
 /* Provide a sys/times.h header file.
-   Copyright (C) 2008-2010 Free Software Foundation, Inc.
+   Copyright (C) 2008-2012 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,25 +12,25 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by Simon Josefsson <simon@josefsson.org>, 2008.  */
 
 /* This file is supposed to be used on platforms where <sys/times.h>
    is missing.  */
 
-#ifndef _GL_SYS_TIMES_H
+#ifndef _@GUARD_PREFIX@_SYS_TIMES_H
 
 # if __GNUC__ >= 3
 @PRAGMA_SYSTEM_HEADER@
 # endif
+@PRAGMA_COLUMNS@
 
 # if @HAVE_SYS_TIMES_H@
 #  @INCLUDE_NEXT@ @NEXT_SYS_TIMES_H@
 # endif
 
-# define _GL_SYS_TIMES_H
+# define _@GUARD_PREFIX@_SYS_TIMES_H
 
 /* Get clock_t.
    But avoid namespace pollution on glibc systems.  */
@@ -47,6 +47,7 @@ extern "C" {
 # endif
 
 # if !@HAVE_STRUCT_TMS@
+#  if !GNULIB_defined_struct_tms
   /* Structure describing CPU time used by a process and its children.  */
   struct tms
   {
@@ -56,6 +57,8 @@ extern "C" {
     clock_t tms_cutime;         /* User CPU time of dead children.  */
     clock_t tms_cstime;         /* System CPU time of dead children.  */
   };
+#   define GNULIB_defined_struct_tms 1
+#  endif
 # endif
 
 # if @GNULIB_TIMES@
@@ -74,4 +77,4 @@ _GL_WARN_ON_USE (times, "times is unportable - "
 }
 # endif
 
-#endif                          /* _GL_SYS_TIMES_H */
+#endif                          /* _@GUARD_PREFIX@_SYS_TIMES_H */

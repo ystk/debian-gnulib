@@ -11,10 +11,10 @@ Depends-on:
 cloexec
 dup2
 error
-exit
 fatal-signal
 wait-process
 gettext-h
+msvc-nothrow
 spawn
 posix_spawnp
 posix_spawn_file_actions_init
@@ -25,6 +25,7 @@ posix_spawnattr_setsigmask
 posix_spawnattr_setflags
 posix_spawnattr_destroy
 stdbool
+stdlib
 strpbrk
 unistd
 environ

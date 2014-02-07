@@ -2,7 +2,7 @@
 @section @code{optind}
 @findex optind
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/optind.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/optind.html}
 
 Gnulib module: ---
 
@@ -14,5 +14,5 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This variable is missing on some platforms:
-IRIX 6.5, OSF/1 5.1.
+IRIX 6.5, OSF/1 5.1, MSVC 9.
 @end itemize

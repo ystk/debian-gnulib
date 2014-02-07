@@ -1,7 +1,7 @@
-# serial 1
+# serial 3
 # See if we need to provide mkfifo replacement.
 
-dnl Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+dnl Copyright (C) 2009-2012 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -14,7 +14,6 @@ AC_DEFUN([gl_FUNC_MKFIFO],
   AC_CHECK_FUNCS_ONCE([mkfifo])
   if test $ac_cv_func_mkfifo = no; then
     HAVE_MKFIFO=0
-    AC_LIBOBJ([mkfifo])
   else
     dnl Check for Solaris 9 and FreeBSD bug with trailing slash.
     AC_CHECK_FUNCS_ONCE([lstat])
@@ -27,10 +26,15 @@ AC_DEFUN([gl_FUNC_MKFIFO],
        AC_RUN_IFELSE(
          [AC_LANG_PROGRAM(
            [[#include <sys/stat.h>
-]], [[if (!mkfifo ("conftest.tmp/", 0600)) return 1;
+           ]],
+           [[int result = 0;
+             if (!mkfifo ("conftest.tmp/", 0600))
+               result |= 1;
 #if HAVE_LSTAT
-      if (!mkfifo ("conftest.lnk/", 0600)) return 2;
+             if (!mkfifo ("conftest.lnk/", 0600))
+               result |= 2;
 #endif
+             return result;
            ]])],
          [gl_cv_func_mkfifo_works=yes], [gl_cv_func_mkfifo_works=no],
          [gl_cv_func_mkfifo_works="guessing no"])
@@ -39,7 +43,6 @@ AC_DEFUN([gl_FUNC_MKFIFO],
       AC_DEFINE([MKFIFO_TRAILING_SLASH_BUG], [1], [Define to 1 if mkfifo
         does not reject trailing slash])
       REPLACE_MKFIFO=1
-      AC_LIBOBJ([mkfifo])
     fi
   fi
 ])

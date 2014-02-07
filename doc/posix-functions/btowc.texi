@@ -2,7 +2,7 @@
 @section @code{btowc}
 @findex btowc
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/btowc.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/btowc.html}
 
 Gnulib module: btowc
 
@@ -10,7 +10,7 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-HP-UX 11.00, IRIX 5.3, Solaris 2.6, mingw, Interix 3.5.
+Minix 3.1.8, HP-UX 11.00, IRIX 5.3, Solaris 2.6, mingw, Interix 3.5.
 @item
 This function returns WEOF for a NUL argument on some platforms:
 Cygwin 1.7.2.

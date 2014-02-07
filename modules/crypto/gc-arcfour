@@ -3,13 +3,10 @@ Generic crypto wrappers for ARCFOUR stream cipher.
 
 Files:
 m4/gc-arcfour.m4
-lib/arcfour.h
-lib/arcfour.c
-m4/arcfour.m4
 
 Depends-on:
-stdint
 crypto/gc
+crypto/arcfour [test "$ac_cv_libgcrypt" != yes]
 
 configure.ac:
 gl_GC_ARCFOUR

@@ -1,6 +1,6 @@
 /* Write block to given position in file without changing file pointer.
    POSIX version.
-   Copyright (C) 1997, 1998, 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2002, 2011-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -55,7 +55,7 @@ pwrite (int fd, const void *buf, size_t nbyte, off_t offset)
   if (__libc_lseek (fd, old_offset, SEEK_SET) == (off_t) -1)
     {
       if (result == -1)
-	__set_errno (save_errno);
+        __set_errno (save_errno);
       return -1;
     }
   __set_errno (save_errno);

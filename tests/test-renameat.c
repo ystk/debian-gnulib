@@ -1,5 +1,5 @@
 /* Tests of renameat.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include "signature.h"
 SIGNATURE_CHECK (renameat, int, (int, char const *, int, char const *));
 
+#include <dirent.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <stdbool.h>
@@ -32,7 +33,6 @@ SIGNATURE_CHECK (renameat, int, (int, char const *, int, char const *));
 #include <sys/stat.h>
 
 #include "filenamecat.h"
-#include "xgetcwd.h"
 #include "ignore-value.h"
 #include "macros.h"
 
@@ -61,6 +61,30 @@ main (void)
   /* Clean up any trash from prior testsuite runs.  */
   ignore_value (system ("rm -rf " BASE "*"));
 
+  /* Test behaviour for invalid file descriptors.  */
+  {
+    errno = 0;
+    ASSERT (renameat (-1, "foo", AT_FDCWD, "bar") == -1);
+    ASSERT (errno == EBADF);
+  }
+  {
+    errno = 0;
+    ASSERT (renameat (99, "foo", AT_FDCWD, "bar") == -1);
+    ASSERT (errno == EBADF);
+  }
+  ASSERT (close (creat (BASE "oo", 0600)) == 0);
+  {
+    errno = 0;
+    ASSERT (renameat (AT_FDCWD, BASE "oo", -1, "bar") == -1);
+    ASSERT (errno == EBADF);
+  }
+  {
+    errno = 0;
+    ASSERT (renameat (AT_FDCWD, BASE "oo", 99, "bar") == -1);
+    ASSERT (errno == EBADF);
+  }
+  ASSERT (unlink (BASE "oo") == 0);
+
   /* Test basic rename functionality, using current directory.  */
   result = test_rename (do_rename, false);
   dfd1 = open (".", O_RDONLY);
@@ -78,7 +102,8 @@ main (void)
   dfd = creat (BASE "00", 0600);
   ASSERT (0 <= dfd);
   ASSERT (close (dfd) == 0);
-  cwd = xgetcwd ();
+  cwd = getcwd (NULL, 0);
+  ASSERT (cwd);
 
   dfd = open (BASE "sub1", O_RDONLY);
   ASSERT (0 <= dfd);
@@ -129,10 +154,10 @@ main (void)
   errno = 0;
   ASSERT (renameat (dfd, BASE "sub2", dfd, BASE "sub1/.") == -1);
   ASSERT (errno == EINVAL || errno == EISDIR || errno == EBUSY
-          || errno == ENOTEMPTY);
+          || errno == ENOTEMPTY || errno == EEXIST);
   errno = 0;
   ASSERT (renameat (dfd, BASE "sub2/.", dfd, BASE "sub1") == -1);
-  ASSERT (errno == EINVAL || errno == EBUSY);
+  ASSERT (errno == EINVAL || errno == EBUSY || errno == EEXIST);
   errno = 0;
   ASSERT (renameat (dfd, BASE "17", dfd, BASE "sub1") == -1);
   ASSERT (errno == EISDIR);

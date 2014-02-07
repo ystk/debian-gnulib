@@ -1,5 +1,5 @@
 /* Tests of utimensat.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -68,6 +68,18 @@ main (void)
 
   /* Clean up any trash from prior testsuite runs.  */
   ignore_value (system ("rm -rf " BASE "*"));
+
+  /* Test behaviour for invalid file descriptors.  */
+  {
+    errno = 0;
+    ASSERT (utimensat (-1, "foo", NULL, 0) == -1);
+    ASSERT (errno == EBADF);
+  }
+  {
+    errno = 0;
+    ASSERT (utimensat (99, "foo", NULL, 0) == -1);
+    ASSERT (errno == EBADF);
+  }
 
   /* Basic tests.  */
   result1 = test_utimens (do_utimensat, true);

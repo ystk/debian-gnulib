@@ -1,5 +1,5 @@
-# expl.m4 serial 1
-dnl Copyright (C) 2010 Free Software Foundation, Inc.
+# expl.m4 serial 7
+dnl Copyright (C) 2010-2012 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -7,6 +7,8 @@ dnl with or without modifications, as long as this notice is preserved.
 AC_DEFUN([gl_FUNC_EXPL],
 [
   AC_REQUIRE([gl_MATH_H_DEFAULTS])
+  AC_REQUIRE([gl_LONG_DOUBLE_VS_DOUBLE])
+
   dnl Persuade glibc <math.h> to declare expl().
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
 
@@ -14,12 +16,16 @@ AC_DEFUN([gl_FUNC_EXPL],
   AC_CACHE_CHECK([whether expl() can be used without linking with libm],
     [gl_cv_func_expl_no_libm],
     [
-      AC_TRY_LINK([#ifndef __NO_MATH_INLINES
-                   # define __NO_MATH_INLINES 1 /* for glibc */
-                   #endif
-                   #include <math.h>
-                   long double x;],
-                  [return expl (x) > 1.5;],
+      AC_LINK_IFELSE(
+        [AC_LANG_PROGRAM(
+           [[#ifndef __NO_MATH_INLINES
+             # define __NO_MATH_INLINES 1 /* for glibc */
+             #endif
+             #include <math.h>
+             long double (*funcptr) (long double) = expl;
+             long double x;]],
+           [[return funcptr (x) > 1.5
+                    || expl (x) > 1.5;]])],
         [gl_cv_func_expl_no_libm=yes],
         [gl_cv_func_expl_no_libm=no])
     ])
@@ -29,12 +35,16 @@ AC_DEFUN([gl_FUNC_EXPL],
       [
         save_LIBS="$LIBS"
         LIBS="$LIBS -lm"
-        AC_TRY_LINK([#ifndef __NO_MATH_INLINES
-                     # define __NO_MATH_INLINES 1 /* for glibc */
-                     #endif
-                     #include <math.h>
-                     long double x;],
-                    [return expl (x) > 1.5;],
+        AC_LINK_IFELSE(
+          [AC_LANG_PROGRAM(
+             [[#ifndef __NO_MATH_INLINES
+               # define __NO_MATH_INLINES 1 /* for glibc */
+               #endif
+               #include <math.h>
+               long double (*funcptr) (long double) = expl;
+               long double x;]],
+             [[return funcptr (x) > 1.5
+                      || expl (x) > 1.5;]])],
           [gl_cv_func_expl_in_libm=yes],
           [gl_cv_func_expl_in_libm=no])
         LIBS="$save_LIBS"
@@ -47,13 +57,35 @@ AC_DEFUN([gl_FUNC_EXPL],
      || test $gl_cv_func_expl_in_libm = yes; then
     dnl Also check whether it's declared.
     dnl MacOS X 10.3 has expl() in libc but doesn't declare it in <math.h>.
-    AC_CHECK_DECL([expl], , [HAVE_DECL_EXPL=0], [#include <math.h>])
+    AC_CHECK_DECL([expl], , [HAVE_DECL_EXPL=0], [[#include <math.h>]])
   else
     HAVE_DECL_EXPL=0
     HAVE_EXPL=0
-    AC_LIBOBJ([expl])
-    AC_REQUIRE([gl_FUNC_FLOORL])
-    EXPL_LIBM="$FLOORL_LIBM"
+    dnl Find libraries needed to link lib/expl.c.
+    if test $HAVE_SAME_LONG_DOUBLE_AS_DOUBLE = 1; then
+      AC_REQUIRE([gl_FUNC_EXP])
+      EXPL_LIBM="$EXP_LIBM"
+    else
+      AC_REQUIRE([gl_FUNC_ISNANL])
+      AC_REQUIRE([gl_FUNC_ROUNDL])
+      AC_REQUIRE([gl_FUNC_LDEXPL])
+      EXPL_LIBM=
+      dnl Append $ISNANL_LIBM to EXPL_LIBM, avoiding gratuitous duplicates.
+      case " $EXPL_LIBM " in
+        *" $ISNANL_LIBM "*) ;;
+        *) EXPL_LIBM="$EXPL_LIBM $ISNANL_LIBM" ;;
+      esac
+      dnl Append $ROUNDL_LIBM to EXPL_LIBM, avoiding gratuitous duplicates.
+      case " $EXPL_LIBM " in
+        *" $ROUNDL_LIBM "*) ;;
+        *) EXPL_LIBM="$EXPL_LIBM $ROUNDL_LIBM" ;;
+      esac
+      dnl Append $LDEXPL_LIBM to EXPL_LIBM, avoiding gratuitous duplicates.
+      case " $EXPL_LIBM " in
+        *" $LDEXPL_LIBM "*) ;;
+        *) EXPL_LIBM="$EXPL_LIBM $LDEXPL_LIBM" ;;
+      esac
+    fi
   fi
   AC_SUBST([EXPL_LIBM])
 ])

@@ -2,7 +2,7 @@
 @section @code{link}
 @findex link
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/link.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/link.html}
 
 Gnulib module: link
 
@@ -10,11 +10,15 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw.
+mingw, MSVC 9.
 @item
 This function fails to reject trailing slashes on non-directories on
 some platforms:
-FreeBSD 7.2, Solaris, Cygwin 1.5.x.
+FreeBSD 7.2, Solaris 11 2011-11, Cygwin 1.5.x.
+@item
+When the second argument is a dangling symlink, some platforms follow
+that link and create the destination rather than failing:
+IRIX 6.5.
 @end itemize
 
 Portability problems not fixed by Gnulib:

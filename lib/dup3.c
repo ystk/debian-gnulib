@@ -1,5 +1,5 @@
 /* Copy a file descriptor, applying specific flags.
-   Copyright (C) 2009-2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,8 +12,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License along
-   with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 #include <config.h>
 
@@ -25,27 +24,6 @@
 #include <limits.h>
 
 #include "binary-io.h"
-
-#if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
-/* Native Woe32 API.  */
-
-# include <string.h>
-
-/* Get declarations of the Win32 API functions.  */
-# define WIN32_LEAN_AND_MEAN
-# include <windows.h>
-
-/* Upper bound on getdtablesize().  See lib/getdtablesize.c.  */
-# define OPEN_MAX_MAX 0x10000
-
-#else
-/* Unix API.  */
-
-# ifndef O_CLOEXEC
-#  define O_CLOEXEC 0
-# endif
-
-#endif
 
 int
 dup3 (int oldfd, int newfd, int flags)
@@ -63,10 +41,10 @@ dup3 (int oldfd, int newfd, int flags)
         if (!(result < 0 && errno == ENOSYS))
           {
             have_dup3_really = 1;
-#if REPLACE_FCHDIR
+# if REPLACE_FCHDIR
             if (0 <= result)
               result = _gl_register_dup (oldfd, newfd);
-#endif
+# endif
             return result;
           }
         have_dup3_really = -1;

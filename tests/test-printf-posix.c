@@ -1,5 +1,5 @@
 /* Test of POSIX compatible printf() function.
-   Copyright (C) 2007-2010 Free Software Foundation, Inc.
+   Copyright (C) 2007-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ main (int argc, char *argv[])
 }
 
 /* Test whether __attribute__ (__format__ (...)) still works.  */
-#if (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)) && !__STRICT_ANSI__
+#if (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)) && !defined __STRICT_ANSI__
 extern int func1 (char *, size_t, const char *, ...)
      __attribute__ ((__format__ (__printf__, 3, 4)));
 extern int func2 (char *, size_t, const char *, ...)

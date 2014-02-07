@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2004-2010 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2004-2012 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This program is free software: you can redistribute it and/or modify
@@ -27,9 +27,10 @@
 
 #include <fcntl.h> /* For AT_FDCWD on Solaris 9.  */
 
-/* If this host provides the openat function, then enable
-   code below to make getcwd more efficient and robust.  */
-#ifdef HAVE_OPENAT
+/* If this host provides the openat function or if we're using the
+   gnulib replacement function, then enable code below to make getcwd
+   more efficient and robust.  */
+#if defined HAVE_OPENAT || defined GNULIB_OPENAT
 # define HAVE_OPENAT_SUPPORT 1
 #else
 # define HAVE_OPENAT_SUPPORT 0
@@ -57,8 +58,6 @@
 # endif
 #endif
 
-#include <limits.h>
-
 #ifndef MAX
 # define MAX(a, b) ((a) < (b) ? (b) : (a))
 #endif
@@ -66,12 +65,12 @@
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
+#include "pathmax.h"
+
+/* In this file, PATH_MAX only serves as a threshold for choosing among two
+   algorithms.  */
 #ifndef PATH_MAX
-# ifdef MAXPATHLEN
-#  define PATH_MAX MAXPATHLEN
-# else
-#  define PATH_MAX 1024
-# endif
+# define PATH_MAX 8192
 #endif
 
 #if D_INO_IN_DIRENT
@@ -100,7 +99,7 @@
 /* Get the name of the current working directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
    SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
-   NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
+   NULL, an array is allocated with 'malloc'; the array is SIZE bytes long,
    unless SIZE == 0, in which case it is as big as necessary.  */
 
 char *
@@ -136,22 +135,44 @@ __getcwd (char *buf, size_t size)
   size_t allocated = size;
   size_t used;
 
-#if HAVE_PARTLY_WORKING_GETCWD
-  /* The system getcwd works, except it sometimes fails when it
-     shouldn't, setting errno to ERANGE, ENAMETOOLONG, or ENOENT.  If
-     AT_FDCWD is not defined, the algorithm below is O(N**2) and this
-     is much slower than the system getcwd (at least on GNU/Linux).
-     So trust the system getcwd's results unless they look
-     suspicious.
+#if HAVE_RAW_DECL_GETCWD && HAVE_MINIMALLY_WORKING_GETCWD
+  /* If AT_FDCWD is not defined, the algorithm below is O(N**2) and
+     this is much slower than the system getcwd (at least on
+     GNU/Linux).  So trust the system getcwd's results unless they
+     look suspicious.
 
      Use the system getcwd even if we have openat support, since the
      system getcwd works even when a parent is unreadable, while the
-     openat-based approach does not.  */
+     openat-based approach does not.
+
+     But on AIX 5.1..7.1, the system getcwd is not even minimally
+     working: If the current directory name is slightly longer than
+     PATH_MAX, it omits the first directory component and returns
+     this wrong result with errno = 0.  */
 
 # undef getcwd
   dir = getcwd (buf, size);
-  if (dir || (errno != ERANGE && errno != ENAMETOOLONG && errno != ENOENT))
+  if (dir || (size && errno == ERANGE))
     return dir;
+
+  /* Solaris getcwd (NULL, 0) fails with errno == EINVAL, but it has
+     internal magic that lets it work even if an ancestor directory is
+     inaccessible, which is better in many cases.  So in this case try
+     again with a buffer that's almost always big enough.  */
+  if (errno == EINVAL && buf == NULL && size == 0)
+    {
+      char big_buffer[BIG_FILE_NAME_LENGTH + 1];
+      dir = getcwd (big_buffer, sizeof big_buffer);
+      if (dir)
+        return strdup (dir);
+    }
+
+# if HAVE_PARTLY_WORKING_GETCWD
+  /* The system getcwd works, except it sometimes fails when it
+     shouldn't, setting errno to ERANGE, ENAMETOOLONG, or ENOENT.    */
+  if (errno != ERANGE && errno != ENAMETOOLONG && errno != ENOENT)
+    return NULL;
+# endif
 #endif
 
   if (size == 0)
@@ -230,8 +251,6 @@ __getcwd (char *buf, size_t size)
       dirstream = fdopendir (fd);
       if (dirstream == NULL)
         goto lose;
-      /* Reset fd.  It may have been closed by fdopendir.  */
-      fd = dirfd (dirstream);
       fd_needs_closing = false;
 #else
       dirstream = __opendir (dotlist);
@@ -391,7 +410,7 @@ __getcwd (char *buf, size_t size)
     buf = realloc (dir, used);
 
   if (buf == NULL)
-    /* Either buf was NULL all along, or `realloc' failed but
+    /* Either buf was NULL all along, or 'realloc' failed but
        we still have the original string.  */
     buf = dir;
 

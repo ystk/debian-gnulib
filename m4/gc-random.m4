@@ -1,5 +1,5 @@
-# gc-random.m4 serial 4
-dnl Copyright (C) 2005-2010 Free Software Foundation, Inc.
+# gc-random.m4 serial 6
+dnl Copyright (C) 2005-2012 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -12,7 +12,7 @@ AC_DEFUN([gl_GC_RANDOM],
   AC_REQUIRE([AC_CANONICAL_HOST])dnl
 
   case "$host_os" in
-    *openbsd*)
+    *openbsd* | *mirbsd*)
       NAME_OF_RANDOM_DEVICE="/dev/srandom"
       NAME_OF_PSEUDO_RANDOM_DEVICE="/dev/prandom"
       NAME_OF_NONCE_DEVICE="/dev/urandom"
@@ -61,15 +61,15 @@ AC_DEFUN([gl_GC_RANDOM],
   if test "$cross_compiling" != yes; then
     if test "$NAME_OF_RANDOM_DEVICE" != "no"; then
       AC_CHECK_FILE([$NAME_OF_RANDOM_DEVICE],,
-        AC_MSG_WARN([[Device `$NAME_OF_RANDOM_DEVICE' does not exist, consider to use --enable-random-device]]))
+        AC_MSG_WARN([[Device '$NAME_OF_RANDOM_DEVICE' does not exist, consider to use --enable-random-device]]))
     fi
     if test "$NAME_OF_PSEUDO_RANDOM_DEVICE" != "no"; then
       AC_CHECK_FILE([$NAME_OF_PSEUDO_RANDOM_DEVICE],,
-        AC_MSG_WARN([[Device `$NAME_OF_PSEUDO_RANDOM_DEVICE' does not exist, consider to use --enable-pseudo-random-device]]))
+        AC_MSG_WARN([[Device '$NAME_OF_PSEUDO_RANDOM_DEVICE' does not exist, consider to use --enable-pseudo-random-device]]))
     fi
     if test "$NAME_OF_NONCE_DEVICE" != "no"; then
       AC_CHECK_FILE([$NAME_OF_NONCE_DEVICE],,
-        AC_MSG_WARN([[Device `$NAME_OF_NONCE_DEVICE' does not exist, consider to use --enable-nonce-device]]))
+        AC_MSG_WARN([[Device '$NAME_OF_NONCE_DEVICE' does not exist, consider to use --enable-nonce-device]]))
     fi
   else
     AC_MSG_NOTICE([[Cross compiling, assuming random devices exists on the target host...]])

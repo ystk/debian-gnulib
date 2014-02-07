@@ -1,17 +1,20 @@
 Description:
-unlink(): remove a file.
+unlink() function: remove a file.
 
 Files:
 lib/unlink.c
-m4/dos.m4
 m4/unlink.m4
 
 Depends-on:
-lstat
 unistd
+dosname         [test $REPLACE_UNLINK = 1]
+lstat           [test $REPLACE_UNLINK = 1]
 
 configure.ac:
 gl_FUNC_UNLINK
+if test $REPLACE_UNLINK = 1; then
+  AC_LIBOBJ([unlink])
+fi
 gl_UNISTD_MODULE_INDICATOR([unlink])
 
 Makefile.am:
@@ -20,7 +23,7 @@ Include:
 <unistd.h>
 
 License:
-LGPL
+LGPLv2+
 
 Maintainer:
 Eric Blake

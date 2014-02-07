@@ -1,5 +1,5 @@
 /* Test of <unistd.h> substitute in C++ mode.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,10 @@
 #include "signature.h"
 
 
+#if GNULIB_TEST_CHDIR
+SIGNATURE_CHECK (GNULIB_NAMESPACE::chdir, int, (const char *));
+#endif
+
 #if GNULIB_TEST_CHOWN
 SIGNATURE_CHECK (GNULIB_NAMESPACE::chown, int, (const char *, uid_t, gid_t));
 #endif
@@ -32,7 +36,9 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::chown, int, (const char *, uid_t, gid_t));
 SIGNATURE_CHECK (GNULIB_NAMESPACE::close, int, (int));
 #endif
 
+#if GNULIB_TEST_DUP
 SIGNATURE_CHECK (GNULIB_NAMESPACE::dup, int, (int));
+#endif
 
 #if GNULIB_TEST_DUP2
 SIGNATURE_CHECK (GNULIB_NAMESPACE::dup2, int, (int, int));
@@ -58,6 +64,10 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::fchdir, int, (int));
 #if GNULIB_TEST_FCHOWNAT
 SIGNATURE_CHECK (GNULIB_NAMESPACE::fchownat, int,
                  (int, char const *, uid_t, gid_t, int));
+#endif
+
+#if GNULIB_TEST_FDATASYNC
+SIGNATURE_CHECK (GNULIB_NAMESPACE::fdatasync, int, (int));
 #endif
 
 #if GNULIB_TEST_FSYNC
@@ -112,6 +122,10 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::setusershell, void, (void));
 SIGNATURE_CHECK (GNULIB_NAMESPACE::endusershell, void, (void));
 #endif
 
+#if GNULIB_TEST_GROUP_MEMBER
+SIGNATURE_CHECK (GNULIB_NAMESPACE::group_member, int, (gid_t));
+#endif
+
 #if GNULIB_TEST_LCHOWN
 SIGNATURE_CHECK (GNULIB_NAMESPACE::lchown, int, (char const *, uid_t, gid_t));
 #endif
@@ -127,6 +141,10 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::linkat, int,
 
 #if GNULIB_TEST_LSEEK
 SIGNATURE_CHECK (GNULIB_NAMESPACE::lseek, off_t, (int, off_t, int));
+#endif
+
+#if GNULIB_TEST_PIPE
+SIGNATURE_CHECK (GNULIB_NAMESPACE::pipe, int, (int[2]));
 #endif
 
 #if GNULIB_TEST_PIPE2

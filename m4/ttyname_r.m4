@@ -1,5 +1,5 @@
-# ttyname_r.m4 serial 3
-dnl Copyright (C) 2010 Free Software Foundation, Inc.
+# ttyname_r.m4 serial 8
+dnl Copyright (C) 2010-2012 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -12,10 +12,16 @@ AC_DEFUN([gl_FUNC_TTYNAME_R],
   dnl ttyname_r().
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
 
+  AC_CHECK_DECLS_ONCE([ttyname_r])
+  if test $ac_cv_have_decl_ttyname_r = no; then
+    HAVE_DECL_TTYNAME_R=0
+  fi
+
   AC_CHECK_FUNCS([ttyname_r])
   if test $ac_cv_func_ttyname_r = no; then
     HAVE_TTYNAME_R=0
   else
+    HAVE_TTYNAME_R=1
     dnl On MacOS X 10.4 (and Solaris 10 without gl_USE_SYSTEM_EXTENSIONS)
     dnl the return type is 'char *', not 'int'.
     AC_CACHE_CHECK([whether ttyname_r is compatible with its POSIX signature],
@@ -37,6 +43,8 @@ AC_DEFUN([gl_FUNC_TTYNAME_R],
       dnl On Solaris 10, both ttyname_r functions (the one with the non-POSIX
       dnl declaration and the one with the POSIX declaration) refuse to do
       dnl anything when the output buffer is less than 128 bytes large.
+      dnl On OSF/1 5.1, ttyname_r ignores the buffer size and assumes the
+      dnl buffer is large enough.
       AC_REQUIRE([AC_CANONICAL_HOST])
       AC_CACHE_CHECK([whether ttyname_r works with small buffers],
         [gl_cv_func_ttyname_r_works],
@@ -47,36 +55,43 @@ changequote(,)dnl
           case "$host_os" in
                       # Guess no on Solaris.
             solaris*) gl_cv_func_ttyname_r_works="guessing no" ;;
+                      # Guess no on OSF/1.
+            osf*)     gl_cv_func_ttyname_r_works="guessing no" ;;
                       # Guess yes otherwise.
             *)        gl_cv_func_ttyname_r_works="guessing yes" ;;
           esac
 changequote([,])dnl
-          AC_TRY_RUN([
+          AC_RUN_IFELSE(
+            [AC_LANG_SOURCE([[
 #include <fcntl.h>
 #include <unistd.h>
 int
 main (void)
 {
+  int result = 0;
   int fd;
   char buf[31]; /* use any size < 128 here */
 
   fd = open ("/dev/tty", O_RDONLY);
   if (fd < 0)
-    return 1;
-  if (ttyname_r (fd, buf, sizeof (buf)) != 0)
-    return 1;
-  return 0;
-}], [gl_cv_func_ttyname_r_works=yes], [:], [:])
+    result |= 16;
+  else if (ttyname_r (fd, buf, sizeof (buf)) != 0)
+    result |= 17;
+  else if (ttyname_r (fd, buf, 1) == 0)
+    result |= 18;
+  return result;
+}]])],
+            [gl_cv_func_ttyname_r_works=yes],
+            [case $? in
+               17 | 18) gl_cv_func_ttyname_r_works=no ;;
+             esac],
+            [:])
         ])
       case "$gl_cv_func_ttyname_r_works" in
         *yes) ;;
         *) REPLACE_TTYNAME_R=1 ;;
       esac
     fi
-  fi
-  if test $HAVE_TTYNAME_R = 0 || test $REPLACE_TTYNAME_R = 1; then
-    AC_LIBOBJ([ttyname_r])
-    gl_PREREQ_TTYNAME_R
   fi
 ])
 

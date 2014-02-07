@@ -1,16 +1,19 @@
 Description:
-symlink(): create a symlink, if possible
+symlink() function: create a symlink, if possible
 
 Files:
 lib/symlink.c
 m4/symlink.m4
 
 Depends-on:
-lstat
 unistd
+lstat           [test $HAVE_SYMLINK = 0 || test $REPLACE_SYMLINK = 1]
 
 configure.ac:
 gl_FUNC_SYMLINK
+if test $HAVE_SYMLINK = 0 || test $REPLACE_SYMLINK = 1; then
+  AC_LIBOBJ([symlink])
+fi
 gl_UNISTD_MODULE_INDICATOR([symlink])
 
 Makefile.am:

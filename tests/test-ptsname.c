@@ -1,5 +1,5 @@
 /* Test of ptsname(3).
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,15 +22,46 @@
 SIGNATURE_CHECK (ptsname, char *, (int));
 
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/stat.h>
+
+#include "same-inode.h"
 
 #include "macros.h"
+
+/* Compare two slave names.
+   On some systems, there are hard links in the /dev/ directory.
+   For example, on OSF/1 5.1,
+     /dev/ttyp0 == /dev/pts/0
+     /dev/ttyp9 == /dev/pts/9
+     /dev/ttypa == /dev/pts/10
+     /dev/ttype == /dev/pts/14
+ */
+static int
+same_slave (const char *slave_name1, const char *slave_name2)
+{
+  struct stat statbuf1;
+  struct stat statbuf2;
+
+  return (strcmp (slave_name1, slave_name2) == 0
+          || (stat (slave_name1, &statbuf1) >= 0
+              && stat (slave_name2, &statbuf2) >= 0
+              && SAME_INODE (statbuf1, statbuf2)));
+}
 
 int
 main (void)
 {
+#if HAVE_DECL_ALARM
+  /* Declare failure if test takes too long, by using default abort
+     caused by SIGALRM.  */
+  signal (SIGALRM, SIG_DFL);
+  alarm (5);
+#endif
+
   {
     int fd;
     char *result;
@@ -54,6 +85,30 @@ main (void)
     close (fd);
   }
 
+#if defined __sun
+  /* Solaris has BSD-style /dev/pty[p-r][0-9a-f] files, but the function
+     ptsname() does not work on them.  */
+  {
+    int fd;
+    char *result;
+
+    /* Open the controlling tty of the current process.  */
+    fd = open ("/dev/ptmx", O_RDWR | O_NOCTTY);
+    if (fd < 0)
+      {
+        fprintf (stderr, "Skipping test: cannot open pseudo-terminal\n");
+        return 77;
+      }
+
+    result = ptsname (fd);
+    ASSERT (result != NULL);
+    ASSERT (memcmp (result, "/dev/pts/", 9) == 0);
+
+    close (fd);
+  }
+
+#else
+
   /* Try various master names of MacOS X: /dev/pty[p-w][0-9a-f]  */
   {
     int char1;
@@ -75,7 +130,7 @@ main (void)
               result = ptsname (fd);
               ASSERT (result != NULL);
               sprintf (slave_name, "/dev/tty%c%c", char1, char2);
-              ASSERT (strcmp (result, slave_name) == 0);
+              ASSERT (same_slave (result, slave_name));
 
               close (fd);
             }
@@ -105,12 +160,14 @@ main (void)
                 result = ptsname (fd);
                 ASSERT (result != NULL);
                 sprintf (slave_name, "/dev/tty%c%c", char1, char2);
-                ASSERT (strcmp (result, slave_name) == 0);
+                ASSERT (same_slave (result, slave_name));
 
                 close (fd);
               }
           }
   }
+
+#endif
 
   return 0;
 }

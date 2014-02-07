@@ -2,7 +2,7 @@
 @section @code{realpath}
 @findex realpath
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/realpath.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/realpath.html}
 
 Gnulib module: canonicalize-lgpl
 
@@ -10,15 +10,15 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw, BeOS.
+mingw, MSVC 9, BeOS.
 @item
 This function does not allow for a NULL @samp{resolved} parameter on
 some platforms:
-Solaris.
+MacOS X 10.5, FreeBSD 6.4, OpenBSD 4.4, Solaris 10.
 @item
 This function does not always return an absolute path on some
 platforms:
-Solaris.
+Solaris 10.
 @item
 This function fails to detect trailing slashes on non-directories on
 some platforms:
@@ -27,6 +27,9 @@ glibc 2.3.5.
 This function fails to recognize non-directories followed @samp{..} on
 some platforms:
 cygwin.
+@item
+This function misbehaves on consecutive slashes on some platforms:
+AIX 7.
 @end itemize
 
 Portability problems not fixed by Gnulib:

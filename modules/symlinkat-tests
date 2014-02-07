@@ -1,5 +1,4 @@
 Files:
-tests/test-readlink.h
 tests/test-symlink.h
 tests/test-symlinkat.c
 tests/signature.h
@@ -7,6 +6,7 @@ tests/macros.h
 
 Depends-on:
 ignore-value
+openat
 
 configure.ac:
 

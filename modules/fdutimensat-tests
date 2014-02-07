@@ -8,13 +8,16 @@ tests/test-fdutimensat.c
 tests/macros.h
 
 Depends-on:
+fcntl-h
 ignore-value
-progname
+openat
 timespec
+dup
 usleep
 utimecmp
 
 configure.ac:
+AC_REQUIRE([AC_C_INLINE])
 
 Makefile.am:
 TESTS += test-fdutimensat

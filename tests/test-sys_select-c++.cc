@@ -1,5 +1,5 @@
 /* Test of <sys/select.h> substitute in C++ mode.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,12 @@
 
 #include "signature.h"
 
+
+#if GNULIB_TEST_PSELECT
+SIGNATURE_CHECK (GNULIB_NAMESPACE::pselect, int,
+                 (int, fd_set *restrict, fd_set *restrict, fd_set *restrict,
+                  struct timespec const *restrict, sigset_t const *restrict));
+#endif
 
 #if GNULIB_TEST_SELECT
 SIGNATURE_CHECK (GNULIB_NAMESPACE::select, int,

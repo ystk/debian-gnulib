@@ -1,5 +1,5 @@
 /* Test the pread function.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -68,7 +68,9 @@ main (void)
     /* Invalid offset must evoke failure with EINVAL.  */
     char byte;
     ASSERT (pread (fd, &byte, 1, (off_t) -1) == -1);
-    ASSERT (errno == EINVAL);
+    ASSERT (errno == EINVAL
+            || errno == EFBIG /* seen on OpenBSD 4.9 */
+           );
   }
 
   ASSERT (close (fd) == 0);
@@ -79,6 +81,20 @@ main (void)
        This assumes that stdin is a pipe, and hence not seekable.  */
     ASSERT (pread (STDIN_FILENO, &byte, 1, 1) == -1);
     ASSERT (errno == ESPIPE);
+  }
+
+  /* Test behaviour for invalid file descriptors.  */
+  {
+    char byte;
+    errno = 0;
+    ASSERT (pread (-1, &byte, 1, 0) == -1);
+    ASSERT (errno == EBADF);
+  }
+  {
+    char byte;
+    errno = 0;
+    ASSERT (pread (99, &byte, 1, 0) == -1);
+    ASSERT (errno == EBADF);
   }
 
   return 0;

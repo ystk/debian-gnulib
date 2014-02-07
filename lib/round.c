@@ -1,5 +1,5 @@
 /* Round toward nearest, breaking ties away from zero.
-   Copyright (C) 2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2010-2012 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,16 +12,21 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License along
-   with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
 /* Written by Ben Pfaff <blp@gnu.org>, 2007.
    Based heavily on code by Bruno Haible. */
 
-#include <config.h>
+#if ! defined USE_LONG_DOUBLE
+# include <config.h>
+#endif
+
+/* Specification.  */
+#include <math.h>
 
 #include <float.h>
-#include <math.h>
+
+#undef MIN
 
 #ifdef USE_LONG_DOUBLE
 # define ROUND roundl
@@ -29,6 +34,7 @@
 # define CEIL ceill
 # define DOUBLE long double
 # define MANT_DIG LDBL_MANT_DIG
+# define MIN LDBL_MIN
 # define L_(literal) literal##L
 # define HAVE_FLOOR_AND_CEIL HAVE_FLOORL_AND_CEILL
 #elif ! defined USE_FLOAT
@@ -37,6 +43,7 @@
 # define CEIL ceil
 # define DOUBLE double
 # define MANT_DIG DBL_MANT_DIG
+# define MIN DBL_MIN
 # define L_(literal) literal
 # define HAVE_FLOOR_AND_CEIL 1
 #else /* defined USE_FLOAT */
@@ -45,8 +52,22 @@
 # define CEIL ceilf
 # define DOUBLE float
 # define MANT_DIG FLT_MANT_DIG
+# define MIN FLT_MIN
 # define L_(literal) literal##f
 # define HAVE_FLOOR_AND_CEIL HAVE_FLOORF_AND_CEILF
+#endif
+
+/* -0.0.  See minus-zero.h.  */
+#if defined __hpux || defined __sgi || defined __ICC
+# define MINUS_ZERO (-MIN * MIN)
+#else
+# define MINUS_ZERO L_(-0.0)
+#endif
+
+/* MSVC with option -fp:strict refuses to compile constant initializers that
+   contain floating-point operations.  Pacify this compiler.  */
+#ifdef _MSC_VER
+# pragma fenv_access (off)
 #endif
 
 /* If we're being included from test-round2[f].c, it already defined names for
@@ -133,7 +154,7 @@ FLOOR_FREE_ROUND (DOUBLE x)
     {
       /* Avoid rounding error for x = -(0.5 - 2^(-MANT_DIG-1)).  */
       if (z > - L_(0.5))
-        z = L_(0.0);
+        z = MINUS_ZERO;
       /* Avoid rounding errors for values near -2^k, where k >= MANT_DIG-1.  */
       else if (z > -TWO_MANT_DIG)
         {
@@ -151,4 +172,3 @@ FLOOR_FREE_ROUND (DOUBLE x)
   return z;
 }
 #endif /* FLOOR_FREE_ROUND */
-

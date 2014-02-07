@@ -9,6 +9,8 @@ havelib
 
 configure.ac:
 AM_ICONV
+m4_ifdef([gl_ICONV_MODULE_INDICATOR],
+  [gl_ICONV_MODULE_INDICATOR([iconv])])
 
 Makefile.am:
 

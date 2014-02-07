@@ -7,12 +7,14 @@ lib/sha1.c
 m4/sha1.m4
 
 Depends-on:
+stdalign
 stdint
 
 configure.ac:
 gl_SHA1
 
 Makefile.am:
+lib_SOURCES += sha1.c
 
 Include:
 "sha1.h"

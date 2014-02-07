@@ -2,7 +2,7 @@
 @section @code{mmap}
 @findex mmap
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/mmap.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/mmap.html}
 
 Gnulib module: ---
 
@@ -14,7 +14,11 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw, BeOS.
+mingw, MSVC 9, BeOS.
+@item
+On platforms where @code{off_t} is a 32-bit type, this function may not
+work correctly across the entire data range of files larger than 2 GB.
+The fix is to use the @code{AC_SYS_LARGEFILE} macro.
 @item
 To get anonymous memory, on some platforms, you can use the flags
 @code{MAP_ANONYMOUS | MAP_PRIVATE} and @code{-1} instead of a file descriptor;

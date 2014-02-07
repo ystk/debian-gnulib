@@ -1,6 +1,279 @@
 			Gnulib stable snapshot
 			----------------------
 
+  * 20120404-stable
+
+Snapshot taken based on:
+
+commit 1f28fa660e4ca110f073251a24ef3a94ad97ef69
+Date:   Sat Mar 24 16:41:21 2012 +0100
+
+with the following additional commits:
+
+    * [7ce7d6b]->[c07add3] autoupdate
+    * [3d0ba3f]->[7f8314c] maint.mk: fix syntax checks without exclusions
+    * [0e0635a]->[3d25ec7] fflush: Fix syntax error.
+
+----------------------------------------------------------------------
+
+  * 20111211-stable
+
+Snapshot taken based on:
+
+commit b572c3a256e7bf1e4eecc8c36448c08093240a6a
+Date:   Sat Dec 3 13:09:58 2011 +0100
+
+with the following additional commits:
+
+    * [c69114d]->[b3a93d2] tests: Avoid spurious error message on platforms without mktemp program.
+    * [8446103]->[46519aa] autoupdate
+    * [7c25126]->[6057366] autoupdate
+
+----------------------------------------------------------------------
+
+  * 20110908-stable
+
+Snapshot taken based on:
+
+commit 0ba19fcc5ff43167939e465af4b93f965fffcc8c
+Date:   Tue Aug 30 16:38:59 2011 -0700
+
+with the following additional commits:
+
+    * [a0d9972]->[21d1619] freopen: Don't crash if the filename argument is NULL.
+    * [a5a35f0]->[c4596b1] freopen: Documentation.
+    * [9926b90]->[395f9e6] tests: avoid spurious assertion failure in test-float.c on ppc64
+    * [8b18afa]->[c948e19] sys_select: Avoid a syntax error regarding timespec_t on IRIX 6.5.
+    * [de1fa2a]->[17f0ec6] openat: work around AIX 7.1 fstatat issue
+    * [6cf1a95]->[338ebcb] lib/fstatat.c: Include <sys/types.h> before <sys/stat.h>.
+    * [d21602d]->[aa4ddc3] pthread: Determine $(LIB_PTHREAD) correctly on IRIX 6.5.
+    * [7c712d9]->[b34698e] imaxabs: Avoid link error on OSF/1 with DTK cc.
+    * [d828cda]->[6add58a] imaxdiv: Avoid link error on OSF/1 with DTK cc.
+    * [ae006b4]->[4a9738e] strtoimax: Avoid link error on OSF/1 with DTK cc.
+    * [24bfc89]->[1d71dc7] strtoumax: Avoid link error on OSF/1 with DTK cc.
+    * [d1fa59e]->[e238a25] strtoimax, strtoumax: Document problem on HP-UX 11.
+    * [e4078c6]->[b26a79b] avoid literal : in index entries
+    * [e91216b]->[946c971] openat: test for fstatat (AT_FDCWD, ..., 0) bug
+    * [204072b]->[9f60473] openat: test for fstatat (..., 0) bug
+    * [a05ce27]->[f4293d3] openat: port to AIX 7.1 with large files
+    * [90a660c]->[e916d00] autoupdate
+    * [76074e9]->[a5e4927] openat: Work around compilation error with OSF/1 5.1 DTK cc.
+
+----------------------------------------------------------------------
+
+  * 20110609-stable
+
+Snapshot taken based on:
+
+commit 0c4be75eb0966bde4533bc111778e0ab494a93be
+Date:   Wed May 18 13:13:03 2011 -0600
+
+with the following additional commits:
+
+    * [48cc748]->[a5f8483] intprops: TYPE_IS_INTEGER, TYPE_SIGNED not integer constant exprs
+    * [8cc0fee]->[8c5e817] intprops: work around C compiler bugs
+    * [92c71a1]->[2dd0ce3] intprops: work around IRIX 6.5 cc bug with 0u - 0u + -1
+    * [c9ff025]->[056b00f] maint: correct misuse of "a" and "an"
+    * [93d7550]->[0cc5541] maint: replace misused "a" with "an"
+    * [325f131]->[f00bf3d] relocatable-prog-wrapper: Fix possible link error.
+    * [21eb071]->[8694861] clock-time: change to LGPLv2+.
+    * [6c8bcfc]->[617bbef] * doc/intprops.texi: fix typo in copyright date
+    * [99b3138]->[9279f19] verify: fix bug when gnulib <assert.h> is also included
+    * [64c6332]->[98ce667] linkat, renameat: Update dependencies.
+    * [fbd3cc5]->[be2aacf] getugroups: Fix module description.
+    * [ddd54c7]->[cd78e73] gnulib-tool: fix portability problem with MacOS sed
+    * [59ed6e8]->[1166200] idcache: Fix module description.
+    * [1e8752a]->[4831e70] Fix recent ChangeLog entry.
+    * [d94bbd1]->[4af1887] opendir-safer.c: don't clobber errno; don't close negative FD
+    * [6dc42e2]->[d0fe920] utimensat: do not reference an out-of-scope buffer
+    * [866bbae]->[b9bb8b9] tests: fix logic bug in init.sh
+    * [fc9b0f6]->[cca883f] atexit-tests: ensure reliable exit status
+    * [f4c4af0]->[61c4bf6] docs: document recently fixed glibc printf bug
+    * [9d196fa]->[a3a87d2] test-intprops: disable -Wtype-limits diagnostics
+    * [1622b36]->[527d6c4] getcwd: work around mingw bug
+    * [4ed9779]->[d1c9bfc] mbsrchr: Avoid collision with system function on Interix.
+    * [03f358b]->[1ad6403] gen-uni-tables: Say "gen-uni-tables.c" consistently.
+    * [8d8a973]->[cb6151a] getloadavg: Remove an unreliable safety check.
+    * [fdc9e6c]->[264ebf0] Status of work-in-progress around libposix.
+    * [2449068]->[cfd76ac] trim: avoid a warning from -O2 -Wstrict-overflow
+    * [a8ff65c]->[264aa35] parse-datetime.y: accommodate -Wstrict-overflow
+    * [05f391a]->[ca57003] wctype-h: Avoid namespace pollution on Solaris 2.6.
+    * [224c034]->[225c8ef] Fix link errors in tests: wait-process uses gettext-h.
+    * [9c3746f]->[7f56311] build-aux/config.sub
+    * [7c886ca]->[802ee67] Fix link errors in tests: openat-die uses gettext-h.
+    * [64e3383]->[e54b616] pipe2: Remove dependency on 'nonblocking' module.
+    * [27edfbd]->[4ba5a2c] doc: Fix a module name.
+    * [872f360]->[8248d1a] Copyright: Use LGPL 2.1 instead of LGPL 2.0.
+    * [0605107]->[d9883ac] setlocale: Enable replacement on Cygwin 1.5.
+    * [d3e6271]->[1a2b0e6] sys_select: Ensure memset is declared also on AIX 7.
+    * [c00787b]->[11da7a4] setenv: Avoid gcc warning.
+    * [6f88ff3]->[4c509f3] unsetenv: Avoid gcc warning.
+    * [1866b23]->[0560196] localename: Fix link dependencies.
+    * [bf7690a]->[54731c1] pipe-filter-ii: Fix test failure on AIX and IRIX.
+    * [e7754b0]->[52062c8] acl: Fix test failure on AIX 7.
+    * [c914617]->[34d3cce] ansi-c++-opt: Interoperability with libtool.
+    * [3f9fff2]->[0bd455a] careadlinkat: Avoid mismatch between ssize_t and int.
+    * [c224523]->[5c698ae] canonicalize-lgpl: work around AIX realpath bug
+    * [79aac72]->[cc1a9b7] canonicalize-lgpl: use common idiom
+    * [3180807]->[768eb31] doc/lgpl-2.1.texi
+    * [fba3245]->[a96c4d5] tests: fix usage message in 'mktempd_'
+    * [7b2b693]->[a43f6fd] autoupdate
+    * [3639716]->[74c0798] rmdir: Avoid test failure on HP-UX 10.20.
+    * [9776680]->[6ddae30] acl tests: Fix compilation error on HP-UX 11.
+    * [5f0441a]->[c1bf224] thread: Fix confusion between NULL and 0.
+
+----------------------------------------------------------------------
+
+  * 20110412-stable
+
+Snapshot taken based on:
+
+commit dec3475763be252103922a887920012eeb32dc26
+Date:  Thu Mar 31 15:28:37 2011 -0600
+
+with the following additional commits:
+
+    * [b64c50c]->[c8bdb92] wcpcpy, wcpncpy: Ensure declaration on glibc >= 2.13 systems.
+    * [25d7f3a]->[6c630cd] wmemchr, wcschr, wcsrchr, wcspbrk, wcsstr: Avoid errors in C++ mode.
+    * [eccf108]->[de98845] autoupdate
+    * [a2c7be5]->[d6acfb1] maint.mk: Don't trigger sc_space_tab check.
+    * [31c3890]->[eb1217e] pipe2: Relicense under LGPLv2+.
+    * [bd5d1e6]->[2db494c] binary-io: relicense under LGPLv2+
+    * [b277764]->[a7091b5] fcntl-h: fix O_ACCMODE on cygwin
+    * [306bd09]->[6870aba] autoupdate
+    * [62f3b86]->[90309e4] getaddrinfo: Fix test for sa_len member.
+    * [5e29a7a]->[9bb2e6b] test-chown.h: correct a cast
+    * [eff4c03]->[7f3fdea] stdint test: Fix compilation failure on OSF/1 with DTK compiler.
+    * [ca6143b]->[8571b74] autoupdate
+    * [fb79969]->[fa84676] autoupdate
+
+----------------------------------------------------------------------
+
+  * 20110216-stable
+
+Snapshot taken based on:
+
+commit f9289f00be9b70c0cb469faee8a40a768d7c6d43
+Date:   Wed Feb 9 20:55:19 2011 +0100
+
+with the following additional commits:
+
+    * [27147dc]->[4c5d3e6] doc: update users.txt
+    * [a54ee6e]->[a1245ce] doc: update users.txt
+    * [4cce65c]->[b9f1203] doc: update users.txt
+    * [aa887f8]->[ce38c27] mbsrtowcs: Work around bug on native Windows.
+    * [c9dc6ff]->[461ace8] wcsrtombs: Work around bug on native Windows.
+    * [06c2675]->[1138b90] stdlib: support non-GCC __attribute__
+    * [4baa767]->[1dfaba6] quotearg test: Avoid test failure on mingw.
+    * [b45dc21]->[d19a89f] stdlib: don't get in the way of non-GCC __attribute__
+    * [9fbdea6]->[860215e] Fix last ChangeLog entry.
+    * [e680a55]->[2d86779] Don't interfere with a program's definition of __attribute__.
+    * [a38e4bb]->[6f5e418] mbsinit: Don't crash for a NULL argument.
+    * [cca34e7]->[1b94e03] mbsinit: Work around mingw bug.
+    * [a035a8d]->[2bbd452] mbrtowc: Work around native Windows bug.
+    * [f6a5a12]->[c7a1790] Don't interfere with a program's definition of __attribute__.
+    * [59b191e]->[5f5a2a4] Consistent macro naming for macros that use GCC __attribute__.
+    * [bf2664d]->[25ab657] doc: update users.txt
+    * [665d45c]->[321331f] autoupdate
+
+----------------------------------------------------------------------
+
+  * 20101221-stable
+
+This snapshot is identical to the previous 20101220-stable snapshot,
+with the addition of one fix:
+
+    * [d534aa8]->[385ec31] iconv_open: Fix regression from 2010-12-04.
+
+----------------------------------------------------------------------
+
+  * 20101220-stable
+
+Snapshot taken based on:
+
+commit 64911207854610668b480939469282fdaeb96f74
+Date:   Tue Dec 7 03:32:46 2010 +0100
+
+with the following additional commits:
+
+    * [8029e49]->[6f83d07] autoupdate
+    * [0de2016]->[c94504d] * build-aux/gendocs.sh: restore x bit
+    * [82afcdd]->[e631098] autoupdate
+    * [980f9d2]->[20c5bd5] cloexec, fcntl: relax license
+    * [15a8eaf]->[68e0cfc] tests: set fail=0 at start
+    * [ef6309e]->[d157341] acl: port to Solaris 8 when copying from tmpfs to ufs
+    * [585734b]->[fb7d1d8] iconv: Make it possible again to use this module without 'iconv-h'.
+    * [7b4e992]->[3eb5095] unistr/u8-mbsnlen: Add missing dependency.
+    * [cc0adb3]->[e65c7e5] relocatable-prog-wrapper: Separate from relocatable-prog.
+    * [423d3ca]->[6f9e924] doc: Mention vasprintf-posix module.
+    * [224a907]->[7131d7e] Document some different function declarations on OSF/1 5.1.
+
+----------------------------------------------------------------------
+
+  * 20101024-stable
+
+Snapshot taken based on:
+
+commit ba523890aa7bae76e3ac6b3ce68f22a79d25ce2c
+Date:   Wed Oct 13 10:15:38 2010 +0200
+
+with the following additional commits:
+
+    * [b6d1430]->[fef7abe] termios: fix compilation on mingw
+    * [74b1e48]->[7bf74f7] socketlib: Fix.
+    * [d239853]->[ced7fa1] vasnprintf: Don't set errno to 0.
+    * [fdaeccf]->[66e670a] GNUmakefile: handle "stable" target, not "major"
+    * [cac3889]->[7661272] ignore-value: make header idempotent
+    * [61241ea]->[25d72f8] termios: Update documentation.
+    * [94617c2]->[a964f9e] Fix date in ChangeLog.
+    * [3f75f63]->[7966020] nextafter: Fix configure check.
+    * [b86f488]->[ddc319e] c-stack: work around libsigsegv 2.8 bug
+    * [a0598ff]->[69c6204] nl_langinfo test: Avoid test failure on NetBSD 5.
+    * [f8dd25c]->[9116c10] Tests: Fix LOCALE_JA on MirBSD 10.
+    * [9645318]->[87dea4e] nl_langinfo: Mention problem with CRNCYSTR on NetBSD 5.0.
+
+----------------------------------------------------------------------
+
+  * 20100829-stable
+
+Snapshot taken based on:
+
+commit 3f08220c1a263dfc45f6e0ce6dcee97631dd5e56
+Date:   Tue Aug 17 07:18:27 2010 -0700
+
+with the following additional commits:
+
+    * [6333e13]->[a2ae92e] Fix gnulib-tool sed script de-commentation for AIX sed.
+    * [350aad7]->[9e05eaf] autoupdate
+    * [06728e0]->[c94cede] fts: allow compilation with C++
+    * [51c2a23]->[880d107] poll, select: handle ERROR_BROKEN_PIPE.
+    * [0c37a90]->[0b22530] argz: fix shell quoting issue
+    * [204e903]->[99d6cd5] stdbool: avoid rejecting clang
+    * [5a2d7e1]->[21182ba] priv-set: fix comments
+    * [a9ec89b]->[325e969] priv-set: fix comment
+    * [667277d]->[d74874d] getloadavg: don't define SVR4 on cygwin
+    * [8c8ee4b]->[24ad42e] getloadavg: simplify code
+    * [cab03f4]->[6acb78a] stdbool: avoid spurious failure with modern xlc
+    * [8951e0e]->[2981537] Fix test-unlinkat, test-rmdir failure on AIX 5.3.
+    * [0a05120]->[a83a25f] poll: return immediately on POLLHUP.
+    * [fc9e09a]->[63b29c2] autoupdate
+    * [20e165d]->[6a0e461] stat-time: relax license LGPL
+    * [2901094]->[90aa7a1] acl: fix compilation test
+    * [a228f53]->[0b86eb2] lseek: fix link test
+    * [14b6d70]->[3056d82] btowc: fix missing file
+    * [78ea303]->[0e59cb6] glob: fix compile test
+    * [06e1426]->[7434863] lib-symbol-versions: fix m4 quoting
+    * [6530a2c]->[d45eaf1] login_tty: add missing dependeny
+    * [f99e41e]->[176c42a] * ChangeLog: fix typo
+    * [ebf441c]->[2a3686a] sys_socket, netdb: Ensure socklen_t gets defined.
+    * [63d392e]->[cb49949] Avoid relocwrapper link errors due to gnulib replacement functions.
+    * [7a6e9cf]->[da66e7e] ftello: Relax license.
+    * [5712b08]->[02df495] autoupdate
+    * [6c345f6]->[9a348fb] unistr/u*-strchr: Fix tests dependencies.
+    * [c4bc551]->[2b958de] pread, pwrite: add missing dependency
+
+----------------------------------------------------------------------
+
   * 20100704-stable
 
 Snapshot taken based on:

@@ -9,12 +9,12 @@ tests/macros.h
 
 Depends-on:
 ignore-value
-progname
 timespec
 usleep
 utimecmp
 
 configure.ac:
+AC_REQUIRE([AC_C_INLINE])
 
 Makefile.am:
 TESTS += test-utimensat

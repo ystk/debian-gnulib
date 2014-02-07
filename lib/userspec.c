@@ -1,5 +1,5 @@
 /* userspec.c -- Parse a user and group string.
-   Copyright (C) 1989-1992, 1997-1998, 2000, 2002-2010 Free Software
+   Copyright (C) 1989-1992, 1997-1998, 2000, 2002-2012 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -79,8 +79,8 @@
    - It's typically faster.
    POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
    isdigit unless it's important to use the locale's definition
-   of `digit' even when the host does not conform to POSIX.  */
-#define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
+   of "digit" even when the host does not conform to POSIX.  */
+# define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
 
 /* Return true if STR represents an unsigned decimal integer.  */
 
@@ -145,7 +145,7 @@ parse_with_separator (char const *spec, char const *separator,
 
 #ifdef __DJGPP__
   /* Pretend that we are the user U whose group is G.  This makes
-     pwd and grp functions ``know'' about the UID and GID of these.  */
+     pwd and grp functions "know" about the UID and GID of these.  */
   if (u && !is_number (u))
     setenv ("USER", u, 1);
   if (g && !is_number (g))
@@ -232,10 +232,10 @@ parse_with_separator (char const *spec, char const *separator,
    Either user or group, or both, must be present.
    If the group is omitted but the separator is given,
    use the given user's login group.
-   If SPEC contains a `:', then use that as the separator, ignoring
-   any `.'s.  If there is no `:', but there is a `.', then first look
+   If SPEC contains a ':', then use that as the separator, ignoring
+   any '.'s.  If there is no ':', but there is a '.', then first look
    up the entire SPEC as a login name.  If that look-up fails, then
-   try again interpreting the `.'  as a separator.
+   try again interpreting the '.'  as a separator.
 
    USERNAME and GROUPNAME will be in newly malloc'd memory.
    Either one might be NULL instead, indicating that it was not
@@ -254,7 +254,7 @@ parse_user_spec (char const *spec, uid_t *uid, gid_t *gid,
   if (!colon && error_msg)
     {
       /* If there's no colon but there is a dot, and if looking up the
-         whole spec failed (i.e., the spec is not a owner name that
+         whole spec failed (i.e., the spec is not an owner name that
          includes a dot), then try again, but interpret the dot as a
          separator.  This is a compatible extension to POSIX, since
          the POSIX-required behavior is always tried first.  */

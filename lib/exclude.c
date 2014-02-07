@@ -1,7 +1,7 @@
 /* exclude.c -- exclude file names
 
-   Copyright (C) 1992, 1993, 1994, 1997, 1999, 2000, 2001, 2002, 2003, 2004,
-   2005, 2006, 2007, 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 1992-1994, 1997, 1999-2007, 2009-2012 Free Software
+   Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -142,14 +142,14 @@ unescape_pattern (char *str)
   do
     {
       if (inset)
-	{
-	  if (*q == ']')
-	    inset = 0;
-	}
+        {
+          if (*q == ']')
+            inset = 0;
+        }
       else if (*q == '[')
-	inset = 1;
+        inset = 1;
       else if (*q == '\\')
-	q++;
+        q++;
     }
   while ((*str++ = *q++));
 }
@@ -501,7 +501,7 @@ add_exclude (struct exclude *ex, char const *pattern, int options)
 
       str = xstrdup (pattern);
       if (options & EXCLUDE_WILDCARDS)
-	unescape_pattern (str);
+        unescape_pattern (str);
       p = hash_insert (seg->v.table, str);
       if (p != str)
         free (str);

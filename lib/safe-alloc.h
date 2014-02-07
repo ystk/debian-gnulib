@@ -1,6 +1,6 @@
 /* safe-alloc.h: safer memory allocation
 
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -31,22 +31,22 @@
 # endif
 #endif
 
-# ifndef ATTRIBUTE_RETURN_CHECK
+# ifndef _GL_ATTRIBUTE_RETURN_CHECK
 #  if __GNUC_PREREQ (3, 4)
-#   define ATTRIBUTE_RETURN_CHECK __attribute__((__warn_unused_result__))
+#   define _GL_ATTRIBUTE_RETURN_CHECK __attribute__((__warn_unused_result__))
 #  else
-#   define ATTRIBUTE_RETURN_CHECK
+#   define _GL_ATTRIBUTE_RETURN_CHECK
 #  endif
 # endif
 
 /* Don't call these directly - use the macros below */
 int
 safe_alloc_alloc_n (void *ptrptr, size_t size, size_t count, int zeroed)
-  ATTRIBUTE_RETURN_CHECK;
+  _GL_ATTRIBUTE_RETURN_CHECK;
 
 int
 safe_alloc_realloc_n (void *ptrptr, size_t size, size_t count)
-  ATTRIBUTE_RETURN_CHECK;
+  _GL_ATTRIBUTE_RETURN_CHECK;
 
 /**
  * ALLOC:

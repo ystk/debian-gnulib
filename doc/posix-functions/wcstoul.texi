@@ -2,7 +2,7 @@
 @section @code{wcstoul}
 @findex wcstoul
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/wcstoul.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/wcstoul.html}
 
 Gnulib module: ---
 
@@ -14,7 +14,7 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-IRIX 5.3, Solaris 2.5.1, Cygwin 1.5.x.
+Minix 3.1.8, IRIX 5.3, Solaris 2.5.1, Cygwin 1.5.x.
 @item
 On AIX and Windows platforms, @code{wchar_t} is a 16-bit type and therefore cannot
 accommodate all Unicode characters.

@@ -2,7 +2,7 @@
 @section @code{setpgrp}
 @findex setpgrp
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/setpgrp.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/setpgrp.html}
 
 Gnulib module: ---
 
@@ -14,5 +14,5 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw, Interix 3.5.
+Minix 3.1.8, mingw, MSVC 9, Interix 3.5.
 @end itemize

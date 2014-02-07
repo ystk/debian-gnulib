@@ -5,7 +5,11 @@
 @c For double-sided printing, uncomment:
 @c @setchapternewpage odd
 @c This date is automagically updated when you save this file:
-@set lastupdate June 21, 2010
+<<<<<<< HEAD
+@set lastupdate December 2, 2011
+=======
+@set lastupdate March 20, 2012
+>>>>>>> snapshot-start
 @c %**end of header
 
 @dircategory GNU organization
@@ -23,8 +27,8 @@
 Information for maintainers of GNU software, last updated @value{lastupdate}.
 
 Copyright @copyright{} 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Free Software
-Foundation, Inc.
+2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
+2010, 2011, 2012 Free Software Foundation, Inc.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -57,7 +61,7 @@ Texts.  A copy of the license is included in the section entitled
 @menu
 * Preface::
 * Getting Help::
-* Getting a GNU Account::
+* GNU Accounts and Resources::
 * Stepping Down::
 * Recruiting Developers::
 * Legal Matters::
@@ -70,6 +74,7 @@ Texts.  A copy of the license is included in the section entitled
 * Ethical and Philosophical Consideration::
 * Terminology::
 * Hosting::
+* Donations::
 * Free Software Directory::
 * Using the Proofreaders List::
 * GNU Free Documentation License::
@@ -92,8 +97,8 @@ In addition to this document, please read and follow the GNU Coding
 Standards (@pxref{Top, , Contents, standards, GNU Coding Standards}).
 
 @cindex @code{bug-standards@@gnu.org} email address
-@cindex Savannah repository for gnustandards
-@cindex gnustandards project repository
+@cindex Savannah repository for @code{gnustandards}
+@cindex @code{gnustandards} project repository
 Please send corrections or suggestions for this document to
 @email{bug-standards@@gnu.org}.  If you make a suggestion, please
 include suggested new wording if you can.  We prefer a context diff to
@@ -127,27 +132,45 @@ This release of the GNU Maintainer Information was last updated
 @cindex help, getting
 
 @cindex @code{mentors@@gnu.org} mailing list
-If you have general questions or encounter a situation where it isn't
-clear what to do, you can ask @email{mentors@@gnu.org}, which is a
-list of a few experienced GNU contributors who have offered to answer
-questions for new maintainers.
+If you have any general questions or encounter a situation where it
+isn't clear how to get something done or who to ask, you (as a GNU
+contributor) can always write to @email{mentors@@gnu.org}, which is a
+list of a few experienced GNU folks who have volunteered to answer
+questions.  Any GNU-related question is fair game for the
+@code{mentors} list.
 
 @cindex advisory committee
 The GNU Advisory Committee helps to coordinate activities in the GNU
-project on behalf of RMS.  If you have any organizational questions or
-concerns you can contact the committee at
-@email{gnu-advisory@@gnu.org}.  The committee holds a regular monthly
-meeting to discuss any issues that have been raised.  The minutes of
-the meeting are sent to the @code{gnu-prog} list, and can also be
-found, along with additional information, in
+project on behalf of RMS (Richard Stallman, the Chief GNUisance).  If
+you have any organizational questions or concerns you can contact the
+committee at @email{gnu-advisory@@gnu.org}.  See
+@url{http://www.gnu.org/contact/gnu-advisory.html} for the current
+committee members.  Additional information is in
 @file{/gd/gnuorg/advisory}.
 
+@cindex down, when GNU machines are
+@cindex outage, of GNU machines
+@cindex @url{http://identi.ca/group/fsfstatus}
+If you find that any GNU computer systems (@code{fencepost.gnu.org},
+@code{ftp.gnu.org}, @code{www.gnu.org}, @code{savannah.gnu.org},
+@dots{}) seem to be down, you can check the current status at
+@url{http://identi.ca/group/fsfstatus}.  Most likely the problem, if
+it can be alleviated at the FSF end, is already being worked on.
+
+@cindex sysadmin, FSF
+@cindex FSF system administrators
+@cindex GNU system administrators
+The FSF system administrators are responsible for the network and GNU
+hardware.  You can email them at @email{sysadmin@@fsf.org}, but please
+try not to burden them unnecessarily.
 
 
-@node Getting a GNU Account
-@chapter Getting a GNU Account
+@node GNU Accounts and Resources
+@chapter GNU Accounts and Resources
 @cindex shell account, on fencepost
-@cindex @code{fencepost.gnu.org} GNU machine
+@cindex @code{fencepost.gnu.org} GNU login host
+@cindex resources for GNU developers
+@cindex development resources
 
 @c We want to repeat this text later, so define a macro.
 @macro gdgnuorgtext
@@ -162,14 +185,27 @@ the package.
 
 @gdgnuorgtext{}
 
-@cindex down, when GNU machines are
-@cindex outage, of GNU machines
-@cindex @url{http://identi.ca/group/fsfstatus}
-If you find that any GNU computer systems (@code{fencepost.gnu.org},
-@code{ftp.gnu.org}, @code{www.gnu.org}, @code{savannah.gnu.org},
-@dots{}) seem to be down, you can check the current status at
-@url{http://identi.ca/group/fsfstatus}.  Most likely the problem, if
-it can be alleviated at the FSF end, is already being worked on.
+Other resources available to GNU maintainers are described at
+@url{http://www.gnu.org/software/devel.html}, as well as throughout
+this document.  In brief:
+
+@itemize @bullet
+@item Login accounts (see above).
+
+@item Version control (@pxref{Old Versions}).
+
+@item Mailing lists (@pxref{Mail}).
+
+@item Web pages (@pxref{Web Pages}).
+
+@item Mirrored release areas (@pxref{Distributions}).
+
+@cindex Hydra
+@cindex @code{platform-testers} mailing list
+@item Pre-release portability testing, both automated (via Hydra) and
+on request (via volunteers).
+
+@end itemize
 
 
 @node Stepping Down
@@ -192,12 +228,11 @@ If you have an idea for who should take over, please tell
 maintainer needs the GNU Project's confirmation, but your judgment that
 a person is capable of doing the job will carry a lot of weight.
 
-As your final act as maintainer, it would be helpful to set up the
-package under @code{savannah.gnu.org} if it is not there already
-(@pxref{Old Versions}).  This will make it much easier for the new
-maintainer to pick up where you left off and will ensure that the
-source tree is not misplaced if it takes us a while to find a new
-maintainer.
+As your final act as maintainer, it would be helpful to set up or
+update the package under @code{savannah.gnu.org} (@pxref{Old
+Versions}).  This will make it much easier for the new maintainer to
+pick up where you left off and will ensure that the source tree is not
+misplaced if it takes us a while to find a new maintainer.
 
 
 @node Recruiting Developers
@@ -288,7 +323,7 @@ this:
 
 @quotation
 Would you be willing to assign the copyright to the Free Software
-Foundation, so that we could install it in @var{program}?
+Foundation, so that we could install it in @var{package}?
 @end quotation
 
 @noindent
@@ -296,7 +331,7 @@ or
 
 @quotation
 Would you be willing to sign a copyright disclaimer to put this change
-in the public domain, so that we can install it in @var{program}?
+in the public domain, so that we can install it in @var{package}?
 @end quotation
 
 If the contributor then wants more information, you can send per the file
@@ -336,10 +371,14 @@ file gives per instructions for how to ask the FSF to mail per the
 papers to sign.  The @file{request-} file also raises the issue of
 getting an employer's disclaimer from the contributor's employer.
 
-When the contributor emails the form to the FSF, the FSF sends per
-papers to sign.  If person signs them right away, the whole process
-takes a couple of weeks---mostly waiting for letters to go back and
-forth.
+When the contributor emails the form to the FSF, the FSF sends per an
+electronic (usually PDF) copy of the assignment.  All contributors
+then print the assignment and sign it.  Contributors residing outside
+the U.S. must mail the signed form to the FSF via the post.
+Contributors located in the U.S. can then email or fax a scanned copy
+back to the FSF (or use postal mail, if they prefer).  (To emphasize,
+the necessary distinction is between US residents and non-residents,
+citizenship does not matter.)
 
 For less common cases, we have template files you should send to the
 contributor.  Be sure to fill in the name of the person and the name
@@ -362,7 +401,7 @@ changes to a manual, you can use @file{assign.future.manual}.
 For a translation of a manual, use @file{assign.translation.manual}.
 
 For translations of program strings (as used by GNU Gettext, for
-example; @pxref{Internationalization,,,standards,GNU Coding
+example; @pxref{Internationalization,,, standards, GNU Coding
 Standards}), use @file{disclaim.translation}.  If you make use of the
 Translation Project (@url{http://translationproject.org}) facilities,
 please check with the TP coordinators that they have sent the
@@ -515,6 +554,11 @@ trivial to matter for copyright purposes.  Later on you can update the
 automatically, if you are careful about the formatting of the change
 log entries.
 
+It is ok to include other email addresses, names, and program
+information in @file{AUTHORS}, such as bug-reporting information.
+@xref{Standard Mailing Lists}.
+
+
 @node Copying from Other Packages
 @section Copying from Other Packages
 
@@ -625,8 +669,11 @@ domain, if the movie companies don't continue buying laws to further
 extend copyright.  If you copy a file into the package from some other
 program, keep the copyright years that come with the file.
 
-Do not abbreviate the year list using a range; for instance, do not
-write @samp{1996--1998}; instead, write @samp{1996, 1997, 1998}.
+You can use a range (@samp{2008-2010}) instead of listing individual
+years (@samp{2008, 2009, 2010}) if and only if: 1)@tie{}every year in
+the range, inclusive, really is a ``copyrightable'' year that would be
+listed individually; @emph{and} 2)@tie{}you make an explicit statement
+in a @file{README} file about this usage.
 
 For files which are regularly copied from another project (such as
 @samp{gnulib}), leave the copyright notice as it is in the original.
@@ -679,15 +726,71 @@ any files distributed under the Lesser GPL, it should contain a full
 copy of its plain text version also (conventionally in a file named
 @file{COPYING.LESSER}).
 
-If you have questions about license issues for your GNU package,
+If you have questions about licensing issues for your GNU package,
 please write @email{licensing@@gnu.org}.
 
 @menu
-* Source: Canonical License Sources.
-* Code: License Notices for Code.
+* Which:         Licensing of GNU Packages.
+* Canonical:     Canonical License Sources.
+* Code:          License Notices for Code.
 * Documentation: License Notices for Documentation.
-* Other: License Notices for Other Files.
+* Other:         License Notices for Other Files.
 @end menu
+
+
+@node Licensing of GNU Packages
+@subsection Licensing of GNU Packages
+
+Normally, GNU packages should use the latest version of the GNU GPL,
+with the ``or any later version'' formulation.  @xref{License Notices
+for Code}, for the exact wording of the license notice.
+
+Occasionally, a GNU library may provide functionality which is already
+widely available to proprietary programs through alternative
+implementations; for example, the GNU C Library.  In such cases, the
+Lesser GPL should be used (again, for the notice wording,
+@pxref{License Notices for Code}).  If a GNU library provides unique
+functionality, however, the GNU GPL should be used.
+@url{http://www.gnu.org/licenses/why-not-lgpl.html} discusses this
+strategic choice.
+
+Some of these libraries need to work with programs released under
+GPLv2-only; that is, which allow the GNU GPL version 2 but not later
+versions.  In this case, the GNU package should be released under a
+dual license: GNU GPL version 2 (or any later version) and the GNU
+Lesser GPL version 3 (or any later version).  Here is the notice for
+that case:
+
+@smallexample
+This file is part of GNU @var{package}.
+
+GNU @var{package} is free software: you can redistribute it and/or
+modify it under the terms of either:
+
+  * the GNU Lesser General Public License as published by the Free
+    Software Foundation; either version 3 of the License, or (at your
+    option) any later version.
+
+or
+
+  * the GNU General Public License as published by the Free
+    Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+or both in parallel, as here.
+
+GNU @var{package} is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received copies of the GNU General Public License and
+the GNU Lesser General Public License along with this program.  If
+not, see @url{http://www.gnu.org/licenses/}.
+@end smallexample
+
+For small packages, you can use ``This program'' instead of ``GNU
+@var{package}''.
 
 
 @node Canonical License Sources
@@ -710,7 +813,7 @@ can access via anonymous Git or CVS.  See
 The official Texinfo sources for the licenses are also available in
 those same places, so you can include them in your documentation.  A
 GFDL-covered manual should include the GFDL in this way.  @xref{GNU
-Sample Texts,,,texinfo,Texinfo}, for a full example in a Texinfo
+Sample Texts,,, texinfo, Texinfo}, for a full example in a Texinfo
 manual.
 
 
@@ -721,14 +824,14 @@ Typically the license notice for program files (including build scripts,
 configure files and makefiles) should cite the GPL, like this:
 
 @quotation
-This file is part of GNU @var{program}.
+This file is part of GNU @var{package}.
 
-GNU @var{program} is free software: you can redistribute it and/or
+GNU @var{package} is free software: you can redistribute it and/or
 modify it under the terms of the GNU General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
 
-GNU @var{program} is distributed in the hope that it will be useful,
+GNU @var{package} is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
@@ -754,6 +857,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see @url{http://www.gnu.org/licenses/}.
 @end quotation
+
+In either case, for those few packages which use the Lesser GPL
+(@pxref{Licensing of GNU Packages}), insert the word ``Lesser'' before
+``General'' in @emph{all three} places.
+@url{http://@/www.gnu.org/@/licenses/@/gpl-howto.html} discusses application
+the GPL in more detail.
 
 
 @node License Notices for Documentation
@@ -788,10 +897,14 @@ manual.  If there are none, then say ``with no Invariant Sections''.
 If your manual is not published by the FSF, and under 400 pages, you
 can omit both cover texts.
 
-@xref{GNU Sample Texts,,,texinfo,Texinfo}, for a full example in a
+@xref{GNU Sample Texts,,, texinfo, Texinfo}, for a full example in a
 Texinfo manual, and see
 @url{http://www.gnu.org/licenses/fdl-howto.html} for more advice about
 how to use the GNU FDL.
+
+If you write a manual that people might want to buy on paper, please
+write to @email{maintainers@@gnu.org} to tell the FSF about it.  We
+might want to publish it.
 
 If the manual is over 400 pages, or if the FSF thinks it might be a
 good choice for publishing on paper, then please include the GNU GPL,
@@ -981,11 +1094,9 @@ have them.
 Once a program is in use, you will get bug reports for it.  Most GNU
 programs have their own special lists for sending bug reports.  The
 advertised bug-reporting email address should always be
-@samp{bug-@var{program}@@gnu.org}, to help show users that the program
+@samp{bug-@var{package}@@gnu.org}, to help show users that the program
 is a GNU package, but it is ok to set up that list to forward to another
-site if you prefer.  The package distribution should state the
-name of the bug-reporting list in a prominent place, and ask users to
-help us by reporting bugs there.
+site if you prefer.
 
 @cindex @email{bug-gnu-utils@@gnu.org}
 We also have a catch-all list, @email{bug-gnu-utils@@gnu.org}, which is
@@ -993,17 +1104,28 @@ used for all GNU programs that don't have their own specific lists.  But
 nowadays we want to give each program its own bug-reporting list and
 move away from using @email{bug-gnu-utils}.
 
+@xref{Replying to Mail}, for more about handling and tracking bug
+reports.
+
 @cindex help for users, mailing list for
 Some GNU programs with many users have another mailing list,
-@samp{help-@var{program}.org}, for people to ask other users for help.
+@samp{help-@var{package}.org}, for people to ask other users for help.
 If your program has many users, you should create such a list for it.
 For a fairly new program, which doesn't have a large user base yet, it
 is better not to bother with this.
 
 @cindex announcements, mailing list for
 If you wish, you can also have a mailing list
-@samp{info-@var{program}} for announcements (@pxref{Announcements}),
-and any others you find useful.
+@samp{info-@var{package}} for announcements (@pxref{Announcements}).
+Any other mailing lists you find useful can also be created.
+
+The package distribution should state the name of all the package's
+mailing lists in a prominent place, and ask users to help us by
+reporting bugs appropriately.  The top-level @file{README} file and/or
+@file{AUTHORS} file are good places.  Mailing list information should
+also be included in the manual and the package web pages (@pxref{Web
+Pages}).
+
 
 
 @node Creating Mailing Lists
@@ -1022,9 +1144,9 @@ default configuration for antispam purposes (see below).
 
 To create and maintain simple aliases and unmanaged lists, you can
 edit @file{/com/mailer/aliases} on the main GNU server.  If you don't
-have an account there,
-@url{http://www.gnu.org/software/README.accounts.html} (@pxref{Getting
-a GNU Account}).
+have an account there, please read
+@url{http://www.gnu.org/software/README.accounts.html} (@pxref{GNU
+Accounts and Resources}).
 
 But if you don't want to learn how to do those things, you can
 alternatively ask @email{alias-file@@gnu.org} to add you to the
@@ -1090,16 +1212,28 @@ Some GNU packages, such as Emacs and GCC, come with advice about how
 to make bug reports useful.  Copying and adapting that could be very
 useful for your package.
 
+@cindex @url{http://bugs.gnu.org}
+@cindex bug reports, email tracker for
+@cindex bug reports, web tracker for
+If you would like to use an email-based bug tracking system, see
+@url{http://bugs.gnu.org}; this can be connected with the regular
+bug-reporting address.  Alternatively, if you would like to use a
+web-based bug tracking system, Savannah supports this (@pxref{Old
+Versions}), but please don't fail to accept bugs by regular email as
+well---we don't want to put up unnecessary barriers against users
+submitting reports.
+
 
 @node Old Versions
 @chapter Recording Old Versions
 @cindex version control
 
 It is very important to keep backup files of all source files of GNU.
-You can do this using a source control system (such as RCS, CVS, Git,
-@dots{}) if you like.  The easiest way to use RCS or CVS is via the
-Version Control library in Emacs (@pxref{VC Concepts,, Concepts of
-Version Control, emacs, The GNU Emacs Manual}).
+You can do this using a source control system (such as Bazaar, RCS,
+CVS, Git, Subversion, @dots{}) if you like.  An easy way to use
+many such systems is via the Version Control library in Emacs
+(@pxref{Introduction to VC,, Introduction to Version Control, emacs,
+The GNU Emacs Manual}).
 
 The history of previous revisions and log entries is very important for
 future maintainers of the package, so even if you do not make it
@@ -1108,17 +1242,18 @@ change log that you would not want to hand over to another maintainer
 some day.
 
 @cindex @code{savannah-hackers@@gnu.org}
-The GNU Project provides a server that GNU software packages can use
+The GNU Project provides a server that GNU packages can use
 for source control and other package needs: @code{savannah.gnu.org}.
-You don't have to use this repository, but if you plan to allow public
-read-only access to your development sources, it is convenient for
-people to be able to find various GNU packages in a central place.
-Savannah is managed by @email{savannah-hackers@@gnu.org}.
+Savannah is managed by @email{savannah-hackers@@gnu.org}.  For more
+details on using and contributing to Savannah, see
+@url{http://savannah.gnu.org/maintenance}.
 
-All GNU maintainers are strongly encouraged to take advantage of
-Savannah, as sharing such a central point can serve to foster a sense
-of community among GNU developers and help in keeping up with project
-management.
+It's not an absolute requirement, but all GNU maintainers are strongly
+encouraged to take advantage of Savannah, as sharing such a central
+point can serve to foster a sense of community among GNU developers as
+well as help in keeping up with project management.  Please don't mark
+Savannah projects for GNU packages as private; that defeats a large
+part of the purpose of using Savannah in the first place.
 
 @cindex @code{savannah-announce@@gnu.org} mailing list
 If you do use Savannah, please subscribe to the
@@ -1131,7 +1266,7 @@ upgrades, problems, and the like.
 @node Distributions
 @chapter Distributions
 
-It is important to follow the GNU conventions when making GNU software
+Please follow the GNU conventions when making GNU software
 distributions.
 
 @menu
@@ -1206,7 +1341,7 @@ it will be very clear from the diffs themselves which version is which.
 @cindex time stamp in diffs
 If you use GNU @code{diff} to make the patch, use the options
 @samp{-rc2P}.  That will put any new files into the output as ``entirely
-different.''  Also, the patch's context diff headers should have dates
+different''.  Also, the patch's context diff headers should have dates
 and times in Universal Time using traditional Unix format, so that patch
 recipients can use GNU @code{patch}'s @samp{-Z} option.  For example,
 you could use the following Bourne shell command to create the patch:
@@ -1230,23 +1365,21 @@ which subdirectory to find each file in.
 It's wise to test your patch by applying it to a copy of the old
 version, and checking that the result exactly matches the new version.
 
+
 @node Distribution on ftp.gnu.org
 @section Distribution on @code{ftp.gnu.org}
 @cindex GNU ftp site
 @cindex @code{ftp.gnu.org}, the GNU release site
 
-GNU packages are distributed through the directory @file{/gnu} on
-@code{ftp.gnu.org}, via both HTTP and FTP.  Each package should have a
-subdirectory named after the package, and all the distribution files
-for the package should go in that subdirectory.
+We strongly recommend using @code{ftp.gnu.org} to distribute official
+releases.  If you want to also distribute the package from a site of
+your own, that is fine.  To use some other site instead of
+@code{ftp.gnu.org} is acceptable, provided it allows connections from
+anyone anywhere.
 
-@c If you have an interest in seeing the monthly download logs from the FTP
-@c site at @code{ftp.gnu.org} for your program, that is something that
-@c @email{ftp-upload@@gnu.org} can set up for you.  Please contact them if
-@c you are interested.
+@xref{Automated FTP Uploads}, for the procedural details of putting
+new versions on @code{ftp.gnu.org}.
 
-@xref{Automated FTP Uploads}, for procedural details of putting new
-versions on @code{ftp.gnu.org}.
 
 @node Test Releases
 @section Test Releases
@@ -1261,8 +1394,8 @@ but send it only to a group of volunteers that you have recruited.  (Use
 a suitable GNU mailing list/newsgroup to recruit them.)
 
 We normally use the server @code{alpha.gnu.org} for pretests and
-prerelease versions.  @xref{Automated FTP Uploads}, for procedural details
-of putting new versions on @code{alpha.gnu.org}.
+prerelease versions.  @xref{Automated FTP Uploads}, for the procedural
+details of putting new versions on @code{alpha.gnu.org}.
 
 Once a program gets to be widely used and people expect it to work
 solidly, it is a good idea to do pretest releases before each ``real''
@@ -1305,7 +1438,7 @@ In order to upload new releases to @code{ftp.gnu.org} or
 information.  Then, you can perform uploads yourself, with no
 intervention needed by the system administrators.
 
-The general idea is that releases should be crytographically signed
+The general idea is that releases should be cryptographically signed
 before they are made publicly available.
 
 @menu
@@ -1335,28 +1468,29 @@ maintain the web pages at @url{http://www.gnu.org} for your project
 
 @item
 In the @samp{My Account Conf} page on @code{savannah}, upload the GPG
-key you will use to sign your packages.
+key you will use to sign your packages.  If you haven't created one
+before, you can do so with the command @code{gpg --gen-key} (you can
+accept all the default answers to its questions).
 
-You can create a key with the command @code{gpg --gen-key}.  It is
-good to also send your key to the GPG public key server: @code{gpg
---keyserver keys.gnupg.net --send-keys @var{keyid}}, where @var{keyid}
-is the eight hex digits reported by @code{gpg --list-public-keys} on
-the @code{pub} line before the date.  For full information about GPG,
-see @url{http://www.gnu.org/software/gpg})
+Optional but recommended: Send your key to a GPG public key server:
+@code{gpg --keyserver keys.gnupg.net --send-keys @var{keyid}}, where
+@var{keyid} is the eight hex digits reported by @code{gpg
+--list-public-keys} on the @code{pub} line before the date.  For full
+information about GPG, see @url{http://www.gnu.org/software/gpg}.
 
 @item
 Compose a message with the following items in some @var{msgfile}.
 Then GPG-sign it by running @code{gpg --clearsign @var{msgfile}}, and
-finally email the resulting @file{@var{msgfile}.asc}), to
+finally email the resulting @file{@var{msgfile}.asc} to
 @email{ftp-upload@@gnu.org}.
 
 @enumerate
 @item
-Name of package(s) that you are the maintainer for, and your
-preferred email address.
+Name of package(s) that you are the maintainer for, your
+preferred email address, and your Savannah username.
 
 @item
-An ASCII armored copy of your GnuPG key, as an attachment.  (@samp{gpg
+An ASCII armored copy of your GPG key, as an attachment.  (@samp{gpg
 --export -a @var{your_key_id} >mykey.asc} should give you this.)
 
 @item
@@ -1365,7 +1499,7 @@ authorize to make releases for which packages, if any (in the case that you
 don't make all releases yourself).
 
 @item
-ASCII armored copies of GnuPG keys for any individuals listed in (3).
+ASCII armored copies of GPG keys for any individuals listed in (3).
 @end enumerate
 @end enumerate
 
@@ -1449,7 +1583,9 @@ directory of @code{gnulib} serves as a replacement which uses plain
 command line @code{ftp}.
 
 If you have difficulties with an upload, email
-@email{ftp-upload@@gnu.org}.
+@email{ftp-upload@@gnu.org}.  You can check the archive of uploads
+processed at
+@url{https://lists.gnu.org/archive/html/ftp-upload-report}.
 
 
 @node FTP Upload Directive File - v1.1
@@ -1625,7 +1761,7 @@ on the GNU Planet web page.
 
 @cindex announcement mailing list, project-specific
 You can maintain your own mailing list (typically
-@email{info-@var{program}@@gnu.org}) for announcements as well if you
+@indicateurl{info-@var{package}@@gnu.org}) for announcements as well if you
 like.  For your own list, of course you decide as you see fit what
 events are worth announcing.  (@xref{Mail}, for setting this up, and
 more suggestions on handling mail for your package.)
@@ -1647,11 +1783,11 @@ Your package's download location (normally
 @indicateurl{http://ftp.gnu.org/gnu/@var{package}/}).  It is also
 useful to mention the mirror list at
 @url{http://www.gnu.org/order/ftp.html}, and that
-@url{http://ftpmirror.gnu.org/@var{package/}} will automatically
+@indicateurl{http://ftpmirror.gnu.org/@var{package/}} will automatically
 redirect to a nearby mirror.
 
 @item
-The NEWS (@pxref{NEWS File,,, standards, GNU Coding Standards}) for
+The @t{NEWS} (@pxref{NEWS File,,, standards, GNU Coding Standards}) for
 the present release.
 @end itemize
 
@@ -1793,15 +1929,15 @@ gendocs.sh --email @var{yourbuglist} @var{yourmanual} "GNU @var{yourmanual} manu
 @end smallexample
 
 @noindent where @var{yourmanual} is the short name for your package
-and @var{yourbuglist} is the email address for bug reports (typically
-@code{bug-@var{package}@@gnu.org}).  The script processes the file
-@file{@var{yourmanual}.texinfo} (or @file{.texi} or @file{.txi}).  For
-example:
+and @var{yourbuglist} is the email address for bug reports (which
+should be @code{bug-@var{package}@@gnu.org}).  The script processes
+the file @file{@var{yourmanual}.texinfo} (or @file{.texi} or
+@file{.txi}).  For example:
 
 @smallexample
-cd .../emacs/man
+cd .../texinfo/doc
 # download gendocs.sh and gendocs_template
-gendocs.sh --email bug-gnu-emacs@@gnu.org emacs "GNU Emacs manual"
+gendocs.sh --email bug-texinfo@@gnu.org texinfo "GNU Texinfo manual"
 @end smallexample
 
 @command{gendocs.sh} creates a subdirectory @file{manual/} containing
@@ -1967,31 +2103,35 @@ about GNU.
 
 @node Free Software and Open Source
 @section Free Software and Open Source
-@cindex free software
+@cindex free software movement
 @cindex open source
-@cindex movements, Free Software and Open Source
+@cindex movement, free software
+@cindex development method, open source
 
-The terms ``free software'' and ``open source'' are the slogans of two
-different movements which differ in their basic philosophy.  The Free
-Software Movement is idealistic, and raises issues of freedom, ethics,
-principle and what makes for a good society.  The Open Source Movement,
-founded in 1998, studiously avoids such questions.  For more explanation,
-see @url{http://www.gnu.org/philosophy/open-source-misses-the-point.html}.
+The terms ``free software'' and ``open source'', while describing
+almost the same category of software, stand for views based on
+fundamentally different values.  The free software movement is
+idealistic, and raises issues of freedom, ethics, principle and what
+makes for a good society.  The term open source, initiated in 1998, is
+associated with a philosophy which studiously avoids such questions.
+For a detailed explanation, see
+@url{http://www.gnu.org/philosophy/open-source-misses-the-point.html}.
 
-The GNU Project is aligned with the Free Software Movement.  This
+The GNU Project is aligned with the free software movement.  This
 doesn't mean that all GNU contributors and maintainers have to agree;
 your views on these issues are up to you, and you're entitled to express
 them when speaking for yourself.
 
-However, due to the much greater publicity that the Open Source
-Movement receives, the GNU Project needs to overcome a widespread
-mistaken impression that GNU is @emph{and always was} an activity of
-the Open Source Movement.  For this reason, please use the term ``free
+However, due to the much greater publicity that the term ``open source''
+receives, the GNU Project needs to overcome a widespread
+mistaken impression that GNU is @emph{and always was} an ``open
+source'' activity.  For this reason, please use the term ``free
 software'', not ``open source'', in GNU software releases, GNU
 documentation, and announcements and articles that you publish in your
 role as the maintainer of a GNU package.  A reference to the URL given
 above, to explain the difference, is a useful thing to include as
 well.
+
 
 @node GNU and Linux
 @section GNU and Linux
@@ -2006,7 +2146,7 @@ users don't know about the GNU Project's major accomplishment---or more
 precisely, they know about it, but don't realize it is the GNU Project's
 accomplishment and reason for existence.  Even people who believe they
 know the real history often believe that the goal of GNU was to develop
-``tools'' or ``utilities.''
+``tools'' or ``utilities''.
 
 To correct this confusion, we have made a years-long effort to
 distinguish between Linux, the kernel that Linus Torvalds wrote, and
@@ -2021,13 +2161,24 @@ role as the maintainer of a GNU package.  If you want to explain the
 terminology and its reasons, you can refer to the URL
 @url{http://www.gnu.org/gnu/linux-and-gnu.html}.
 
+To make it clear that Linux is a kernel, not an operating system,
+please take care to avoid using the term ``Linux system'' in those
+materials.  If you want to have occasion to make a statement about
+systems in which the kernel is Linux, write ``systems in which the
+kernel is Linux'' or ``systems with Linux as the kernel.''  That
+explicitly contrasts the system and the kernel, and will help readers
+understand the difference between the two.  Please avoid simplified
+forms such as ``Linux-based systems'' because those fail to highlight
+the difference between the kernel and the system, and could encourage
+readers to overlook the distinction.
+
 To contrast the GNU system properly with respect to GNU/Linux, you can
-call it ``GNU/Hurd'' or ``the GNU/Hurd system.''  However, when that
+call it ``GNU/Hurd'' or ``the GNU/Hurd system''.  However, when that
 contrast is not specifically the focus, please call it just ``GNU'' or
-``the GNU system.''
+``the GNU system''.
 
 When referring to the collection of servers that is the higher level
-of the GNU kernel, please call it ``the Hurd'' or ``the GNU Hurd.''
+of the GNU kernel, please call it ``the Hurd'' or ``the GNU Hurd''.
 Note that this uses a space, not a slash.
 
 
@@ -2046,15 +2197,17 @@ repository for your package, but that's not required.  @xref{Old
 Versions}, for more information about Savannah.
 
 We strongly urge you to use @code{ftp.gnu.org} as the standard
-distribution site.  Doing so makes it easier for developers and users
-to find the latest GNU releases.  However, it is ok to use another
-server if you wish, provided it allows access from the general public
-without limitation (for instance, without excluding any country).
+distribution site for releases.  Doing so makes it easier for
+developers and users to find the latest GNU releases.  However, it is
+ok to use another server if you wish, provided it allows access from
+the general public without limitation (for instance, without excluding
+any country).
 
 If you use a company's machine to hold the repository for your
-program, or as its ftp site, please put this statement in a prominent
-place on the site, so as to prevent people from getting the wrong idea
-about the relationship between the package and the company:
+program, or as its release distribution site, please put this
+statement in a prominent place on the site, so as to prevent people
+from getting the wrong idea about the relationship between the package
+and the company:
 
 @smallexample
 The programs <list of them> hosted here are free software packages
@@ -2064,13 +2217,57 @@ following the rules stated in the license of each package.  For more
 information, see http://www.gnu.org/philosophy/free-sw.html.
 
 If you are looking for service or support for GNU software, see
-http://www.gnu.org/help/gethelp.html for suggestions of where to ask.
+http://www.gnu.org/gethelp/ for suggestions of where to ask.
 
 If you would like to contribute to the development of one of these
 packages, contact the package maintainer or the bug-reporting address
 of the package (which should be listed in the package itself), or look
 on www.gnu.org for more information on how to contribute.
 @end smallexample
+
+
+@node Donations
+@chapter Donations
+@cindex Donations, for packages
+@cindex Money, donated to packages
+
+As a maintainer, you might want to accept donations for your work,
+especially if you pay for any of your own hosting/development
+infrastructure.  Following is some text you can adapt to your own
+situation, and use on your package's web site, @file{README}, or
+in wherever way you find it useful:
+
+@smallexample
+We appreciate contributions of any size -- donations enable us to spend
+more time working on the project, and help cover our infrastructure
+expenses.
+
+If you'd like to make a small donation, please visit @var{url1} and do
+it through @var{payment-service}.  Since our project isn't a
+tax-exempt organization, we can't offer you a tax deduction, but for
+all donations over @var{amount1}, we'd be happy to recognize your
+contribution on @var{url2}.
+
+We are also happy to consider making particular improvements or
+changes, or giving specific technical assistance, in return for a
+substantial donation over @var{amount2}.  If you would like to discuss
+this possibility, write to us at @var{address}.
+
+Another possibility is to pay a software maintenance fee.  Again,
+write to us about this at @var{address} to discuss how much you want
+to pay and how much maintenance we can offer in return.  If you pay
+more than @var{amount1}, we can give you a document for your records.
+
+Thanks for your support!
+@end smallexample
+
+We don't recommend any specific payment service.  However, GNU
+developers should not use a service that requires them to sign a
+proprietary software license, such as Google's payment service.
+
+Of course, it is also good to encourage people to join or contribute
+to the FSF (@url{http://www.fsf.org}), either instead of or as well as
+package-specific donations.
 
 
 @node Free Software Directory

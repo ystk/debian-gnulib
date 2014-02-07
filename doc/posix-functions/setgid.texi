@@ -2,7 +2,7 @@
 @section @code{setgid}
 @findex setgid
 
-POSIX specification: @url{http://www.opengroup.org/onlinepubs/9699919799/functions/setgid.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/functions/setgid.html}
 
 Gnulib module: ---
 
@@ -14,5 +14,5 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-mingw.
+mingw, MSVC 9.
 @end itemize

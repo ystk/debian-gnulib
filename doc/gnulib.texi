@@ -2,8 +2,14 @@
 @comment %**start of header
 @setfilename gnulib.info
 @settitle GNU Gnulib
+@c Define a new index for the magic constants in regex.texi.
+@defcodeindex cn
 @syncodeindex fn cp
+@syncodeindex ky cp
 @syncodeindex pg cp
+@syncodeindex tp cp
+@syncodeindex vr cp
+@syncodeindex cn cp
 @ifclear texi2html
 @firstparagraphindent insert
 @end ifclear
@@ -17,7 +23,7 @@ This manual is for GNU Gnulib (updated @value{UPDATED}),
 which is a library of common routines intended to be shared at the
 source level.
 
-Copyright @copyright{} 2004-2010 Free Software Foundation, Inc.
+Copyright @copyright{} 2004-2012 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -63,6 +69,7 @@ Documentation License''.
 * Glibc Header File Substitutes::   Overriding system headers.
 * Glibc Function Substitutes::      Replacing system functions.
 * Particular Modules::              Documentation of individual modules.
+* Regular expressions::             The regex module.
 * GNU Free Documentation License::  Copying and sharing this manual.
 * Index::
 @end menu
@@ -83,7 +90,7 @@ If you need this particular \thing\, you may write to
 @node Introduction
 @chapter Introduction
 
-Gnulib is a source code library. It provides basic functionalities to
+Gnulib is a source code library. It provides basic functionality to
 programs and libraries.  Currently (as of October 2006) more than 30
 packages make use of Gnulib.
 
@@ -101,6 +108,7 @@ Resources:
 * Benefits::
 * Library vs Reusable Code::
 * Portability and Application Code::
+* Target Platforms::
 * Modules::
 * Various Kinds of Modules::
 * Collaborative Development::
@@ -381,13 +389,24 @@ required module automatically, unless it is specified with option
 @code{--avoid} or it is marked as obsolete and the option
 @code{--with-obsolete} is not given.
 
-A test modules @code{foo-tests} implicity depends on the corresponding non-test
+A test modules @code{foo-tests} implicitly depends on the corresponding non-test
 module @code{foo}.  @code{foo} implicitly depends on @code{foo-tests} if the
 latter exists and if the option @code{--with-tests} has been given.
 
 Tests modules can depend on non-tests modules.  Non-tests modules should not
 depend on tests modules. (Recall that tests modules are built in a separate
 directory.)
+
+Each listed required module may be declared a conditional dependency.  This
+is indicated by placing the condition for the dependency on the same line,
+enclosed in brackets, after the name of the required module.  The condition
+is a shell expression that is run after the module's @code{configure.ac}
+statements.  For example:
+@smallexample
+strtoull   [test $ac_cv_func_strtoumax = no]
+@end smallexample
+
+Lines starting with @code{#} are recognized as comments and are ignored.
 
 @item configure.ac-early
 This field contains @file{configure.ac} stuff (Autoconf macro invocations and
@@ -533,7 +552,7 @@ used here.  It contains a convenient @code{ASSERT} macro.
 
 The body of the test, then, contains many @code{ASSERT} invocations.  When
 a test fails, the @code{ASSERT} macro prints the line number of the failing
-statement, thus giving you as a developer a idea which part of the test
+statement, thus giving you, the developer, an idea of which part of the test
 failed, even when you don't have access to the machine where the test failed
 and the reporting user cannot run a debugger.
 
@@ -708,40 +727,37 @@ better to share them.
 
 @cindex Out of Memory handling
 @cindex Memory allocation failure
-The GSS API does not have a standard error code for the out of memory
-error condition.  Instead of adding a non-standard error code, this
-library has chosen to adopt a different strategy.  Out of memory
-handling happens in rare situations, but performing the out of memory
-error handling after almost all API function invocations pollute your
-source code and might make it harder to spot more serious problems.
-The strategy chosen improves code readability and robustness.
+The gnulib API does not have a standard error code for the out of memory
+error condition.  Instead of adding a non-standard error code, gnulib
+has chosen to adopt a different strategy.  Out of memory handling
+happens in rare situations, but performing the out of memory error
+handling after almost all API function invocations pollute your source
+code and might make it harder to spot more serious problems.  The
+strategy chosen improves code readability and robustness.
 
 @cindex Aborting execution
 For most applications, aborting the application with an error message
 when the out of memory situation occurs is the best that can be wished
-for.  This is how the library behaves by default.
+for.  This is how the library behaves by default (using
+the @samp{xalloc-die} module).
 
-@vindex xalloc_fail_func
-However, we realize that some applications may not want to have the
-GSS library abort execution in any situation.  The GSS library supports
-a hook to let the application regain control and perform its own
-cleanups when an out of memory situation has occurred.  The application
-can define a function (having a @code{void} prototype, i.e., no return
-value and no parameters) and set the library variable
-@code{xalloc_fail_func} to that function.  The variable should be
+@vindex xalloc_die
+However, we realize that some applications may not want to abort
+execution in any situation.  Gnulib supports a hook to let the
+application regain control and perform its own cleanups when an out of
+memory situation has occurred.  The application can define a function
+(having a @code{void} prototype, i.e., no return value and no
+parameters) and set the library variable
+@code{xalloc_die} to that function.  The variable should be
 declared as follows.
 
 @example
-extern void (*xalloc_fail_func) (void);
+extern void (*xalloc_die) (void);
 @end example
 
-The GSS library will invoke this function if an out of memory error
-occurs.  Note that after this the GSS library is in an undefined
-state, so you must unload or restart the application to continue call
-GSS library functions.  The hook is only intended to allow the
-application to log the situation in a special way.  Of course, care
-must be taken to not allocate more memory, as that will likely also
-fail.
+Gnulib will invoke this function if an out of memory error occurs.  Note
+that the function should not return.  Of course, care must be taken to
+not allocate more memory, as that will likely also fail.
 
 
 @node Obsolete modules
@@ -809,17 +825,17 @@ there is no workaround about it.  Such a test is better avoided in a
 release that is made for the general public.
 @end table
 
-@code{gnulib-tool --import} will not include tests marked with these
-attributes by default.  When @code{gnulib-tool} is invoked with one
+@code{gnulib-tool --import --with-tests} will not include tests marked with
+these attributes by default.  When @code{gnulib-tool} is invoked with one
 of the options @code{--with-c++-tests}, @code{--with-longrunning-tests},
 @code{--with-privileged-tests}, @code{--with-unportable-tests}, it
 will include tests despite the corresponding special status attribute.
 When @code{gnulib-tool} receives the option @code{--with-all-tests},
 it will include all tests regardless of their status attributes.
 
-@code{gnulib-tool --create-testdir} and
-@code{gnulib-tool --create-megatestdir} by default include all tests of
-modules specified on the command line, regardless of their status
+@code{gnulib-tool --create-testdir --with-tests} and
+@code{gnulib-tool --create-megatestdir --with-tests} by default include all
+tests of modules specified on the command line, regardless of their status
 attributes.  Tests of modules occurring as dependencies are not included
 by default if they have one of these status attributes.  The options
 @code{--with-c++-tests}, @code{--with-longrunning-tests},
@@ -985,7 +1001,7 @@ XP.  The function declaration is present if @code{WINVER >= 0x0501}.
 Windows 2000 does not have getaddrinfo in its @file{WS2_32.DLL}.
 
 Thus, if you want to assume Windows XP or later, you can add
-AC_DEFINE(WINVER, 0x0501) to avoid compiling to (partial) getaddrinfo
+AC_DEFINE(WINVER, 0x0501) to avoid compiling the (partial) getaddrinfo
 implementation.
 
 If you want to support Windows 2000, don't do anything.  The
@@ -1071,7 +1087,7 @@ And then transferring the @file{dummy-0.tar.gz} file.
 @item Build modules
 
 On the build machine, run ./do-autobuild (or "nohup ./do-autobuild").
-It creates a directory 'logs/' with a log file for each module.
+It creates a directory @file{logs/} with a log file for each module.
 
 @item Submit build logs
 
@@ -1171,12 +1187,14 @@ which (known) portability problems are not worked around by Gnulib.
 * setjmp.h::
 * signal.h::
 * spawn.h::
+* stdalign.h::
 * stdarg.h::
 * stdbool.h::
 * stddef.h::
 * stdint.h::
 * stdio.h::
 * stdlib.h::
+* stdnoreturn.h::
 * string.h::
 * strings.h::
 * stropts.h::
@@ -1204,6 +1222,7 @@ which (known) portability problems are not worked around by Gnulib.
 * tgmath.h::
 * time.h::
 * trace.h::
+* uchar.h::
 * ucontext.h::
 * ulimit.h::
 * unistd.h::
@@ -1257,12 +1276,14 @@ which (known) portability problems are not worked around by Gnulib.
 @include posix-headers/setjmp.texi
 @include posix-headers/signal.texi
 @include posix-headers/spawn.texi
+@include posix-headers/stdalign.texi
 @include posix-headers/stdarg.texi
 @include posix-headers/stdbool.texi
 @include posix-headers/stddef.texi
 @include posix-headers/stdint.texi
 @include posix-headers/stdio.texi
 @include posix-headers/stdlib.texi
+@include posix-headers/stdnoreturn.texi
 @include posix-headers/string.texi
 @include posix-headers/strings.texi
 @include posix-headers/stropts.texi
@@ -1290,6 +1311,7 @@ which (known) portability problems are not worked around by Gnulib.
 @include posix-headers/tgmath.texi
 @include posix-headers/time.texi
 @include posix-headers/trace.texi
+@include posix-headers/uchar.texi
 @include posix-headers/ucontext.texi
 @include posix-headers/ulimit.texi
 @include posix-headers/unistd.texi
@@ -1339,6 +1361,7 @@ by Gnulib.
 * aio_suspend::
 * aio_write::
 * alarm::
+* aligned_alloc::
 * alphasort::
 * asctime::
 * asctime_r::
@@ -1367,6 +1390,8 @@ by Gnulib.
 * bind::
 * bsearch::
 * btowc::
+* c16rtomb::
+* c32rtomb::
 * cabs::
 * cabsf::
 * cabsl::
@@ -1852,6 +1877,8 @@ by Gnulib.
 * malloc::
 * mblen::
 * mbrlen::
+* mbrtoc16::
+* mbrtoc32::
 * mbrtowc::
 * mbsinit::
 * mbsnrtowcs::
@@ -2140,6 +2167,7 @@ by Gnulib.
 * putwchar::
 * pwrite::
 * qsort::
+* quick_exit::
 * raise::
 * rand::
 * rand_r::
@@ -2532,6 +2560,7 @@ by Gnulib.
 @include posix-functions/aio_suspend.texi
 @include posix-functions/aio_write.texi
 @include posix-functions/alarm.texi
+@include posix-functions/aligned_alloc.texi
 @include posix-functions/alphasort.texi
 @include posix-functions/asctime.texi
 @include posix-functions/asctime_r.texi
@@ -2560,6 +2589,8 @@ by Gnulib.
 @include posix-functions/bind.texi
 @include posix-functions/bsearch.texi
 @include posix-functions/btowc.texi
+@include posix-functions/c16rtomb.texi
+@include posix-functions/c32rtomb.texi
 @include posix-functions/cabs.texi
 @include posix-functions/cabsf.texi
 @include posix-functions/cabsl.texi
@@ -3045,6 +3076,8 @@ by Gnulib.
 @include posix-functions/malloc.texi
 @include posix-functions/mblen.texi
 @include posix-functions/mbrlen.texi
+@include posix-functions/mbrtoc16.texi
+@include posix-functions/mbrtoc32.texi
 @include posix-functions/mbrtowc.texi
 @include posix-functions/mbsinit.texi
 @include posix-functions/mbsnrtowcs.texi
@@ -3333,6 +3366,7 @@ by Gnulib.
 @include posix-functions/putwchar.texi
 @include posix-functions/pwrite.texi
 @include posix-functions/qsort.texi
+@include posix-functions/quick_exit.texi
 @include posix-functions/raise.texi
 @include posix-functions/rand.texi
 @include posix-functions/rand_r.texi
@@ -3789,6 +3823,7 @@ not worked around by Gnulib.
 * fstab.h::
 * fts.h::
 * getopt.h::
+* gshadow.h::
 * ieee754.h::
 * ifaddrs.h::
 * libintl.h::
@@ -3822,6 +3857,7 @@ not worked around by Gnulib.
 @include glibc-headers/fstab.texi
 @include glibc-headers/fts.texi
 @include glibc-headers/getopt.texi
+@include glibc-headers/gshadow.texi
 @include glibc-headers/ieee754.texi
 @include glibc-headers/ifaddrs.texi
 @include glibc-headers/libintl.texi
@@ -3875,6 +3911,7 @@ This list of functions is sorted according to the header that declares them.
 * Glibc glob.h::
 * Glibc gnu/libc-version.h::
 * Glibc grp.h::
+* Glibc gshadow.h::
 * Glibc ifaddrs.h::
 * Glibc libintl.h::
 * Glibc link.h::
@@ -3922,6 +3959,7 @@ This list of functions is sorted according to the header that declares them.
 * Glibc string.h::
 * Glibc sys/capability.h::
 * Glibc sys/epoll.h::
+* Glibc sys/fanotify.h::
 * Glibc sys/file.h::
 * Glibc sys/fsuid.h::
 * Glibc sys/gmon.h::
@@ -3936,6 +3974,7 @@ This list of functions is sorted according to the header that declares them.
 * Glibc sys/ptrace.h::
 * Glibc sys/quota.h::
 * Glibc sys/reboot.h::
+* Glibc sys/resource.h::
 * Glibc sys/sem.h::
 * Glibc sys/sendfile.h::
 * Glibc sys/socket.h::
@@ -3948,6 +3987,7 @@ This list of functions is sorted according to the header that declares them.
 * Glibc sys/sysmacros.h::
 * Glibc sys/time.h::
 * Glibc sys/timex.h::
+* Glibc sys/uio.h::
 * Glibc sys/ustat.h::
 * Glibc sys/vlimit.h::
 * Glibc sys/vm86.h::
@@ -4144,10 +4184,12 @@ This list of functions is sorted according to the header that declares them.
 
 @menu
 * getdirentries::
+* scandirat::
 * versionsort::
 @end menu
 
 @include glibc-functions/getdirentries.texi
+@include glibc-functions/scandirat.texi
 @include glibc-functions/versionsort.texi
 
 @node Glibc dlfcn.h
@@ -4258,11 +4300,15 @@ This list of functions is sorted according to the header that declares them.
 
 @menu
 * fallocate::
+* name_to_handle_at::
 * readahead::
+* open_by_handle_at::
 @end menu
 
 @include glibc-functions/fallocate.texi
+@include glibc-functions/name_to_handle_at.texi
 @include glibc-functions/readahead.texi
+@include glibc-functions/open_by_handle_at.texi
 
 @node Glibc fenv.h
 @section Glibc Extensions to @code{<fenv.h>}
@@ -4384,6 +4430,35 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/putgrent.texi
 @include glibc-functions/setgroups.texi
 
+@node Glibc gshadow.h
+@section Glibc @code{<gshadow.h>}
+
+@menu
+* endsgent::
+* fgetsgent::
+* fgetsgent_r::
+* getsgent::
+* getsgent_r::
+* getsgnam::
+* getsgnam_r::
+* putsgent::
+* setsgent::
+* sgetsgent::
+* sgetsgent_r::
+@end menu
+
+@include glibc-functions/endsgent.texi
+@include glibc-functions/fgetsgent.texi
+@include glibc-functions/fgetsgent_r.texi
+@include glibc-functions/getsgent.texi
+@include glibc-functions/getsgent_r.texi
+@include glibc-functions/getsgnam.texi
+@include glibc-functions/getsgnam_r.texi
+@include glibc-functions/putsgent.texi
+@include glibc-functions/setsgent.texi
+@include glibc-functions/sgetsgent.texi
+@include glibc-functions/sgetsgent_r.texi
+
 @c @node Glibc iconv.h
 @c @section Glibc Extensions to @code{<iconv.h>}
 
@@ -4460,6 +4535,7 @@ This list of functions is sorted according to the header that declares them.
 * mallinfo::
 * malloc_get_state::
 * malloc_set_state::
+* malloc_info::
 * malloc_stats::
 * malloc_trim::
 * malloc_usable_size::
@@ -4471,6 +4547,7 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/mallinfo.texi
 @include glibc-functions/malloc_get_state.texi
 @include glibc-functions/malloc_set_state.texi
+@include glibc-functions/malloc_info.texi
 @include glibc-functions/malloc_stats.texi
 @include glibc-functions/malloc_trim.texi
 @include glibc-functions/malloc_usable_size.texi
@@ -4719,6 +4796,19 @@ This list of functions is sorted according to the header that declares them.
 * inet6_option_init::
 * inet6_option_next::
 * inet6_option_space::
+* inet6_opt_append::
+* inet6_opt_find::
+* inet6_opt_finish::
+* inet6_opt_get_val::
+* inet6_opt_init::
+* inet6_opt_next::
+* inet6_opt_set_val::
+* inet6_rth_add::
+* inet6_rth_getaddr::
+* inet6_rth_init::
+* inet6_rth_reverse::
+* inet6_rth_segments::
+* inet6_rth_space::
 * setipv4sourcefilter::
 * setsourcefilter::
 @end menu
@@ -4734,6 +4824,19 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/inet6_option_init.texi
 @include glibc-functions/inet6_option_next.texi
 @include glibc-functions/inet6_option_space.texi
+@include glibc-functions/inet6_opt_append.texi
+@include glibc-functions/inet6_opt_find.texi
+@include glibc-functions/inet6_opt_finish.texi
+@include glibc-functions/inet6_opt_get_val.texi
+@include glibc-functions/inet6_opt_init.texi
+@include glibc-functions/inet6_opt_next.texi
+@include glibc-functions/inet6_opt_set_val.texi
+@include glibc-functions/inet6_rth_add.texi
+@include glibc-functions/inet6_rth_getaddr.texi
+@include glibc-functions/inet6_rth_init.texi
+@include glibc-functions/inet6_rth_reverse.texi
+@include glibc-functions/inet6_rth_segments.texi
+@include glibc-functions/inet6_rth_space.texi
 @include glibc-functions/setipv4sourcefilter.texi
 @include glibc-functions/setsourcefilter.texi
 
@@ -4771,28 +4874,58 @@ This list of functions is sorted according to the header that declares them.
 * printf_size::
 * printf_size_info::
 * register_printf_function::
+* register_printf_modifier::
+* register_printf_specifier::
+* register_printf_type::
 @end menu
 
 @include glibc-functions/parse_printf_format.texi
 @include glibc-functions/printf_size.texi
 @include glibc-functions/printf_size_info.texi
 @include glibc-functions/register_printf_function.texi
+@include glibc-functions/register_printf_modifier.texi
+@include glibc-functions/register_printf_specifier.texi
+@include glibc-functions/register_printf_type.texi
 
 @node Glibc pthread.h
 @section Glibc Extensions to @code{<pthread.h>}
 
 @menu
+* pthread_attr_getaffinity_np::
+* pthread_attr_setaffinity_np::
+* pthread_getaffinity_np::
 * pthread_getattr_np::
+* pthread_getname_np::
 * pthread_kill_other_threads_np::
+* pthread_mutex_consistent_np::
+* pthread_mutexattr_getrobust_np::
+* pthread_mutexattr_setrobust_np::
 * pthread_rwlockattr_getkind_np::
 * pthread_rwlockattr_setkind_np::
+* pthread_setaffinity_np::
+* pthread_setname_np::
+* pthread_sigqueue::
+* pthread_timedjoin_np::
+* pthread_tryjoin_np::
 * pthread_yield::
 @end menu
 
+@include glibc-functions/pthread_attr_getaffinity_np.texi
+@include glibc-functions/pthread_attr_setaffinity_np.texi
+@include glibc-functions/pthread_getaffinity_np.texi
 @include glibc-functions/pthread_getattr_np.texi
+@include glibc-functions/pthread_getname_np.texi
 @include glibc-functions/pthread_kill_other_threads_np.texi
+@include glibc-functions/pthread_mutex_consistent_np.texi
+@include glibc-functions/pthread_mutexattr_getrobust_np.texi
+@include glibc-functions/pthread_mutexattr_setrobust_np.texi
 @include glibc-functions/pthread_rwlockattr_getkind_np.texi
 @include glibc-functions/pthread_rwlockattr_setkind_np.texi
+@include glibc-functions/pthread_setaffinity_np.texi
+@include glibc-functions/pthread_setname_np.texi
+@include glibc-functions/pthread_sigqueue.texi
+@include glibc-functions/pthread_timedjoin_np.texi
+@include glibc-functions/pthread_tryjoin_np.texi
 @include glibc-functions/pthread_yield.texi
 
 @node Glibc pty.h
@@ -5518,11 +5651,13 @@ This list of functions is sorted according to the header that declares them.
 * clone::
 * sched_getaffinity::
 * sched_setaffinity::
+* setns::
 @end menu
 
 @include glibc-functions/clone.texi
 @include glibc-functions/sched_getaffinity.texi
 @include glibc-functions/sched_setaffinity.texi
+@include glibc-functions/setns.texi
 
 @node Glibc search.h
 @section Glibc Extensions to @code{<search.h>}
@@ -5722,6 +5857,7 @@ This list of functions is sorted according to the header that declares them.
 * qfcvt::
 * qfcvt_r::
 * qgcvt::
+* qsort_r::
 * random_r::
 * rpmatch::
 * seed48_r::
@@ -5765,6 +5901,7 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/qfcvt.texi
 @include glibc-functions/qfcvt_r.texi
 @include glibc-functions/qgcvt.texi
+@include glibc-functions/qsort_r.texi
 @include glibc-functions/random_r.texi
 @include glibc-functions/rpmatch.texi
 @include glibc-functions/seed48_r.texi
@@ -5842,6 +5979,17 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/epoll_create.texi
 @include glibc-functions/epoll_ctl.texi
 @include glibc-functions/epoll_wait.texi
+
+@node Glibc sys/fanotify.h
+@section Glibc @code{<sys/fanotify.h>}
+
+@menu
+* fanotify_init::
+* fanotify_mark::
+@end menu
+
+@include glibc-functions/fanotify_init.texi
+@include glibc-functions/fanotify_mark.texi
 
 @node Glibc sys/file.h
 @section Glibc @code{<sys/file.h>}
@@ -5992,8 +6140,14 @@ This list of functions is sorted according to the header that declares them.
 
 @include glibc-functions/reboot.texi
 
-@c @node Glibc sys/resource.h
-@c @section Glibc Extensions to @code{<sys/resource.h>}
+@node Glibc sys/resource.h
+@section Glibc Extensions to @code{<sys/resource.h>}
+
+@menu
+* prlimit::
+@end menu
+
+@include glibc-functions/prlimit.texi
 
 @c @node Glibc sys/select.h
 @c @section Glibc Extensions to @code{<sys/select.h>}
@@ -6025,10 +6179,14 @@ This list of functions is sorted according to the header that declares them.
 @menu
 * accept4::
 * isfdtype::
+* recvmmsg::
+* sendmmsg::
 @end menu
 
 @include glibc-functions/accept4.texi
 @include glibc-functions/isfdtype.texi
+@include glibc-functions/recvmmsg.texi
+@include glibc-functions/sendmmsg.texi
 
 @node Glibc sys/stat.h
 @section Glibc Extensions to @code{<sys/stat.h>}
@@ -6142,17 +6300,31 @@ This list of functions is sorted according to the header that declares them.
 * adjtimex::
 * ntp_adjtime::
 * ntp_gettime::
+* ntp_gettimex::
 @end menu
 
 @include glibc-functions/adjtimex.texi
 @include glibc-functions/ntp_adjtime.texi
 @include glibc-functions/ntp_gettime.texi
+@include glibc-functions/ntp_gettimex.texi
 
 @c @node Glibc sys/types.h
 @c @section Glibc Extensions to @code{<sys/types.h>}
 
-@c @node Glibc sys/uio.h
-@c @section Glibc Extensions to @code{<sys/uio.h>}
+@node Glibc sys/uio.h
+@section Glibc Extensions to @code{<sys/uio.h>}
+
+@menu
+* preadv::
+* process_vm_readv::
+* process_vm_writev::
+* pwritev::
+@end menu
+
+@include glibc-functions/preadv.texi
+@include glibc-functions/process_vm_readv.texi
+@include glibc-functions/process_vm_writev.texi
+@include glibc-functions/pwritev.texi
 
 @c @node Glibc sys/un.h
 @c @section Glibc Extensions to @code{<sys/un.h>}
@@ -6265,20 +6437,24 @@ This list of functions is sorted according to the header that declares them.
 @section Glibc Extensions to @code{<time.h>}
 
 @menu
+* clock_adjtime::
 * dysize::
 * getdate_r::
 * stime::
 * strptime_l::
 * timegm::
 * timelocal::
+* timespec_get::
 @end menu
 
+@include glibc-functions/clock_adjtime.texi
 @include glibc-functions/dysize.texi
 @include glibc-functions/getdate_r.texi
 @include glibc-functions/stime.texi
 @include glibc-functions/strptime_l.texi
 @include glibc-functions/timegm.texi
 @include glibc-functions/timelocal.texi
+@include glibc-functions/timespec_get.texi
 
 @c @node Glibc trace.h
 @c @section Glibc Extensions to @code{<trace.h>}
@@ -6297,6 +6473,9 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/getttyent.texi
 @include glibc-functions/getttynam.texi
 @include glibc-functions/setttyent.texi
+
+@c @node Glibc uchar.h
+@c @section Glibc Extensions to @code{<uchar.h>}
 
 @c @node Glibc ucontext.h
 @c @section Glibc Extensions to @code{<ucontext.h>}
@@ -6336,6 +6515,7 @@ This list of functions is sorted according to the header that declares them.
 * setresgid::
 * setresuid::
 * setusershell::
+* syncfs::
 * syscall::
 * ttyslot::
 * vhangup::
@@ -6369,6 +6549,7 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/setresgid.texi
 @include glibc-functions/setresuid.texi
 @include glibc-functions/setusershell.texi
+@include glibc-functions/syncfs.texi
 @include glibc-functions/syscall.texi
 @include glibc-functions/ttyslot.texi
 @include glibc-functions/vhangup.texi
@@ -6391,6 +6572,7 @@ This list of functions is sorted according to the header that declares them.
 * setutent::
 * updwtmp::
 * utmpname::
+* login::
 * login_tty::
 @end menu
 
@@ -6405,6 +6587,7 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/setutent.texi
 @include glibc-functions/updwtmp.texi
 @include glibc-functions/utmpname.texi
+@include glibc-functions/login.texi
 @include glibc-functions/login_tty.texi
 
 @node Glibc utmpx.h
@@ -6482,20 +6665,23 @@ This list of functions is sorted according to the header that declares them.
 * alloca::
 * alloca-opt::
 * Safe Allocation Macros::
+* Compile-time Assertions::
+* Integer Properties::
 * String Functions in C Locale::
 * Quoting::
 * error and progname::
 * gcd::
-* Regular expressions::
 * Searching for Libraries::
 * Exported Symbols of Shared Libraries::
 * LD Version Scripts::
 * Visual Studio Compatibility::
 * Supporting Relocation::
 * func::
+* configmake::
 * warnings::
 * manywarnings::
 * Running self-tests under valgrind::
+* stat-size::
 @end menu
 
 @node alloca
@@ -6509,6 +6695,10 @@ This list of functions is sorted according to the header that declares them.
 @include alloca-opt.texi
 
 @include safe-alloc.texi
+
+@include verify.texi
+
+@include intprops.texi
 
 @node String Functions in C Locale
 @section Character and String Functions in C Locale
@@ -6568,16 +6758,6 @@ ASCII characters.
 
 @include gcd.texi
 
-@node Regular expressions
-@section Regular expressions
-
-Gnulib supports many different types of regular expressions; although
-the underlying features are the same or identical, the syntax used
-varies.  The descriptions given here for the different types are
-generated automatically.
-
-@include regexprops-generic.texi
-
 @include havelib.texi
 
 @include lib-symbol-visibility.texi
@@ -6590,11 +6770,44 @@ generated automatically.
 
 @include func.texi
 
+@include configmake.texi
+
 @include warnings.texi
 
 @include manywarnings.texi
 
 @include valgrind-tests.texi
+
+@include stat-size.texi
+
+
+@node Regular expressions
+@chapter Regular expressions
+
+@menu
+* Overview::
+* Regular Expression Syntax::
+* Common Operators::
+* GNU Operators::
+* GNU Emacs Operators::
+* What Gets Matched?::
+* Programming with Regex::
+* Regular expression syntaxes::
+@end menu
+
+@lowersections
+@include regex.texi
+@raisesections
+
+@node Regular expression syntaxes
+@section Regular expression syntaxes
+
+Gnulib supports many different types of regular expressions; although
+the underlying features are the same or identical, the syntax used
+varies.  The descriptions given here for the different types are
+generated automatically.
+
+@include regexprops-generic.texi
 
 @node GNU Free Documentation License
 @appendix GNU Free Documentation License

@@ -1,5 +1,5 @@
 /* Substitute for and wrapper around <pty.h>.
-   Copyright (C) 2010 Free Software Foundation, Inc.
+   Copyright (C) 2010-2012 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,33 +12,43 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   along with this program; if not, see <http://www.gnu.org/licenses/>.  */
 
-#ifndef _GL_PTY_H
+#ifndef _@GUARD_PREFIX@_PTY_H
 
 #if __GNUC__ >= 3
 @PRAGMA_SYSTEM_HEADER@
 #endif
+@PRAGMA_COLUMNS@
 
 /* The include_next requires a split double-inclusion guard.  */
 #if @HAVE_PTY_H@
 # @INCLUDE_NEXT@ @NEXT_PTY_H@
 #endif
 
-#ifndef _GL_PTY_H
-#define _GL_PTY_H
+#ifndef _@GUARD_PREFIX@_PTY_H
+#define _@GUARD_PREFIX@_PTY_H
 
 /* Some platforms declare this in a different header than glibc.  */
 #if @HAVE_UTIL_H@
 # include <util.h>
 #endif
 #if @HAVE_LIBUTIL_H@
+/* <sys/types.h> is a prerequisite of <libutil.h> on FreeBSD 8.0.  */
+# include <sys/types.h>
 # include <libutil.h>
 #endif
 
 /* Get 'struct termios' and 'struct winsize'.  */
 #include <termios.h>
+#if defined _AIX
+# include <sys/ioctl.h>
+#endif
+/* Mingw lacks 'struct termios' and 'struct winsize', but a forward
+   declaration of an opaque type is sufficient to allow compilation of
+   a stub openpty().  */
+struct termios;
+struct winsize;
 
 /* The definitions of _GL_FUNCDECL_RPL etc. are copied here.  */
 
@@ -117,5 +127,5 @@ _GL_WARN_ON_USE (openpty, "openpty is not declared consistently - "
 #endif
 
 
-#endif /* _GL_PTY_H */
-#endif /* _GL_PTY_H */
+#endif /* _@GUARD_PREFIX@_PTY_H */
+#endif /* _@GUARD_PREFIX@_PTY_H */

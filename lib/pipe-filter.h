@@ -1,5 +1,5 @@
 /* Filtering of data through a subprocess.
-   Copyright (C) 2009, 2010 Free Software Foundation, Inc.
+   Copyright (C) 2009-2012 Free Software Foundation, Inc.
    Written by Bruno Haible <haible@clisp.cons.org>, 2009,
    and Paolo Bonzini <bonzini@gnu.org>, 2009.
 
@@ -119,7 +119,7 @@ typedef void (*done_read_fn) (void *data_read, size_t num_bytes_read,
    true, otherwise return 127.
    Callback arguments are as described above.
 
-   Data is alternatingly written to the subprocess, through the functions
+   Data is alternately written to the subprocess, through the functions
    prepare_write and done_write, and read from the subprocess, through the
    functions prepare_read and done_read.
 

@@ -5,21 +5,24 @@ variables.
 Files:
 lib/backupfile.h
 lib/backupfile.c
-m4/dos.m4
 m4/backupfile.m4
 
 Depends-on:
 argmatch
+closedir
 d-ino
 dirent-safer
 dirname-lgpl
 memcmp
+opendir
+readdir
 stdbool
 
 configure.ac:
 gl_BACKUPFILE
 
 Makefile.am:
+lib_SOURCES += backupfile.c
 
 Include:
 "backupfile.h"

@@ -1,14 +1,15 @@
 @node unistd.h
 @section @file{unistd.h}
 
-POSIX specification: @url{http://www.opengroup.org/susv3xbd/unistd.h.html}
+POSIX specification:@* @url{http://www.opengroup.org/onlinepubs/9699919799/basedefs/unistd.h.html}
 
 Gnulib module: unistd
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
-This header file is missing on some platforms: msvc.
+This header file is missing on some platforms:
+MSVC 9.
 @item
 The SEEK_* macros are not defined in this file on some platforms:
 mingw.
