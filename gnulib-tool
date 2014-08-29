@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# Copyright (C) 2002-2012 Free Software Foundation, Inc.
+# Copyright (C) 2002-2014 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -164,15 +164,11 @@ Operation modes:
       --update              update the current package, restore files omitted
                             from version control
       --create-testdir      create a scratch package with the given modules
-                            (pass --with-tests to include the unit tests)
       --create-megatestdir  create a mega scratch package with the given modules
                             one by one and all together
-                            (pass --with-tests to include the unit tests)
       --test                test the combination of the given modules
-                            (pass --with-tests to include the unit tests)
                             (recommended to use CC=\"gcc -Wall\" here)
       --megatest            test the given modules one by one and all together
-                            (pass --with-tests to include the unit tests)
                             (recommended to use CC=\"gcc -Wall\" here)
       --extract-description        extract the description
       --extract-comment            extract the comment
@@ -210,21 +206,35 @@ Options for --import, --add/remove-import, --update:
 
       --dry-run             Only print what would have been done.
 
+Options for --import, --add/remove-import:
+
+      --with-tests          Include unit tests for the included modules.
+
+Options for --create-[mega]testdir, --[mega]test:
+
+      --without-tests       Don't include unit tests for the included modules.
+
 Options for --import, --add/remove-import,
             --create-[mega]testdir, --[mega]test:
 
-      --with-tests          Include unit tests for the included modules.
       --with-obsolete       Include obsolete modules when they occur among the
                             dependencies. By default, dependencies to obsolete
                             modules are ignored.
       --with-c++-tests      Include even unit tests for C++ interoperability.
+      --without-c++-tests   Exclude unit tests for C++ interoperability.
       --with-longrunning-tests
                             Include even unit tests that are long-runners.
+      --without-longrunning-tests
+                            Exclude unit tests that are long-runners.
       --with-privileged-tests
                             Include even unit tests that require root
                             privileges.
+      --without-privileged-tests
+                            Exclude unit tests that require root privileges.
       --with-unportable-tests
                             Include even unit tests that fail on some platforms.
+      --without-unportable-tests
+                            Exclude unit tests that fail on some platforms.
       --with-all-tests      Include all kinds of problematic unit tests.
       --avoid=MODULE        Avoid including the given MODULE. Useful if you
                             have code that provides equivalent functionality.
@@ -270,17 +280,9 @@ Options for --import, --add/remove-import:
       --vc-files            Update version control related files.
       --no-vc-files         Don't update version control related files
                             (.gitignore and/or .cvsignore).
-      --no-changelog        Don't update or create ChangeLog files.
 
 Options for --create-[mega]testdir, --[mega]test:
 
-      --without-c++-tests   Exclude unit tests for C++ interoperability.
-      --without-longrunning-tests
-                            Exclude unit tests that are long-runners.
-      --without-privileged-tests
-                            Exclude unit tests that require root privileges.
-      --without-unportable-tests
-                            Exclude unit tests that fail on some platforms.
       --single-configure    Generate a single configure file, not a separate
                             configure file for the tests directory.
 
@@ -320,18 +322,8 @@ q
     date=`date -d "$date" -u +"%Y-%m-%d %H:%M:%S"`
     version=' '`cd "$gnulib_dir" && ./build-aux/git-version-gen /dev/null | sed -e 's/-dirty/-modified/'`
   else
-    if test -d "$gnulib_dir"/CVS \
-       && (cvs --version) >/dev/null 2>/dev/null; then
-      # gnulib checked out from CVS.
-      sed_extract_first_date='/^date: /{
-s/^date: \([0-9][0-9][0-9][0-9]\).\([0-9][0-9]\).\([0-9][0-9]\) \([0-9][0-9]:[0-9][0-9]:[0-9][0-9]\).*/\1-\2-\3 \4/p
-q
-}'
-      date=`cd "$gnulib_dir" && cvs log -N ChangeLog 2>/dev/null | sed -n -e "$sed_extract_first_date"`
-    else
-      # gnulib copy without versioning information.
-      date=`sed -e 's/ .*//;q' "$gnulib_dir"/ChangeLog`
-    fi
+    # gnulib copy without versioning information.
+    date=`sed -e 's/ .*//;q' "$gnulib_dir"/ChangeLog`
     version=
   fi
   year=`"$gnulib_dir"/build-aux/mdate-sh "$self_abspathname" | sed -e 's,^.* ,,'`
@@ -341,8 +333,8 @@ Copyright (C) $year Free Software Foundation, Inc.
 License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
-
-Written by" "Bruno Haible" "and" "Simon Josefsson"
+"
+  printf "Written by %s, %s, and %s.\n" "Bruno Haible" "Paul Eggert" "Simon Josefsson"
 }
 
 # func_emit_copyright_notice
@@ -591,7 +583,7 @@ func_warning ()
 
 # func_readlink SYMLINK
 # outputs the target of the given symlink.
-if (type -p readlink) > /dev/null 2>&1; then
+if (type readlink) > /dev/null 2>&1; then
   func_readlink ()
   {
     # Use the readlink program from GNU coreutils.
@@ -906,10 +898,14 @@ if test "X$1" = "X--no-reexec"; then
   shift
 fi
 
+# Unset CDPATH.  Otherwise, output from 'cd dir' can surprise callers.
+(unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+
 # Command-line option processing.
 # Removes the OPTIONS from the arguments. Sets the variables:
-# - mode            list or import or add-import or remove-import or update
-#                   or create-testdir or create-megatestdir
+# - mode            one of: list, find, import, add-import, remove-import,
+#                   update, create-testdir, create-megatestdir, test, megatest,
+#                   copy-file
 # - destdir         from --dir
 # - local_gnulib_dir  from --local-dir
 # - modcache        true or false, from --cache-modules/--no-cache-modules
@@ -921,7 +917,8 @@ fi
 # - docbase         from --doc-base
 # - testsbase       from --tests-base
 # - auxdir          from --aux-dir
-# - inctests        true if --with-tests was given, blank otherwise
+# - inctests        true if --with-tests was given, false if --without-tests
+#                   was given, blank otherwise
 # - incobsolete     true if --with-obsolete was given, blank otherwise
 # - inc_cxx_tests   true if --with-c++-tests was given, blank otherwise
 # - inc_longrunning_tests  true if --with-longrunning-tests was given, blank
@@ -952,7 +949,6 @@ fi
 # - vc_files        true if --vc-files was given, false if --no-vc-files was
 #                   given, blank otherwise
 # - autoconf_minversion  minimum supported autoconf version
-# - do_changelog    false if --no-changelog was given, : otherwise
 # - doit            : if actions shall be executed, false if only to be printed
 # - symbolic        true if --symlink or --more-symlinks was given, blank
 #                   otherwise
@@ -993,7 +989,6 @@ fi
   po_domain=
   witness_c_macro=
   vc_files=
-  do_changelog=:
   doit=:
   symbolic=
   lsymbolic=
@@ -1164,6 +1159,9 @@ fi
       --with-all-tests | --with-all-test | --with-all-tes | --with-all-te | --with-all-t | --with-all- | --with-all | --with-al | --with-a)
         inc_all_tests=true
         shift ;;
+      --without-tests | --without-test | --without-tes | --without-te | --without-t)
+        inctests=false
+        shift ;;
       --without-c++-tests | --without-c++-test | --without-c++-tes | --without-c++-te | --without-c++-t | --without-c++- | --without-c++ | --without-c+ | --without-c)
         excl_cxx_tests=true
         shift ;;
@@ -1260,7 +1258,7 @@ fi
         vc_files=false
         shift ;;
       --no-changelog | --no-changelo | --no-changel | --no-change | --no-chang | --no-chan | --no-cha | --no-ch )
-        do_changelog=false
+        # A no-op for backward compatibility.
         shift ;;
       --dry-run )
         doit=false
@@ -1303,19 +1301,6 @@ fi
       func_exit 1
     fi
   fi
-  # This code helps migrating from --import to --add-import or --update. It can
-  # be removed on 2012-01-01.
-  if test "$mode" = import && test $# = 0; then
-    echo "gnulib-tool: cowardly refusing to erase the module list." 1>&2
-    echo "The meaning of the option '--import' has changed." 1>&2
-    echo "See the documentation at" 1>&2
-    echo "<http://www.gnu.org/software/gnulib/manual/html_node/Modified-imports.html>." 1>&2
-    echo "For updating to a newer version of gnulib, use" 1>&2
-    echo "  gnulib-tool --add-import" 1>&2
-    echo "For restoring files that were omitted from version control, use" 1>&2
-    echo "  gnulib-tool --update" 1>&2
-    func_exit 1
-  fi
   if test "$mode" = update; then
     if test $# != 0; then
       echo "gnulib-tool: too many arguments in 'update' mode" 1>&2
@@ -1342,7 +1327,6 @@ fi
       echo "you need to use 'gnulib --import' - at your own risk!" 1>&2
       func_exit 1
     fi
-    do_changelog=false
   fi
   if test -n "$pobase" && test -z "$po_domain"; then
     echo "gnulib-tool: together with --po-base, you need to specify --po-domain" 1>&2
@@ -1352,7 +1336,22 @@ fi
   if test -z "$pobase" && test -n "$po_domain"; then
     func_warning "--po-domain has no effect without a --po-base option"
   fi
-  if test "$cond_dependencies" = true && test -n "$inctests"; then
+  # Canonicalize the inctests variable.
+  case "$mode" in
+    import | add-import | remove-import | update)
+      if test -z "$inctests"; then
+        inctests=false
+      fi
+      ;;
+    create-testdir | create-megatestdir | test | megatest)
+      if test -z "$inctests"; then
+        inctests=true
+      fi
+      ;;
+  esac
+  # Now the only possible values of "$inctests" are true and false
+  # (or blank but then it is irrelevant).
+  if test "$cond_dependencies" = true && test "$inctests" = true; then
     echo "gnulib-tool: option --conditional-dependencies is not supported with --with-tests" 1>&2
     func_exit 1
   fi
@@ -1498,8 +1497,7 @@ func_lookup_file ()
 # the resulting list to standard output, one per line.
 func_sanitize_modulelist ()
 {
-  sed -e '/^CVS\//d' -e '/\/CVS\//d' \
-      -e '/^ChangeLog$/d' -e '/\/ChangeLog$/d' \
+  sed -e '/^ChangeLog$/d' -e '/\/ChangeLog$/d' \
       -e '/^COPYING$/d' -e '/\/COPYING$/d' \
       -e '/^README$/d' -e '/\/README$/d' \
       -e '/^TEMPLATE$/d' \
@@ -1537,7 +1535,6 @@ func_exists_module ()
   { test -f "$gnulib_dir/modules/$1" \
     || { test -n "$local_gnulib_dir" && test -d "$local_gnulib_dir/modules" \
          && test -f "$local_gnulib_dir/modules/$1"; }; } \
-  && test "CVS" != "$1" \
   && test "ChangeLog" != "$1" \
   && test "COPYING" != "$1" \
   && test "README" != "$1" \
@@ -2625,7 +2622,7 @@ sed_dependencies_without_conditions='s/ *\[.*//'
 # - local_gnulib_dir  from --local-dir
 # - modcache        true or false, from --cache-modules/--no-cache-modules
 # - modules         list of specified modules
-# - inctests        true if tests should be included, blank otherwise
+# - inctests        true if tests should be included, false otherwise
 # - incobsolete     true if obsolete modules among dependencies should be
 #                   included, blank otherwise
 # - inc_cxx_tests   true if C++ interoperability tests should be included,
@@ -2710,7 +2707,7 @@ func_modules_transitive_closure ()
           if test -n "$duplicated_deps"; then
             func_warning "module $module has duplicated dependencies: "`echo $duplicated_deps`
           fi
-          if test -n "$inctests"; then
+          if $inctests; then
             testsmodule=`func_get_tests_module $module`
             if test -n "$testsmodule"; then
               deps="$deps $testsmodule"
@@ -2833,7 +2830,7 @@ func_show_module_list ()
 # - local_gnulib_dir  from --local-dir
 # - modcache        true or false, from --cache-modules/--no-cache-modules
 # - specified_modules  list of specified modules
-# - inctests        true if tests should be included, blank otherwise
+# - inctests        true if tests should be included, false otherwise
 # - incobsolete     true if obsolete modules among dependencies should be
 #                   included, blank otherwise
 # - inc_cxx_tests   true if C++ interoperability tests should be included,
@@ -2871,7 +2868,7 @@ func_modules_transitive_closure_separately ()
 {
   # Determine main module list.
   saved_inctests="$inctests"
-  inctests=""
+  inctests=false
   modules="$specified_modules"
   func_modules_transitive_closure
   main_modules="$modules"
@@ -3340,7 +3337,7 @@ func_emit_lib_Makefile_am ()
     if test -n "$uses_subdirs"; then
       subdir_options=' subdir-objects'
     fi
-    echo "AUTOMAKE_OPTIONS = 1.5 gnits${subdir_options}"
+    echo "AUTOMAKE_OPTIONS = 1.9.6 gnits${subdir_options}"
   fi
   echo
   if test -z "$makefile_name"; then
@@ -3566,9 +3563,11 @@ func_emit_tests_Makefile_am ()
   witness_macro="$1"
   if test "$libtool" = true; then
     libext=la
+    perhapsLT=LT
     sed_eliminate_LDFLAGS="$sed_noop"
   else
     libext=a
+    perhapsLT=
     sed_eliminate_LDFLAGS='/^lib_LDFLAGS[	 ]*+=/d'
   fi
   if $for_test; then
@@ -3647,7 +3646,7 @@ func_emit_tests_Makefile_am ()
   if test -n "$uses_subdirs"; then
     subdir_options=' subdir-objects'
   fi
-  echo "AUTOMAKE_OPTIONS = 1.5 foreign${subdir_options}"
+  echo "AUTOMAKE_OPTIONS = 1.9.6 foreign${subdir_options}"
   echo
   if $for_test && ! $single_configure; then
     echo "ACLOCAL_AMFLAGS = -I ${testsbase_inverse}/${m4base}"
@@ -3882,6 +3881,7 @@ func_emit_initmacro_done ()
 # func_emit_autoconf_snippet indentation
 # emits the autoconf snippet of a module.
 # Input:
+# - indentation       spaces to prepend on each line
 # - local_gnulib_dir  from --local-dir
 # - modcache          true or false, from --cache-modules/--no-cache-modules
 # - sed_replace_build_aux  sed expression that replaces reference to build-aux
@@ -3895,9 +3895,9 @@ func_emit_initmacro_done ()
 #                     command line options.
 # - disable_gettext   true or false. It tells whether to disable AM_GNU_GETTEXT
 #                     invocations.
-# - indentation       spaces to prepend on each line
 func_emit_autoconf_snippet ()
 {
+  indentation="$1"
   if { case $module in
          gnumakefile | maintainer-makefile)
            # These modules are meant to be used only in the top-level directory.
@@ -3921,7 +3921,9 @@ func_emit_autoconf_snippet ()
       | { if $disable_gettext; then
             sed -e 's/AM_GNU_GETTEXT(\[external\])/dnl you must add AM_GNU_GETTEXT([external]) or similar to configure.ac./'
           else
-            cat
+            # Don't indent AM_GNU_GETTEXT_VERSION line, as that confuses
+            # autopoint through at least GNU gettext version 0.18.2.
+            sed -e 's/^ *AM_GNU_GETTEXT_VERSION/AM_GNU_GETTEXT_VERSION/'
           fi
         }
     if test "$module" = 'alloca' && test "$libtool" = true && ! $disable_libtool; then
@@ -4088,7 +4090,7 @@ func_emit_autoconf_snippets ()
 # - docbase         directory relative to destdir where to place doc files
 # - testsbase       directory relative to destdir where to place unit test code
 # - auxdir          directory relative to destdir where to place build aux files
-# - inctests        true if --with-tests was given, blank otherwise
+# - inctests        true if --with-tests was given, false otherwise
 # - incobsolete     true if --with-obsolete was given, blank otherwise
 # - inc_cxx_tests   true if --with-c++-tests was given, blank otherwise
 # - inc_longrunning_tests  true if --with-longrunning-tests was given, blank
@@ -4382,8 +4384,11 @@ func_import ()
       fi
     fi
     # Require the tests if specified either way.
-    if test -z "$inctests"; then
+    if ! $inctests; then
       inctests="$cached_inctests"
+      if test -z "$inctests"; then
+        inctests=false
+      fi
     fi
     # The libname defaults to the cached one.
     if test -z "$supplied_libname"; then
@@ -4432,7 +4437,7 @@ func_import ()
       vc_files="$cached_vc_files"
     fi
     # Ensure constraints.
-    if test "$cond_dependencies" = true && test -n "$inctests"; then
+    if test "$cond_dependencies" = true && $inctests; then
       echo "gnulib-tool: option --conditional-dependencies is not supported with --with-tests" 1>&2
       func_exit 1
     fi
@@ -4629,7 +4634,7 @@ s,^\(.................................................[^ ]*\) *,                
     if test -n "$docfiles"; then
       echo "$docbase"
     fi
-    if test -n "$inctests"; then
+    if $inctests; then
       echo "$testsbase"
     fi
     echo "$auxdir"
@@ -4778,7 +4783,7 @@ s,^\(.................................................[^ ]*\) *,                
   func_append actioncmd " --doc-base=$docbase"
   func_append actioncmd " --tests-base=$testsbase"
   func_append actioncmd " --aux-dir=$auxdir"
-  if test -n "$inctests"; then
+  if $inctests; then
     func_append actioncmd " --with-tests"
   fi
   if test -n "$incobsolete"; then
@@ -4875,7 +4880,7 @@ s,^\(.................................................[^ ]*\) *,                
     pobase_base=`basename "$pobase"`
     func_note_Makefile_am_edit "$pobase_dir" SUBDIRS "$pobase_base"
   fi
-  if test -n "$inctests"; then
+  if $inctests; then
     if test "$makefile_am" = Makefile.am; then
       testsbase_dir=`echo "$testsbase" | sed -n -e 's,/[^/]*$,/,p'`
       testsbase_base=`basename "$testsbase"`
@@ -4894,7 +4899,7 @@ s,//*$,/,'
           && ! { test -f "${destdir}/${dir1}Makefile.am" \
                  || test "${dir1}Makefile.am" = "$sourcebase/$makefile_am" \
                  || test "./${dir1}Makefile.am" = "$sourcebase/$makefile_am" \
-                 || { test -n "$inctests" \
+                 || { $inctests \
                       && { test "${dir1}Makefile.am" = "$testsbase/$makefile_am" \
                            || test "./${dir1}Makefile.am" = "$testsbase/$makefile_am"; }; }; }; do
       dir2=`echo "$dir1" | sed -e "$sed_last"`"$dir2"
@@ -5107,7 +5112,9 @@ s,//*$,/,'
     echo "gl_PO_BASE([$pobase])"
     echo "gl_DOC_BASE([$docbase])"
     echo "gl_TESTS_BASE([$testsbase])"
-    test -z "$inctests" || echo "gl_WITH_TESTS"
+    if $inctests; then
+      echo "gl_WITH_TESTS"
+    fi
     echo "gl_LIB([$libname])"
     if test -n "$lgpl"; then
       if test "$lgpl" = yes; then
@@ -5125,7 +5132,7 @@ s,//*$,/,'
     fi
     echo "gl_MACRO_PREFIX([$macro_prefix])"
     echo "gl_PO_DOMAIN([$po_domain])"
-    echo "gl_WITNESS_C_DOMAIN([$witness_c_macro])"
+    echo "gl_WITNESS_C_MACRO([$witness_c_macro])"
     if test -n "$vc_files"; then
       echo "gl_VC_FILES([$vc_files])"
     fi
@@ -5298,7 +5305,7 @@ s,//*$,/,'
     fi
   fi
 
-  if test -n "$inctests"; then
+  if $inctests; then
     # Create tests makefile.
     func_dest_tmpfilename $testsbase/$makefile_am
     destfile="$testsbase/$makefile_am"
@@ -5325,7 +5332,7 @@ s,//*$,/,'
         echo "Create $testsbase/$makefile_am"
         rm -f "$tmpfile"
       fi
-    func_append added_files "$testsbase/$makefile_am$nl"
+      func_append added_files "$testsbase/$makefile_am$nl"
     fi
   fi
 
@@ -5359,7 +5366,7 @@ s,//*$,/,'
             (echo "$dir_added" | sed -e '/^$/d' | LC_ALL=C sort -u \
                | LC_ALL=C join -v 1 - "$tmp"/ignore > "$tmp"/ignore-added
              echo "$dir_removed" | sed -e '/^$/d' | LC_ALL=C sort -u \
-               | LC_ALL=C join -v 1 - "$tmp"/ignore > "$tmp"/ignore-removed
+               > "$tmp"/ignore-removed
             )
             if test -s "$tmp"/ignore-added || test -s "$tmp"/ignore-removed; then
               if $doit; then
@@ -5486,7 +5493,7 @@ s,//*$,/,'
   if test -n "$pobase"; then
     echo "  - add \"$pobase/Makefile.in\" to AC_CONFIG_FILES in $configure_ac,"
   fi
-  if test -n "$inctests"; then
+  if $inctests; then
     if test "$makefile_am" = Makefile.am; then
       echo "  - add \"$testsbase/Makefile\" to AC_CONFIG_FILES in $configure_ac,"
     else
@@ -5521,7 +5528,7 @@ s,//*$,/,'
 # - local_gnulib_dir  from --local-dir
 # - modcache        true or false, from --cache-modules/--no-cache-modules
 # - auxdir          directory relative to destdir where to place build aux files
-# - inctests        true if tests should be included, blank otherwise
+# - inctests        true if tests should be included, false otherwise
 # - incobsolete     true if obsolete modules among dependencies should be
 #                   included, blank otherwise
 # - excl_cxx_tests   true if C++ interoperability tests should be excluded,
@@ -5570,7 +5577,7 @@ func_create_testdir ()
   # When computing transitive closures, don't consider $module to depend on
   # $module-tests. Need this because tests are implicitly GPL and may depend
   # on GPL modules - therefore we don't want a warning in this case.
-  inctests=""
+  inctests=false
   for requested_module in $specified_modules; do
     requested_license=`func_get_license "$requested_module"`
     if test "$requested_license" != GPL; then
@@ -5772,7 +5779,7 @@ func_create_testdir ()
     func_append subdirs " po"
   fi
 
-  if test -n "$inctests"; then
+  if $inctests; then
     test -d "$testdir/$testsbase" || mkdir "$testdir/$testsbase"
     if $single_configure; then
       # Create $testsbase/Makefile.am.
@@ -5884,7 +5891,7 @@ func_create_testdir ()
   # Create Makefile.am.
   (echo "## Process this file with automake to produce Makefile.in."
    echo
-   echo "AUTOMAKE_OPTIONS = 1.5 foreign"
+   echo "AUTOMAKE_OPTIONS = 1.9.6 foreign"
    echo
    echo "SUBDIRS = $subdirs"
    echo
@@ -6045,7 +6052,7 @@ func_create_testdir ()
    func_execute_command ${AUTOHEADER} || func_exit 1
    func_execute_command ${AUTOMAKE} --add-missing --copy || func_exit 1
   ) || func_exit 1
-  if test -n "$inctests" && ! $single_configure; then
+  if $inctests && ! $single_configure; then
     # Create autogenerated files.
     (cd "$testdir/$testsbase" || func_exit 1
      # Do not use "${AUTORECONF} --force --install", because it may invoke
@@ -6086,7 +6093,7 @@ func_create_testdir ()
                                esac;
                              done`
   tests_distributed_built_sources=
-  if test -n "$inctests"; then
+  if $inctests; then
     # Likewise for built files in the $testsbase directory.
     tests_cleaned_files=`sed -e "$sed_remove_backslash_newline" < "$testdir/$testsbase/Makefile.am" \
                          | sed -n -e 's,^CLEANFILES[	 ]*+=\([^#]*\).*$,\1,p' -e 's,^MOSTLYCLEANFILES[	 ]*+=\([^#]*\).*$,\1,p'`
@@ -6153,11 +6160,7 @@ func_create_megatestdir ()
   func_append megasubdirs "ALL"
 
   # Create autobuild.
-  cvsdate=`if test -f "$gnulib_dir/CVS/Entries"; then \
-             vc_witness="$gnulib_dir/CVS/Entries"; \
-           else \
-             vc_witness="$gnulib_dir/.git/refs/heads/master"; \
-           fi; \
+  cvsdate=`vc_witness="$gnulib_dir/.git/refs/heads/master"; \
            sh "$gnulib_dir/build-aux/mdate-sh" "$vc_witness" \
              | sed -e 's,January,01,'   -e 's,Jan,01,' \
                    -e 's,February,02,'  -e 's,Feb,02,' \
@@ -6197,7 +6200,7 @@ func_create_megatestdir ()
   # Create Makefile.am.
   (echo "## Process this file with automake to produce Makefile.in."
    echo
-   echo "AUTOMAKE_OPTIONS = 1.5 foreign"
+   echo "AUTOMAKE_OPTIONS = 1.9.6 foreign"
    echo
    echo "SUBDIRS = $megasubdirs"
    echo

@@ -1,5 +1,5 @@
 /* macros useful in interpreting size-related values in struct stat.
-   Copyright (C) 1989, 1991-2012 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1991-2014 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,10 +31,6 @@
 #endif
 
 
-/* Much of the remainder of this file is not indented consistently
-   with the above, in order to make it easier to see that the text
-   is almost identical to part of the system.h header in coreutils.
-*/
 /* Get or fake the disk device blocksize.
    Usually defined by sys/param.h (if at all).  */
 #if !defined DEV_BSIZE && defined BSIZE
