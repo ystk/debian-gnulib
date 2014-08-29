@@ -3,8 +3,8 @@ Description: Adjusts shebang.
 
 Index: gnulib/lib/uniname/gen-uninames.lisp
 ===================================================================
---- gnulib.orig/lib/uniname/gen-uninames.lisp	2011-06-10 02:20:10.000000000 +0100
-+++ gnulib/lib/uniname/gen-uninames.lisp	2011-06-10 02:20:14.000000000 +0100
+--- gnulib.orig/lib/uniname/gen-uninames.lisp	2014-02-03 00:56:56.000000000 +0000
++++ gnulib/lib/uniname/gen-uninames.lisp	2014-02-03 00:57:09.000000000 +0000
 @@ -1,4 +1,4 @@
 -#!/usr/local/bin/clisp -C
 +#!/usr/bin/clisp -C

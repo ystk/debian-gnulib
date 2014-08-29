@@ -1,5 +1,5 @@
 /* An lseek() function that detects pipes.
-   Copyright (C) 2007, 2009-2012 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2009-2014 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -59,5 +59,9 @@ rpl_lseek (int fd, off_t offset, int whence)
       return -1;
     }
 #endif
+#if _GL_WINDOWS_64_BIT_OFF_T
+  return _lseeki64 (fd, offset, whence);
+#else
   return lseek (fd, offset, whence);
+#endif
 }

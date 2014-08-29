@@ -1,5 +1,5 @@
 /* Test of POSIX compatible vasprintf() and asprintf() functions.
-   Copyright (C) 2007-2012 Free Software Foundation, Inc.
+   Copyright (C) 2007-2014 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -232,7 +232,8 @@ test_function (int (*my_asprintf) (char **, const char *, ...))
     int retval =
       my_asprintf (&result, "%.0a %d", 1.5, 33, 44, 55);
     ASSERT (result != NULL);
-    ASSERT (strcmp (result, "0x2p+0 33") == 0
+    ASSERT (strcmp (result, "0x1p+0 33") == 0
+            || strcmp (result, "0x2p+0 33") == 0
             || strcmp (result, "0x3p-1 33") == 0
             || strcmp (result, "0x6p-2 33") == 0
             || strcmp (result, "0xcp-3 33") == 0);
@@ -245,7 +246,8 @@ test_function (int (*my_asprintf) (char **, const char *, ...))
     int retval =
       my_asprintf (&result, "%.0a %d", 1.51, 33, 44, 55);
     ASSERT (result != NULL);
-    ASSERT (strcmp (result, "0x2p+0 33") == 0
+    ASSERT (strcmp (result, "0x1p+0 33") == 0
+            || strcmp (result, "0x2p+0 33") == 0
             || strcmp (result, "0x3p-1 33") == 0
             || strcmp (result, "0x6p-2 33") == 0
             || strcmp (result, "0xcp-3 33") == 0);
@@ -306,7 +308,7 @@ test_function (int (*my_asprintf) (char **, const char *, ...))
   }
 
   { /* Rounding can turn a ...FFF into a ...000.
-       This shows a MacOS X 10.3.9 (Darwin 7.9) bug.  */
+       This shows a Mac OS X 10.3.9 (Darwin 7.9) bug.  */
     char *result;
     int retval =
       my_asprintf (&result, "%.1a %d", 1.999, 33, 44, 55);
@@ -721,7 +723,7 @@ test_function (int (*my_asprintf) (char **, const char *, ...))
   }
 
   { /* Rounding can turn a ...FFF into a ...000.
-       This shows a MacOS X 10.3.9 (Darwin 7.9) bug and a
+       This shows a Mac OS X 10.3.9 (Darwin 7.9) bug and a
        glibc 2.4 bug <http://sourceware.org/bugzilla/show_bug.cgi?id=2908>.  */
     char *result;
     int retval =

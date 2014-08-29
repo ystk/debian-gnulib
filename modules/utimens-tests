@@ -9,16 +9,16 @@ tests/macros.h
 
 Depends-on:
 dup
+gettext
 ignore-value
+nanosleep
 symlink
 timespec
-usleep
 utimecmp
 
 configure.ac:
-AC_REQUIRE([AC_C_INLINE])
 
 Makefile.am:
 TESTS += test-utimens
 check_PROGRAMS += test-utimens
-test_utimens_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+test_utimens_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_NANOSLEEP) @LIBINTL@

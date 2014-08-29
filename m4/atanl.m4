@@ -1,5 +1,5 @@
-# atanl.m4 serial 7
-dnl Copyright (C) 2010-2012 Free Software Foundation, Inc.
+# atanl.m4 serial 8
+dnl Copyright (C) 2010-2014 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -56,7 +56,7 @@ AC_DEFUN([gl_FUNC_ATANL],
   if test $gl_cv_func_atanl_no_libm = yes \
      || test $gl_cv_func_atanl_in_libm = yes; then
     dnl Also check whether it's declared.
-    dnl MacOS X 10.3 has atanl() in libc but doesn't declare it in <math.h>.
+    dnl Mac OS X 10.3 has atanl() in libc but doesn't declare it in <math.h>.
     AC_CHECK_DECL([atanl], , [HAVE_DECL_ATANL=0], [[#include <math.h>]])
   else
     HAVE_DECL_ATANL=0

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (C) 2002-2012 Free Software Foundation, Inc.
+# Copyright (C) 2002-2014 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1755,7 +1755,9 @@ func_all_modules ()
   func_echo "$element"
 
   func_begin_table
+  func_module count-leading-zeros
   func_module count-one-bits
+  func_module count-trailing-zeros
   func_module ffs
   func_module ffsl
   func_module ffsll
@@ -1771,6 +1773,7 @@ func_all_modules ()
 
   func_begin_table
   func_module putenv
+  func_module secure_getenv
   func_module setenv
   func_module unsetenv
   func_module xsetenv
@@ -1999,6 +2002,7 @@ func_all_modules ()
   func_module crc
   func_module diacrit
   func_module diffseq
+  func_module execinfo
   func_module getline
   func_module getdelim
   func_module getnline
@@ -2009,6 +2013,7 @@ func_all_modules ()
   func_module obstack-printf
   func_module obstack-printf-posix
   func_module hash-pjw
+  func_module hash-pjw-bare
   func_module hash
   func_module readline
   func_module readtokens
@@ -2428,6 +2433,7 @@ func_all_modules ()
   func_module mkfifo
   func_module mknod
   func_module mkstemp
+  func_module net_if
   func_module netdb
   func_module netinet_in
   func_module nl_langinfo
@@ -3471,7 +3477,6 @@ func_all_modules ()
   func_module config-h
   func_module configmake
   func_module dummy
-  func_module elisp-comp
   func_module gperf
   func_module havelib
   func_module include_next
@@ -3525,6 +3530,7 @@ func_all_modules ()
   func_module gnupload
   func_module maintainer-makefile
   func_module mktempd
+  func_module non-recursive-gnulib-prefix-hack
   func_module readme-release
   func_module test-framework-sh
   func_module update-copyright
@@ -3610,7 +3616,7 @@ if test -n "$missed_modules"; then
 
 fi
 
-{ find lib -type f -print; find m4 -type f -print; } | LC_ALL=C sort | sed -e '/\/\./d' -e /CVS/d -e /README/d -e /ChangeLog/d -e /Makefile/d -e /TODO/d -e '/tags$/d' -e '/TAGS$/d' -e '/~$/d' > "$tmp/all-files"
+{ find lib -type f -print; find m4 -type f -print; } | LC_ALL=C sort | sed -e '/\/\./d' -e /README/d -e /ChangeLog/d -e /Makefile/d -e /TODO/d -e '/tags$/d' -e '/TAGS$/d' -e '/~$/d' > "$tmp/all-files"
 missed_files=`for file in $seen_files; do echo $file; done \
 		| LC_ALL=C sort -u \
 		| LC_ALL=C join -v 2 - "$tmp/all-files"`

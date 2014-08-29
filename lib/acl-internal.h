@@ -1,6 +1,6 @@
 /* Internal implementation of access control lists.
 
-   Copyright (C) 2002-2003, 2005-2012 Free Software Foundation, Inc.
+   Copyright (C) 2002-2003, 2005-2014 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,16 +44,7 @@ extern int acl (char *, int, int, struct acl *);
 extern int aclsort (int, int, struct acl *);
 #endif
 
-#include "error.h"
-#include "quote.h"
-
 #include <errno.h>
-#ifndef ENOSYS
-# define ENOSYS (-1)
-#endif
-#ifndef ENOTSUP
-# define ENOTSUP (-1)
-#endif
 
 #include <limits.h>
 #ifndef MIN
@@ -69,24 +60,19 @@ extern int aclsort (int, int, struct acl *);
 # define fchmod(fd, mode) (-1)
 #endif
 
-/* Recognize some common errors such as from an NFS mount that does
-   not support ACLs, even when local drives do.  */
-#if defined __APPLE__ && defined __MACH__ /* MacOS X */
-# define ACL_NOT_WELL_SUPPORTED(Err) \
-     ((Err) == ENOTSUP || (Err) == ENOSYS || (Err) == EINVAL || (Err) == EBUSY || (Err) == ENOENT)
-#elif defined EOPNOTSUPP /* Tru64 NFS */
-# define ACL_NOT_WELL_SUPPORTED(Err) \
-     ((Err) == ENOTSUP || (Err) == ENOSYS || (Err) == EINVAL || (Err) == EBUSY || (Err) == EOPNOTSUPP)
-#else
-# define ACL_NOT_WELL_SUPPORTED(Err) \
-     ((Err) == ENOTSUP || (Err) == ENOSYS || (Err) == EINVAL || (Err) == EBUSY)
+#ifndef _GL_INLINE_HEADER_BEGIN
+ #error "Please include config.h first."
+#endif
+_GL_INLINE_HEADER_BEGIN
+#ifndef ACL_INTERNAL_INLINE
+# define ACL_INTERNAL_INLINE _GL_INLINE
 #endif
 
 #if USE_ACL
 
 # if HAVE_ACL_GET_FILE
 /* POSIX 1003.1e (draft 17 -- abandoned) specific version.  */
-/* Linux, FreeBSD, MacOS X, IRIX, Tru64 */
+/* Linux, FreeBSD, Mac OS X, IRIX, Tru64 */
 
 #  ifndef MIN_ACL_ENTRIES
 #   define MIN_ACL_ENTRIES 4
@@ -97,7 +83,7 @@ extern int aclsort (int, int, struct acl *);
 /* Most platforms have a 1-argument acl_get_fd, only OSF/1 has a 2-argument
    macro(!).  */
 #   if HAVE_ACL_FREE_TEXT /* OSF/1 */
-static inline acl_t
+ACL_INTERNAL_INLINE acl_t
 rpl_acl_get_fd (int fd)
 {
   return acl_get_fd (fd, ACL_TYPE_ACCESS);
@@ -116,7 +102,7 @@ rpl_acl_get_fd (int fd)
 /* Most platforms have a 2-argument acl_set_fd, only OSF/1 has a 3-argument
    macro(!).  */
 #   if HAVE_ACL_FREE_TEXT /* OSF/1 */
-static inline int
+ACL_INTERNAL_INLINE int
 rpl_acl_set_fd (int fd, acl_t acl)
 {
   return acl_set_fd (fd, ACL_TYPE_ACCESS, acl);
@@ -149,7 +135,7 @@ rpl_acl_set_fd (int fd, acl_t acl)
 
 /* Set to 1 if a file's mode is implicit by the ACL.
    Set to 0 if a file's mode is stored independently from the ACL.  */
-#  if (HAVE_ACL_COPY_EXT_NATIVE && HAVE_ACL_CREATE_ENTRY_NP) || defined __sgi /* MacOS X, IRIX */
+#  if (HAVE_ACL_COPY_EXT_NATIVE && HAVE_ACL_CREATE_ENTRY_NP) || defined __sgi /* Mac OS X, IRIX */
 #   define MODE_INSIDE_ACL 0
 #  else
 #   define MODE_INSIDE_ACL 1
@@ -163,7 +149,7 @@ rpl_acl_set_fd (int fd, acl_t acl)
 extern int acl_entries (acl_t);
 #  endif
 
-#  if HAVE_ACL_TYPE_EXTENDED /* MacOS X */
+#  if HAVE_ACL_TYPE_EXTENDED /* Mac OS X */
 /* ACL is an ACL, from a file, stored as type ACL_TYPE_EXTENDED.
    Return 1 if the given ACL is non-trivial.
    Return 0 if it is trivial.  */
@@ -263,3 +249,5 @@ extern int acl_nontrivial (int count, struct acl *entries);
 # endif
 
 #endif
+
+_GL_INLINE_HEADER_END

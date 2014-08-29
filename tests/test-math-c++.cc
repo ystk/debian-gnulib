@@ -1,5 +1,5 @@
 /* Test of <math.h> substitute in C++ mode.
-   Copyright (C) 2010-2012 Free Software Foundation, Inc.
+   Copyright (C) 2010-2014 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -194,6 +194,16 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::hypotl, long double,
                  (long double, long double));
 #endif
 
+#if GNULIB_TEST_ILOGBF
+SIGNATURE_CHECK (GNULIB_NAMESPACE::ilogbf, int, (float));
+#endif
+#if GNULIB_TEST_ILOGB
+SIGNATURE_CHECK (GNULIB_NAMESPACE::ilogb, int, (double));
+#endif
+#if GNULIB_TEST_ILOGBL
+SIGNATURE_CHECK (GNULIB_NAMESPACE::ilogbl, int, (long double));
+#endif
+
 //SIGNATURE_CHECK (GNULIB_NAMESPACE::j0, double, (double));
 
 //SIGNATURE_CHECK (GNULIB_NAMESPACE::j1, double, (double));
@@ -210,7 +220,9 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::ldexpl, long double, (long double, int));
 
 //SIGNATURE_CHECK (GNULIB_NAMESPACE::lgamma, double, (double));
 
-//SIGNATURE_CHECK (GNULIB_NAMESPACE::log10, double, (double));
+#if GNULIB_TEST_LOG10
+SIGNATURE_CHECK (GNULIB_NAMESPACE::log10, double, (double));
+#endif
 #if GNULIB_TEST_LOG10L
 SIGNATURE_CHECK (GNULIB_NAMESPACE::log10l, long double, (long double));
 #endif
@@ -224,8 +236,6 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::log1p, double, (double));
 #if GNULIB_TEST_LOG1PL
 SIGNATURE_CHECK (GNULIB_NAMESPACE::log1pl, long double, (long double));
 #endif
-
-//SIGNATURE_CHECK (GNULIB_NAMESPACE::logb, double, (double));
 
 #if GNULIB_TEST_LOGF
 SIGNATURE_CHECK (GNULIB_NAMESPACE::logf, float, (float));
@@ -249,6 +259,16 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::log2, double, (double));
 #endif
 #if GNULIB_TEST_LOG2L
 SIGNATURE_CHECK (GNULIB_NAMESPACE::log2l, long double, (long double));
+#endif
+
+#if GNULIB_TEST_LOGBF
+SIGNATURE_CHECK (GNULIB_NAMESPACE::logbf, float, (float));
+#endif
+#if GNULIB_TEST_LOGB
+SIGNATURE_CHECK (GNULIB_NAMESPACE::logb, double, (double));
+#endif
+#if GNULIB_TEST_LOGBL
+SIGNATURE_CHECK (GNULIB_NAMESPACE::logbl, long double, (long double));
 #endif
 
 #if GNULIB_TEST_MODFF

@@ -1,5 +1,5 @@
 /* Condition variables for multithreading.
-   Copyright (C) 2005-2012 Free Software Foundation, Inc.
+   Copyright (C) 2005-2014 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,6 +54,14 @@
 #include <time.h>
 
 #include "glthread/lock.h"
+#ifndef _GL_INLINE_HEADER_BEGIN
+ #error "Please include config.h first."
+#endif
+
+_GL_INLINE_HEADER_BEGIN
+#ifndef _GLTHREAD_COND_INLINE
+# define _GLTHREAD_COND_INLINE _GL_INLINE
+#endif
 
 /* ========================================================================= */
 
@@ -369,7 +377,7 @@ extern "C" {
    while (0)
 #define gl_cond_timedwait(COND, LOCK, ABSTIME) \
   gl_cond_timedwait_func (&COND, &LOCK, ABSTIME)
-static inline bool
+_GLTHREAD_COND_INLINE bool
 gl_cond_timedwait_func (gl_cond_t *cond, gl_lock_t *lock, struct timespec *abstime)
 {
   int err = glthread_cond_timedwait (cond, lock, abstime);
@@ -404,5 +412,7 @@ gl_cond_timedwait_func (gl_cond_t *cond, gl_lock_t *lock, struct timespec *absti
 #ifdef __cplusplus
 }
 #endif
+
+_GL_INLINE_HEADER_END
 
 #endif /* _GLTHREAD_COND_H */

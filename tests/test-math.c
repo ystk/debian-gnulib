@@ -1,5 +1,5 @@
 /* Test of <math.h> substitute.
-   Copyright (C) 2007-2012 Free Software Foundation, Inc.
+   Copyright (C) 2007-2014 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,6 +39,18 @@ choke me
 # error HUGE_VALL should be defined
 choke me
 #endif
+
+#ifndef FP_ILOGB0
+# error FP_ILOGB0 should be defined
+choke me
+#endif
+
+#ifndef FP_ILOGBNAN
+# error FP_ILOGBNAN should be defined
+choke me
+#endif
+
+#include <limits.h>
 
 #include "macros.h"
 
@@ -81,6 +93,12 @@ main (void)
   ASSERT (numeric_equald (HUGE_VAL, HUGE_VAL + HUGE_VAL));
 
   ASSERT (numeric_equall (HUGE_VALL, HUGE_VALL + HUGE_VALL));
+
+  /* Check the value of FP_ILOGB0.  */
+  ASSERT (FP_ILOGB0 == INT_MIN || FP_ILOGB0 == - INT_MAX);
+
+  /* Check the value of FP_ILOGBNAN.  */
+  ASSERT (FP_ILOGBNAN == INT_MIN || FP_ILOGBNAN == INT_MAX);
 
   return 0;
 }

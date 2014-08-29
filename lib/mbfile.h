@@ -1,5 +1,5 @@
 /* Multibyte character I/O: macros for multi-byte encodings.
-   Copyright (C) 2001, 2005, 2009-2012 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2005, 2009-2014 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -62,6 +62,14 @@
 
 #include "mbchar.h"
 
+#ifndef _GL_INLINE_HEADER_BEGIN
+ #error "Please include config.h first."
+#endif
+_GL_INLINE_HEADER_BEGIN
+#ifndef MBFILE_INLINE
+# define MBFILE_INLINE _GL_INLINE
+#endif
+
 struct mbfile_multi {
   FILE *fp;
   bool eof_seen;
@@ -72,7 +80,7 @@ struct mbfile_multi {
   struct mbchar pushback;
 };
 
-static inline void
+MBFILE_INLINE void
 mbfile_multi_getc (struct mbchar *mbc, struct mbfile_multi *mbf)
 {
   size_t bytes;
@@ -215,7 +223,7 @@ eof:
   return;
 }
 
-static inline void
+MBFILE_INLINE void
 mbfile_multi_ungetc (const struct mbchar *mbc, struct mbfile_multi *mbf)
 {
   mb_copy (&mbf->pushback, mbc);
@@ -238,5 +246,10 @@ typedef mbchar_t mbf_char_t;
 #define mbf_ungetc(mbc, mbf) mbfile_multi_ungetc (&(mbc), &(mbf))
 
 #define mb_iseof(mbc) ((mbc).bytes == 0)
+
+#ifndef _GL_INLINE_HEADER_BEGIN
+ #error "Please include config.h first."
+#endif
+_GL_INLINE_HEADER_BEGIN
 
 #endif /* _MBFILE_H */

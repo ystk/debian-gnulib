@@ -1,5 +1,5 @@
 /* pt_chown - helper program for 'grantpt'.
-   Copyright (C) 1998-1999, 2009-2012 Free Software Foundation, Inc.
+   Copyright (C) 1998-1999, 2009-2014 Free Software Foundation, Inc.
    Contributed by C. Scott Ananian <cananian@alumni.princeton.edu>, 1998.
 
    This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#include "root-uid.h"
 
 #include "pty-private.h"
 
@@ -75,7 +77,7 @@ main (int argc, char *argv[])
 {
   uid_t euid = geteuid ();
 
-  if (argc == 1 && euid == 0)
+  if (argc == 1 && euid == ROOT_UID)
     {
       /* Normal invocation of this program is with no arguments and
          with privileges.  */
@@ -152,7 +154,7 @@ main (int argc, char *argv[])
   }
 
   /* Check if we are properly installed.  */
-  if (euid != 0)
+  if (euid != ROOT_UID)
     {
       fprintf (stderr, "pt_chown: needs to be installed setuid 'root'\n");
       return FAIL_EXEC;

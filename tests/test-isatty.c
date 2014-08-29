@@ -1,5 +1,5 @@
 /* Test isatty() function.
-   Copyright (C) 2011-2012 Free Software Foundation, Inc.
+   Copyright (C) 2011-2014 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,14 +45,15 @@ main (void)
     errno = 0;
     ASSERT (isatty (-1) == 0);
     ASSERT (errno == EBADF
-            || errno == 0 /* seen on Solaris 10 */
+            || errno == 0 /* seen on IRIX 6.5, Solaris 10 */
            );
   }
   {
+    close (99);
     errno = 0;
     ASSERT (isatty (99) == 0);
     ASSERT (errno == EBADF
-            || errno == 0 /* seen on Solaris 10 */
+            || errno == 0 /* seen on IRIX 6.5, Solaris 10 */
            );
   }
 

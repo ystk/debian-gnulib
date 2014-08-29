@@ -1,3 +1,43 @@
+gnulib (20140202+stable-2) unstable; urgency=low
+
+  * New package: git-merge-changelog (Closes: #646013).
+  * Thanks to Samuel Bronson <naesten@gmail.com> for
+    the git-merge-changelog patches:
+    + debian/ changes for git-merge-changelog.
+    + Don't hardcode gnulib directory in 01-gnulib-directory.patch.
+      Instead, install gnulib-tool into the gnulib directory and symlink to
+      it from /usr/bin, like the docs say to do.
+    + Bump debhelper compat level to 9 for hardening flags.
+  * Man page for git-merge-changelog adapted
+    from comments at the top of git-merge-changelog.c
+  * Remove duplicate copies of documentation (Closes: #728933).
+  * Tweak list of top-level files installed.
+  * doc-base: add Format: Info version of manual.
+
+ -- Ian Beckwith <ianb@debian.org>  Sun, 02 Mar 2014 23:04:10 +0000
+
+gnulib (20140202+stable-1) unstable; urgency=low
+
+  * New upstream stable snapshot.
+  * Refresh patches.
+  * Standards-Version: 3.9.5 (no changes).
+  * Tweak lintian overrides.
+
+ -- Ian Beckwith <ianb@debian.org>  Sun, 16 Feb 2014 12:45:44 +0000
+
+gnulib (20130805+stable-1) unstable; urgency=low
+
+  * Resumed making upstream snapshots - sorry about the gap.
+  * Packaged upstream stable snapshot (Closes: #687986, #710325).
+  * Fix gnulib-tool --version, also show snapshot and debian
+    package version (Closes: #710330).
+  * Refresh 01-gnulib-directory.patch.
+  * Update lintian overrides for magical shebangs.
+  * Standards-Version: 3.9.4 (no changes).
+  * debian/copyright: refresh, switch to machine-interpretable format.
+
+ -- Ian Beckwith <ianb@debian.org>  Sun, 11 Aug 2013 21:16:48 +0100
+
 gnulib (20120404+stable-1) unstable; urgency=low
 
   * New upstream stable snapshot.

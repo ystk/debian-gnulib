@@ -1,6 +1,46 @@
 			Gnulib stable snapshot
 			----------------------
 
+  * 20140202-stable
+
+Snapshot taken based on:
+
+commit a39d4083cab589d7cd6a13e8a4b8db8875261d75
+Date:   Wed Jan 1 05:19:01 2014 -0800
+
+with the following additional commits:
+
+    * [7a0c729]->[d78c62e] maint: fix public-submodule-commit to work with newer git
+    * [cfe23e8]->[79ca097] autoupdate
+    * [5088dc5]->[7e54a06] manywarnings: remove -Wmudflap
+    * [fe3419d]->[cd56634] doc: use ASCII in .texi files where UTF-8 isn't needed
+    * [580240a]->[a2d14e0] include_next: port to autoconf 2.63
+    * [e446f25]->[c092018] relocatable-shell: Update suggested usage in maintainer documentation.
+    * [7514946]->[2d49283] qacl: check for fchmod
+    * [497f4cd]->[8c28db1] autoupdate
+
+----------------------------------------------------------------------
+
+  * 20130805-stable
+
+Snapshot taken based on:
+
+commit ef5856c0c4c6302b6cac9c7cefb4e6cbdcf127be
+Date:   Tue Jun 11 00:10:21 2013 -0700
+
+with the following additional commits:
+
+    * [353402b]->[979b76e] autoupdate
+    * [2845ecc]->[1fd0acc] getcwd-lgpl: port to Tru64
+    * [240af58]->[dbe7a05] nproc: relax license to LGPLv2+
+    * [33758ba]->[121180e] xalloc-oversized: relax license to LGPLv2+
+    * [612ef3f]->[a08b131] mgetgroups: relax license to LGPLv2+
+    * [c96bab3]->[9e801ad] fnmatch: don't goto over declaration
+    * [de3b502]->[cce1478] autoupdate
+    * [03e96cc]->[78b78bc] autoupdate
+
+----------------------------------------------------------------------
+
   * 20120404-stable
 
 Snapshot taken based on:

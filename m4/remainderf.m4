@@ -1,5 +1,5 @@
-# remainderf.m4 serial 6
-dnl Copyright (C) 2012 Free Software Foundation, Inc.
+# remainderf.m4 serial 8
+dnl Copyright (C) 2012-2014 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -54,6 +54,7 @@ AC_DEFUN([gl_FUNC_REMAINDERF],
 
     m4_ifdef([gl_FUNC_REMAINDERF_IEEE], [
       if test $gl_remainderf_required = ieee && test $REPLACE_REMAINDERF = 0; then
+        AC_REQUIRE([AC_CANONICAL_HOST]) dnl for cross-compiles
         AC_CACHE_CHECK([whether remainderf works according to ISO C 99 with IEC 60559],
           [gl_cv_func_remainderf_ieee],
           [
@@ -93,7 +94,13 @@ int main (int argc, char *argv[])
               ]])],
               [gl_cv_func_remainderf_ieee=yes],
               [gl_cv_func_remainderf_ieee=no],
-              [gl_cv_func_remainderf_ieee="guessing no"])
+              [case "$host_os" in
+                         # Guess yes on glibc systems.
+                 *-gnu*) gl_cv_func_remainderf_ieee="guessing yes" ;;
+                         # If we don't know, assume the worst.
+                 *)      gl_cv_func_remainderf_ieee="guessing no" ;;
+               esac
+              ])
             LIBS="$save_LIBS"
           ])
         case "$gl_cv_func_remainderf_ieee" in
@@ -143,13 +150,14 @@ AC_DEFUN([gl_FUNC_REMAINDERF_WORKS],
 [
   AC_REQUIRE([AC_PROG_CC])
   AC_REQUIRE([AC_CANONICAL_HOST]) dnl for cross-compiles
-  AC_CHECK_FUNCS_ONCE([alarm])
+  AC_CHECK_DECLS_ONCE([alarm])
   AC_CACHE_CHECK([whether remainderf works], [gl_cv_func_remainderf_works],
     [
       AC_RUN_IFELSE(
         [AC_LANG_SOURCE([[
 #include <math.h>
-#if HAVE_ALARM
+#if HAVE_DECL_ALARM
+# include <signal.h>
 # include <unistd.h>
 #endif
 extern
@@ -162,7 +170,8 @@ volatile float y;
 float z;
 int main ()
 {
-#if HAVE_ALARM
+#if HAVE_DECL_ALARM
+  signal (SIGALRM, SIG_DFL);
   alarm (5);
 #endif
   /* This test fails on IRIX 6.5.  */

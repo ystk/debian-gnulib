@@ -3,14 +3,22 @@ Description: Sets the gnulib directory.
 
 Index: gnulib/gnulib-tool
 ===================================================================
---- gnulib.orig/gnulib-tool	2012-04-05 00:45:13.000000000 +0100
-+++ gnulib/gnulib-tool	2012-04-05 00:45:31.000000000 +0100
-@@ -461,7 +461,7 @@
-       * ) self_abspathname=`echo "$self_abspathname" | sed -e 's,/[^/]*$,,'`/"$linkval" ;;
-     esac
-   done
--  gnulib_dir=`echo "$self_abspathname" | sed -e 's,/[^/]*$,,'`
-+  gnulib_dir=/usr/share/gnulib
- }
- 
- # func_tmpdir
+--- gnulib.orig/gnulib-tool	2014-02-03 00:56:56.000000000 +0000
++++ gnulib/gnulib-tool	2014-02-03 00:57:02.000000000 +0000
+@@ -323,12 +323,13 @@
+     version=' '`cd "$gnulib_dir" && ./build-aux/git-version-gen /dev/null | sed -e 's/-dirty/-modified/'`
+   else
+     # gnulib copy without versioning information.
+-    date=`sed -e 's/ .*//;q' "$gnulib_dir"/ChangeLog`
+-    version=
++    date=`zcat /usr/share/doc/gnulib/changelog.gz | sed -e 's/ .*//;q'`
++    version=`zcat /usr/share/doc/gnulib/NEWS.stable.gz | grep -o -m 1 ' [0-9]\+-stable'`
++    debversion=`dpkg-query --show --showformat '${Version}' gnulib`
+   fi
+   year=`"$gnulib_dir"/build-aux/mdate-sh "$self_abspathname" | sed -e 's,^.* ,,'`
+   echo "\
+-gnulib-tool (GNU $package $date)$version
++gnulib-tool (GNU $package $date)$version Debian: $debversion
+ Copyright (C) $year Free Software Foundation, Inc.
+ License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+ This is free software: you are free to change and redistribute it.

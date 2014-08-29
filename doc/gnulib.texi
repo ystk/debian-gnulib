@@ -23,7 +23,7 @@ This manual is for GNU Gnulib (updated @value{UPDATED}),
 which is a library of common routines intended to be shared at the
 source level.
 
-Copyright @copyright{} 2004-2012 Free Software Foundation, Inc.
+Copyright @copyright{} 2004--2014 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -57,7 +57,8 @@ Documentation License''.
 @end ifnottex
 
 @menu
-* Introduction::
+* Brief Overview::
+* Philosophy::
 * Invoking gnulib-tool::
 * Writing modules::
 * Extending Gnulib::
@@ -87,22 +88,31 @@ If you need this particular \thing\, you may write to
 @end macro
 
 
-@node Introduction
-@chapter Introduction
+@node Brief Overview
+@chapter Brief Overview
 
-Gnulib is a source code library. It provides basic functionality to
-programs and libraries.  Currently (as of October 2006) more than 30
-packages make use of Gnulib.
+Gnulib is a source code library that provides basic functionality to
+programs and libraries.  Many software packages make use of Gnulib
+to avoid reinventing the portability wheel.
 
 Resources:
 
 @itemize
 @item Gnulib is hosted at Savannah:
       @url{http://savannah.gnu.org/projects/gnulib}.  Get the sources
-      through Git or CVS from there.
+      through Git from there.
 @item The Gnulib home page:
       @url{http://www.gnu.org/software/gnulib/}.
 @end itemize
+
+@include gnulib-readme.texi
+
+@node Philosophy
+@chapter Philosophy
+
+Gnulib's design and development philosophy is organized around steady,
+collaborative, and open development of reusable modules that are
+suitable for a reasonably wide variety of platforms.
 
 @menu
 * Benefits::
@@ -154,7 +164,7 @@ Every API (C functions or variables) provided should be declared in a header
 file (.h file) and implemented in one or more implementation files (.c files).
 The separation has the effect that users of your module need to read only
 the contents of the .h file and the module description in order to understand
-what the module is about and how to use it - not the entire implementation.
+what the module is about and how to use it---not the entire implementation.
 Furthermore, users of your module don't need to repeat the declarations of
 the functions in their code, and are likely to receive notification through
 compiler errors if you make incompatible changes to the API (like, adding a
@@ -921,8 +931,8 @@ turned off in others.  This can be useful if your package consists of
 an application layer that does not need to invoke POSIX functions and
 an operating system interface layer that contains all the OS function
 calls.  In such a situation, you will want to turn on the namespace mode
-for the application layer --- to avoid many preprocessor macro
-definitions --- and turn it off for the OS interface layer --- to avoid
+for the application layer---to avoid many preprocessor macro
+definitions---and turn it off for the OS interface layer---to avoid
 the drawback of the namespace mode, mentioned above.
 
 
@@ -1063,7 +1073,7 @@ your favorite platform, you may perform these steps:
 @item Create gnulib directory
 
 On a machine with recent automake, autoconf, m4 installed and with a
-gnulib git or cvs checkout (typically a Linux machine), use
+gnulib git checkout (typically a Linux machine), use
 
 @example
 gnulib-tool --create-megatestdir --with-tests --dir=...
@@ -3733,7 +3743,7 @@ by Gnulib.
 @chapter Past POSIX Function Substitutes
 
 This chapter describes which functions and function-like macros specified by
-older versions of POSIX (POSIX:2001) are substituted by Gnulib, which
+older versions of POSIX are substituted by Gnulib, which
 portability pitfalls are fixed by Gnulib, and which (known) portability
 problems are not worked around by Gnulib.
 
@@ -5860,6 +5870,7 @@ This list of functions is sorted according to the header that declares them.
 * qsort_r::
 * random_r::
 * rpmatch::
+* secure_getenv::
 * seed48_r::
 * setstate_r::
 * srand48_r::
@@ -5904,6 +5915,7 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/qsort_r.texi
 @include glibc-functions/random_r.texi
 @include glibc-functions/rpmatch.texi
+@include glibc-functions/secure_getenv.texi
 @include glibc-functions/seed48_r.texi
 @include glibc-functions/setstate_r.texi
 @include glibc-functions/srand48_r.texi
@@ -6667,6 +6679,7 @@ This list of functions is sorted according to the header that declares them.
 * Safe Allocation Macros::
 * Compile-time Assertions::
 * Integer Properties::
+* extern inline::
 * String Functions in C Locale::
 * Quoting::
 * error and progname::
@@ -6699,6 +6712,8 @@ This list of functions is sorted according to the header that declares them.
 @include verify.texi
 
 @include intprops.texi
+
+@include extern-inline.texi
 
 @node String Functions in C Locale
 @section Character and String Functions in C Locale
