@@ -1,2 +1,3 @@
 01-gnulib-directory.patch
 02-shebang.patch
+CVE-2018-17942.patch

@@ -1,3 +1,13 @@
+gnulib (20140202+stable-2+deb8u1) jessie-security; urgency=medium
+
+  * Non-maintainer upload by the LTS team.
+  * Fix CVE-2018-17942:
+    Ben Pfaff disvovered that the convert_to_decimal function in the GNU
+    Portability Library contains a heap-based buffer overflow because memory is
+    not allocated for a trailing '\0' character during %f processing.
+
+ -- Markus Koschany <apo@debian.org>  Wed, 10 Oct 2018 21:44:14 +0200
+
 gnulib (20140202+stable-2) unstable; urgency=low
 
   * New package: git-merge-changelog (Closes: #646013).
